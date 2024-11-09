@@ -1,60 +1,46 @@
-import React, { useContext, useState } from 'react'
-import { assets } from '../assets/assets'
-import { AdminContext } from '../context/AdminContext'
-import axios from 'axios'
-import { toast } from 'react-toastify'
+import React, { useState } from 'react';
 
-const Login = () => {
-  
-  const [state, setState] = useState('Admin')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+const Login = ({ setIsAuthenticated, setRole }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { setAToken, backendUrl } = useContext(AdminContext)
-
-  const onSubmitHandler = async (event) => {
-    event.preventDefault()
-    try{
-      if(state === 'Admin'){
-        const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password })
-        if(data.success){
-          localStorage.setItem('aToken', data.token)
-          setAToken(data.token)
-        }else{
-          toast.error(data.message)
-        }
-      }else{
-
-      }
-    }catch(error){
-
+  const handleLogin = () => {
+    // Misalnya, hardcoded admin login
+    if (username === 'admin' && password === 'admin123') {
+      setIsAuthenticated(true);
+      setRole('admin');
+    } else {
+      alert('Username atau password salah');
     }
-  }
+  };
 
   return (
-    <form onSubmit={ onSubmitHandler } className='min-h-[80vh] flex items-center'>
-      <div className='flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg'>
-        <p className='text-2xl font-semibold m-auto'><span className='text-primary'> { state } </span>Login</p>
-
-        <div className='w-full'>
-          <p>Email</p>
-          <input onChange={(e)=>setEmail(e.target.value)} value={email} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="email" required/>
-        </div>
-
-        <div className='w-full'>
-          <p>Password</p>
-          <input onChange={(e)=>setPassword(e.target.value)} value={password} className='border border-[#DADADA] rounded w-full p-2 mt-1' type="password" required/>
-        </div>
-
-        <button className='bg-primary text-white w-full py-2 rounded-md text-base'>Login</button>
-        {
-          state === 'Admin'
-          ? <p>User Login? <span className='text-primary underline cursor-pointer' onClick={()=>setState('User')}>Click here</span></p>
-          : <p>Admin Login? <span className='text-primary underline cursor-pointer' onClick={()=>setState('Admin')}>Click here</span></p>
-        }
+    <div className="p-6 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded shadow-lg w-80">
+        <h2 className="text-xl font-bold mb-4">Login</h2>
+        <input
+          type="text"
+          className="w-full p-2 mb-4 border rounded"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          className="w-full p-2 mb-4 border rounded"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          className="w-full bg-green-600 text-white py-2 rounded"
+          onClick={handleLogin}
+        >
+          Login
+        </button>
       </div>
-    </form>
-  )
-}
+    </div>
+  );
+};
 
-export default Login
+export default Login;
