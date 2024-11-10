@@ -4,8 +4,8 @@ import { MdForum } from 'react-icons/md';
 
 const Dashboard = () => {
   return (
-    <div className="p-6 min-h-screen bg-softCream">
-      <h1 className="text-3xl font-bold mb-6">Dashboard Admin Pertanian</h1>
+    <div className="p-6 bg-softCream">
+      <h1 className="text-3xl font-bold mb-6">Dashboard Admin</h1>
       
       {/* Ringkasan Statistik */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
@@ -30,12 +30,6 @@ const Dashboard = () => {
             <p className="text-xl font-bold">50</p>
           </div>
         </div>
-      </div>
-
-      {/* Grafik Tren */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Tren Pengguna Terdaftar</h2>
-        <div className="h-56 bg-gray-200 rounded-md">[Grafik Pengguna]</div>
       </div>
 
       {/* Tabel Pengguna / Transaksi */}

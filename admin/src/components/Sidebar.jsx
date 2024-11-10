@@ -7,7 +7,7 @@ import { MdMenuBook } from 'react-icons/md';
 
 const Sidebar = () => {
   return (
-    <div className="w-60 bg-green-700 text-white ">
+    <div className="w-60 bg-white text-black border">
       <ul>
         <li className="p-4 hover:bg-green-600">
           <Link to="/dashboard" className="flex items-center">
@@ -24,7 +24,7 @@ const Sidebar = () => {
             <MdArticle className="mr-2" /> Berita
           </Link>
         </li>
-        <li className="p-4 hover:bg-lightGreen">
+        <li className="p-4 hover:bg-green-600">
           <Link to="/edukasi" className="flex items-center">
             <MdMenuBook className="mr-2" /> Edukasi
           </Link>
