@@ -1,45 +1,35 @@
-import React, { useState, useEffect } from 'react';
 import './App.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
-
-  const posts = [
-    { title: "Manfaat Drone dalam Pemantauan Pertanian", date: "28/10/2024", author: "John Doe", image: "drone.png" },
-    { title: "Panduan Budi Daya Sayuran Hidroponik", date: "28/10/2024", author: "Jane Smith", image: "carrot.png" },
-    { title: "Meningkatkan Kesehatan dengan Pertanian Terpadu", date: "28/10/2024", author: "Mark Lee", image: "healthy-farming.png" },
-    { title: "Penggunaan Pupuk Organik untuk Hasil Maksimal", date: "28/10/2024", author: "Sarah Johnson", image: "organic-fertilizer.png" },
-    { title: "Menggunakan Pupuk Organik untuk Hasil Optimal", date: "28/10/2024", author: "Alice Brown", image: "pest-control.png" },
-    { title: "Teknologi Terbaru di Industri Pertanian", date: "28/10/2024", author: "Paul Green", image: "technology.png" },
-    { title: "Manfaat Drone dalam Pemantauan Pertanian", date: "28/10/2024", author: "John Doe", image: "drone.png" },
-    { title: "Panduan Budi Daya Sayuran Hidroponik", date: "28/10/2024", author: "Jane Smith", image: "carrot.png" },
-    { title: "Meningkatkan Kesehatan dengan Pertanian Terpadu", date: "28/10/2024", author: "Mark Lee", image: "healthy-farming.png" },
-
+  const suggestions = [
+    { img: "/assets/banner.png", name: "Kim_Taehyung" },
+    { img: "/assets/banner.png", name: "Nabila" },
+    { img: "/assets/banner.png", name: "Sarah_fitryani" },
+    { img: "/assets/banner.png", name: "Ardiansyah" },
+    { img: "/assets/banner.png", name: "Siti_nurlela" },
   ];
 
-  // Calculate total pages
-  const totalPages = Math.ceil(posts.length / itemsPerPage);
-
-  // Get current page items
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPosts = posts.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Log the current items for debugging
-  useEffect(() => {
-    console.log("Current page:", currentPage);
-    console.log("Index of First Item:", indexOfFirstItem);
-    console.log("Index of Last Item:", indexOfLastItem);
-    console.log("Displayed posts:", currentPosts);
-  }, [currentPage, currentPosts]);
-  
-
-  // Change page
-  const paginate = (pageNumber) => {
-    console.log("Page clicked:", pageNumber);
-    setCurrentPage(pageNumber);
-  };
+  const posts = [
+    {
+      profileImage: "/assets/banner.png",
+      username: "Siti_nurlela",
+      content: "panen buah tomat dan sayur......",
+      postImage: "/assets/banner.png",
+      likes: "99+",
+      comments: "99+",
+    },
+    {
+      profileImage: "/assets/banner.png",
+      username: "Nabila",
+      content: "Hasil dari lahan yang tidak terlalu luas",
+      postImages: ["/assets/banner.png", "/assets/banner.png", "/assets/banner.png", "/assets/banner.png"],
+      likes: "99+",
+      comments: "99+",
+    },
+  ];
 
   return (
     <div className="App">
@@ -49,49 +39,64 @@ function App() {
         </div>
         <nav>
           <ul>
-            <li>Beranda</li>
-            <li>Forum & Komunitas</li>
-            <li>Blog</li>
-            <li>Berita & Acara</li>
-            <li>Pasar</li>
+  <ul>
+  <li><Link to="/beranda" className="bold-link">Beranda</Link></li>
+    <li><Link to="/forum-komunitas" className="bold-link">Forum & Komunitas</Link></li>
+    <li><Link to="/blog" className="bold-link">Blog</Link></li>
+    <li><Link to="/berita" className="bold-link">Berita & Acara</Link></li>
+    <li><Link to="/pasar" className="bold-link">Pasar</Link></li>
+  </ul>
           </ul>
         </nav>
         <button className="login-btn">Masuk</button>
       </header>
-
-      <section className="selection-section">
-        <center><div className="blog-title">Blog Lengkap</div></center><br />
-        <p>Jelajahi artikel-artikel terbaru mengenai teknik bertani, tips berkebun, dan informasi penting tentang <br /> pertanian lokal. Temukan wawasan dan inspirasi untuk mendukung pertanian yang berkelanjutan.</p>
-        <div className="selection-grid">
-          {currentPosts.map((post, index) => (
-            <div key={index} className="blog-card">
-              <img src={`/assets/${post.image}`} alt={post.title} />
-              <div className="blog-info">
-                <span>KATEGORI BLOG</span>
-                <h3>{post.title}</h3>
-              </div>
-              <div className="blog-footer">
-                <div className="author-info">
-                  <p className="blog-author"><i className="fas fa-user-circle profile-icon"></i> {post.author}</p>
-                </div>
-                <p className="blog-date">{post.date}</p>
-              </div>
-            </div>
-          ))}
+      <div className="container">
+  <main className="main-content">
+    <button className="add-button">Tambah +</button>
+    {posts.map((post, index) => (
+      <div key={index} className="post">
+      <div className="post-header">
+  <img src={post.profileImage} alt={post.username} />
+  <span className="post-username">{post.username}</span>
+</div>
+        <p>{post.content}</p>
+        {post.postImage && <img src={post.postImage} alt="Post" className="post-image" />}
+        {post.postImages && (
+          <div className="post-images">
+            {post.postImages.map((image, idx) => (
+              <img key={idx} src={image} alt={`Image ${idx + 1}`} />
+            ))}
+          </div>
+        )}
+        <div className="post-footer">
+          <span>👍 {post.likes}</span>
+          <span>💬 {post.comments}</span>
         </div>
+      </div>
+    ))}
+  </main>
 
-        <div className="pagination">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index}
-              className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}
-              onClick={() => paginate(index + 1)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      </section>
+  <div className="right-section">
+  <div className="user-profile">
+  <img src="/assets/banner.png" alt="User Profile" className="profile-picture" />
+  <span className="profile-name">Kim_Taehyung</span>
+</div>
+
+
+    <aside className="side">
+      <div className="user-suggestions">
+        <h2>Saran</h2>
+        {suggestions.map((suggestion, index) => (
+          <div key={index} className="suggestion-item">
+            <img src={suggestion.img} alt={`Profile ${index + 1}`} />
+            <span>{suggestion.name}</span>
+          </div>
+        ))}
+      </div>
+    </aside>
+  </div>
+</div>
+
 
       <footer className="footer">
         <div className="footer-content">

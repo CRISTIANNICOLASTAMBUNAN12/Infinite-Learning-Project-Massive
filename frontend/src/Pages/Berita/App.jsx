@@ -1,7 +1,7 @@
 // App.js
 import React, { useState } from 'react';
 import './App.css'; // Import the CSS file
-
+import { Link } from 'react-router-dom';
 function App() {
   const [activeCategory, setActiveCategory] = useState('Lihat Semua');
 
@@ -29,13 +29,13 @@ function App() {
           <img src="/assets/logos.png" alt="Logo" className="logo-image" />
         </div>
         <nav>
-          <ul className="nav-list">
-            <li className="nav-item">Beranda</li>
-            <li className="nav-item">Forum & Komunitas</li>
-            <li className="nav-item">Blog</li>
-            <li className="nav-item">Berita & Acara</li>
-            <li className="nav-item">Pasar</li>
-          </ul>
+  <ul>
+  <li><Link to="/beranda" className="bold-link">Beranda</Link></li>
+    <li><Link to="/forum-komunitas" className="bold-link">Forum & Komunitas</Link></li>
+    <li><Link to="/blog" className="bold-link">Blog</Link></li>
+    <li><Link to="/berita" className="bold-link">Berita & Acara</Link></li>
+    <li><Link to="/pasar" className="bold-link">Pasar</Link></li>
+  </ul>
         </nav>
         <button className="login-btn">Masuk</button>
       </header>

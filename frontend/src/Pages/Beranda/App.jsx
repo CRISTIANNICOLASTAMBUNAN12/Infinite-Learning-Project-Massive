@@ -1,6 +1,7 @@
 // App.js
 import React from 'react';
 import './App.css';
+import { Link } from 'react-router-dom';
 
 function App() {
   return (
@@ -12,14 +13,14 @@ function App() {
    
   </div>
   <nav>
-    <ul>
-      <li>Beranda</li>
-      <li>Forum & Komunitas</li>
-      <li>Blog</li>
-      <li>Berita & Acara</li>
-      <li>Pasar</li>
-    </ul>
-  </nav>
+  <ul>
+    <li><Link to="/beranda" className="bold-link">Beranda</Link></li>
+    <li><Link to="/forum-komunitas" className="bold-link">Forum & Komunitas</Link></li>
+    <li><Link to="/blog" className="bold-link">Blog</Link></li>
+    <li><Link to="/berita" className="bold-link">Berita & Acara</Link></li>
+    <li><Link to="/pasar" className="bold-link">Pasar</Link></li>
+  </ul>
+</nav>
   <button className="login-btn">Masuk</button>
 </header>
 
@@ -73,7 +74,8 @@ function App() {
       <div className="blog-footer">
       <div className="author-info">
  {/* Profile icon */}
-  <p className="blog-author"> <i className="fas fa-user-circle profile-icon"></i> {post.author}</p>
+  <p className="blog-author"><i className="fas fa-user-circle profile-icon" style={{ color: 'white' }}></i>
+  {post.author}</p>
 </div>
         <p className="blog-date">{post.date}</p>
       </div>
