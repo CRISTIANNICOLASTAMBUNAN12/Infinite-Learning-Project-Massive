@@ -9,13 +9,13 @@ const Edukasi = () => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [userIdToToggleStatus, setUserIdToToggleStatus] = useState(null);
-  
+
   const [edukasiList, setEdukasiList] = useState([
     {
       id: 1,
       title: 'Teknik Pertanian Organik yang Efektif',
       date: '2024-11-05',
-      imageUrl: 'https://example.com/edukasi1.jpg',
+      imageUrl: 'https://via.placeholder.com/800x400',
       description: 'Pelajari cara bertani organik yang efektif untuk meningkatkan hasil panen tanpa merusak lingkungan.',
       status: 'published',
     },
@@ -115,7 +115,7 @@ const Edukasi = () => {
 
   return (
     <div className="p-6 bg-softCream bg-white">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-8">Manajemen edukasi Edukasi</h1>
+      <h1 className="text-2xl font-medium text-gray-800 mb-2 text-center pb-10">Manajemen edukasi Edukasi</h1>
 
       <button
         onClick={handleTambah}
@@ -133,9 +133,15 @@ const Edukasi = () => {
               className="w-48 h-48 object-cover rounded-l-xl"
             />
             <div className="p-6 flex-1">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">{edukasi.title}</h3>
+              <h3 className="text-1xl font-medium text-gray-800 mb-2">{edukasi.title}</h3>
               <p className="text-gray-600 text-sm mb-4">{edukasi.date}</p>
               <p className="text-gray-700 mb-4">{edukasi.description}</p>
+              <span
+                className={`px-4 py-2 rounded-full ${edukasi.status === 'published' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-black'
+                  }`}
+              >
+                {edukasi.status === 'published' ? 'Dipublikasikan' : 'Draft'}
+              </span>
             </div>
             <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[edukasi.id] = el)}>
               <button

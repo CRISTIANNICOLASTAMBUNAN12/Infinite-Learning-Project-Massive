@@ -17,7 +17,7 @@ const Navbar = ({ setIsAuthenticated, setRole }) => {
         <img className="w-36 sm:w-40 cursor-pointer" src={assets.admin_logo} alt="" />
       </div>
       <button
-        className="bg-green-600 text-black text-sm px-10 py-2 rounded-full"
+        className="bg-green-600 text-white font-semibold text-sm px-10 py-2 rounded-full"
         onClick={handleLogout}
       >
         Logout

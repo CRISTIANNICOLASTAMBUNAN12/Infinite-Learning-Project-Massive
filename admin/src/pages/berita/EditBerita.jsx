@@ -27,35 +27,37 @@ const EditBerita = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
-      <div className="max-w-xl w-full bg-white shadow-lg rounded-lg p-8">
+    <div className="items-center justify-center p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8">
         <div className='text-center pb-4'>
           <h1 className="text-2xl font-medium text-gray-800">Edit Berita</h1>
         </div>
         {berita.imageUrl && (
           <div className="mb-6">
-            <img
-              src={berita.imageUrl}
-              alt="Preview Gambar Berita"
-              className="w-full h-48 object-cover rounded-md"
-            />
+            <div className="flex justify-center items-center">
+              <img
+                src={berita.imageUrl}
+                alt="Preview Gambar Berita"
+                className="h-48 object-cover rounded-md max-w-xl"
+              />
+            </div> 
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-lg font-semibold text-gray-700">Judul Berita</label>
+            <label htmlFor="title" className="block text-lg text-gray-700">Judul Berita</label>
             <input
               type="text"
               id="title"
-              className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400"
               value={berita.title}
               onChange={(e) => setBerita({ ...berita, title: e.target.value })}
+              className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-lg font-semibold text-gray-700">Tanggal</label>
+            <label htmlFor="date" className="block text-lg text-gray-700">Tanggal</label>
             <input
               type="date"
               id="date"
@@ -67,7 +69,7 @@ const EditBerita = () => {
           </div>
 
           <div>
-            <label htmlFor="status" className="block text-lg font-semibold text-gray-700">Status</label>
+            <label htmlFor="status" className="block text-lg text-gray-700">Status</label>
             <select
               id="status"
               className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
@@ -80,7 +82,7 @@ const EditBerita = () => {
           </div>
 
           <div>
-            <label htmlFor="imageUrl" className="block text-lg font-semibold text-gray-700">URL Gambar Berita</label>
+            <label htmlFor="imageUrl" className="block text-lg text-gray-700">URL Gambar Berita</label>
             <input
               type="text"
               id="imageUrl"
@@ -92,7 +94,7 @@ const EditBerita = () => {
             />
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-20">
             <button
               onClick={handleBack}
               className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"

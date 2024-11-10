@@ -30,68 +30,66 @@ const TambahUser = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
-        <div className='text-center pb-4'>
-          <h1 className="text-2xl font-medium text-gray-800">Tambah Pengguna</h1>
+    <div className="p-6 bg-softCream bg-white">
+      <div className='text-center pb-4'>
+        <h1 className="text-2xl font-medium text-gray-800">Tambah Pengguna</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Masukkan nama lengkap"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Masukkan nama lengkap"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
-            />
-          </div>
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Masukkan email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Masukkan email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
-            />
-          </div>
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Peran</label>
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
 
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">Peran</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-
-          <div className="flex justify-between gap-4">
-            <button
-              onClick={handleBack}
-              className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
-            >
-              Kembali
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
-            >
-              Tambah Pengguna
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="flex justify-between gap-20 pt-10">
+          <button
+            onClick={handleBack}
+            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
+          >
+            Kembali
+          </button>
+          <button
+            type="submit"
+            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
+          >
+            Tambah Pengguna
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

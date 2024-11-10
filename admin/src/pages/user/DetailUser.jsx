@@ -20,45 +20,49 @@ const DetailUser = () => {
   };
 
   return (
-    <div className="min-h-screen bg-softCream p-6">
-      <div className="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-xl space-y-6">
-        <div className="text-center pb-4">
-          <h1 className="text-2xl font-medium text-gray-800">Informasi Pengguna</h1>
+    <div className="flex justify-center items-center p-4">
+      <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-10 space-y-8">
+        <div className="text-center pb-6">
+          <h1 className="text-3xl font-semibold text-gray-900">Detail Pengguna</h1>
+          <p className="text-gray-600">Informasi lengkap mengenai pengguna ini</p>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex justify-between">
+        <div className="space-y-6">
+          <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Nama</p>
-            <p className="text-lg text-gray-800">{user.name}</p>
+            <p className="text-lg text-gray-800 font-medium">{user.name}</p>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Email</p>
-            <p className="text-lg text-gray-800">{user.email}</p>
+            <p className="text-lg text-gray-800 font-medium">{user.email}</p>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Peran</p>
-            <p className="text-lg text-gray-800">{user.role}</p>
+            <p className="text-lg text-gray-800 font-medium">{user.role}</p>
           </div>
-          <div className="flex justify-between">
+
+          <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Status</p>
             <span
-              className={`px-4 py-2 rounded-full ${user.status === 'active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+              className={`px-4 py-2 rounded-full font-medium ${user.status === 'active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
             >
               {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
             </span>
           </div>
         </div>
 
-        <div className="flex justify-between gap-4">
+        <div className="flex gap-4 justify-between items-center">
           <button
             onClick={handleBack}
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 hover:shadow-xl transition-transform transform hover:scale-105"
           >
             Kembali
           </button>
           <button
             onClick={() => navigate(`/users/edit/${user.id}`)}
-            className="flex-1 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 hover:shadow-lg transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 hover:shadow-xl transition-transform transform hover:scale-105"
           >
             Edit Pengguna
           </button>

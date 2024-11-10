@@ -104,7 +104,7 @@ const Berita = () => {
 
   return (
     <div className="p-6 bg-softCream bg-white">
-      <h1 className="text-4xl font-semibold text-gray-800 mb-8">Manajemen Berita</h1>
+      <h1 className="text-2xl font-medium text-gray-800 mb-2 text-center pb-10">Manajemen Berita</h1>
 
       <button
         onClick={handleTambah}
