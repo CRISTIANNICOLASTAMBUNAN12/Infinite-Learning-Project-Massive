@@ -1,0 +1,106 @@
+.profile-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  max-width: 1600px; /* Set a max width for the content area */
+  margin: 0 auto; /* Center the container */
+}
+
+.profile-card {
+  padding: 20px;
+
+  border-radius: 10px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: flex-start; /* Align items at the top */
+}
+
+.profile-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.profile-details {
+  text-align: left;
+  flex: 1; /* Allows details to take up remaining space */
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-name {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.edit-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8fbf5a;
+  color: white;
+  cursor: pointer;
+}
+
+.location,
+.phone,
+.description {
+  margin: 5px 0;
+  color: #333;
+}
+
+.location {
+  color: #8a8a8a;
+}
+
+.more-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.crop-gallery {
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.gallery-title {
+  text-align: center;
+  font-size: 30px;
+  color: #8D5524;
+}
+
+.crop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.crop-item {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.crop-image {
+  width: 100%;
+  height: auto;
+}
+
+.add-button {
+  display: block;
+  margin: 20px auto;
+  background-color: transparent;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+}
