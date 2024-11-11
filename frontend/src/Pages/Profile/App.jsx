@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Link } from 'react-router-dom';
+
 
 function App() {
   const crops = [
@@ -17,13 +19,13 @@ function App() {
           <img src="/assets/logos.png" alt="Logo" className="logo-image" />
         </div>
         <nav>
-          <ul>
-            <li>Beranda</li>
-            <li>Forum & Komunitas</li>
-            <li>Blog</li>
-            <li>Berita & Acara</li>
-            <li>Pasar</li>
-          </ul>
+        <ul>
+        <li><Link to="/beranda" className="bold-link">Beranda</Link></li>
+    <li><Link to="/forum-komunitas" className="bold-link">Forum & Komunitas</Link></li>
+    <li><Link to="/blog" className="bold-link">Blog</Link></li>
+    <li><Link to="/berita" className="bold-link">Berita & Acara</Link></li>
+    <li><Link to="/pasar" className="bold-link">Pasar</Link></li>
+  </ul>
         </nav>
         <button className="login-btn">Masuk</button>
       </header>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Link } from 'react-router-dom';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,20 +49,23 @@ function App() {
           <img src="/assets/logos.png" alt="Logo" className="logo-image" />
         </div>
         <nav>
-          <ul>
-            <li>Beranda</li>
-            <li>Forum & Komunitas</li>
-            <li>Blog</li>
-            <li>Berita & Acara</li>
-            <li>Pasar</li>
-          </ul>
+  <ul>
+  <li><Link to="/beranda" className="bold-link">Beranda</Link></li>
+    <li><Link to="/forum-komunitas" className="bold-link">Forum & Komunitas</Link></li>
+    <li><Link to="/blog" className="bold-link">Blog</Link></li>
+    <li><Link to="/berita" className="bold-link">Berita & Acara</Link></li>
+    <li><Link to="/pasar" className="bold-link">Pasar</Link></li>
+  </ul>
         </nav>
         <button className="login-btn">Masuk</button>
       </header>
 
       <section className="selection-section">
         <center><div className="blog-title">Blog Lengkap</div></center><br />
-        <p>Jelajahi artikel-artikel terbaru mengenai teknik bertani, tips berkebun, dan informasi penting tentang <br /> pertanian lokal. Temukan wawasan dan inspirasi untuk mendukung pertanian yang berkelanjutan.</p>
+        <p style={{ color: 'black' }}>
+  Jelajahi artikel-artikel terbaru mengenai teknik bertani, tips berkebun, dan informasi penting tentang <br />
+  pertanian lokal. Temukan wawasan dan inspirasi untuk mendukung pertanian yang berkelanjutan.
+</p>
         <div className="selection-grid">
           {currentPosts.map((post, index) => (
             <div key={index} className="blog-card">
@@ -72,7 +76,8 @@ function App() {
               </div>
               <div className="blog-footer">
                 <div className="author-info">
-                  <p className="blog-author"><i className="fas fa-user-circle profile-icon"></i> {post.author}</p>
+                  <p className="blog-author"><i className="fas fa-user-circle profile-icon" style={{ color: 'white' }}></i>
+                  {post.author}</p>
                 </div>
                 <p className="blog-date">{post.date}</p>
               </div>

@@ -79,7 +79,9 @@ header .login-btn {
 header .login-button:hover {
   background-color: #45a049;
 }
-
+.bold-link {
+  font-weight: bold;
+}
 /* Banner styling */
 .banner {
   position: relative;
@@ -174,7 +176,7 @@ header .login-button:hover {
 }
 
 .selection-section p {
-  color: #666;
+  color: white;
   text-align: center;
   margin-bottom: 2em;
 }
@@ -189,7 +191,7 @@ header .login-button:hover {
 }
 
 .blog-card {
-  background-color: #fff;
+  background-color: #8D5524;
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -217,13 +219,13 @@ header .login-button:hover {
 
 .blog-info span {
   margin-bottom: 0.5em;
-  color: #666;
+  color: white;
 }
 
 .blog-card h3 {
   font-size: 1rem;
   margin: 0.5em 0;
-  color: #333;
+  color: white;
 }
 .blog-footer {
   width: 100%;
@@ -233,7 +235,7 @@ header .login-button:hover {
   padding: 2.5em 1em;
   font-size: 0.8em;
   color: #666;
-  background-color: #fff;
+  background-color: #8D5524;
   box-sizing: border-box;
 }
 
