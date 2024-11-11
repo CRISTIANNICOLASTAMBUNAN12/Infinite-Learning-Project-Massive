@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'; // Menggunakan react-toastify untuk notifikasi
+import { MdError } from 'react-icons/md';
 
 const Users = () => {
   // Contoh data pengguna (ini bisa diganti dengan data dari API)
@@ -89,7 +90,7 @@ const Users = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-softCream bg-white">
+    <div className="p-6 bg-softCream bg-white h-full w-full">
       <h1 className="text-2xl font-medium text-gray-800 mb-2 text-center pb-10">Manajemen Pengguna</h1>
 
       <button
@@ -168,12 +169,16 @@ const Users = () => {
           ))}
         </tbody>
       </table>
-
       {/* Modal Konfirmasi Hapus */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Perhatian</h3>
+          <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-center mb-4">
+              <MdError className="text-red-500 mr-3 text-2xl" />
+              <h3 className="text-xl font-semibold text-gray-700">
+                Perhatian
+              </h3>
+            </div>
             <p className="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus pengguna ini?</p>
             <div className="flex justify-center gap-4">
               <button
@@ -196,11 +201,14 @@ const Users = () => {
       {/* Modal Konfirmasi Perubahan Status */}
       {isStatusModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Perhatian</h3>
-            <p className="mb-4 text-gray-600">
-              Apakah Anda yakin ingin mengubah status pengguna ini?
-            </p>
+          <div className="bg-white p-8 rounded-xl shadow-xl w-96 text-center transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-center mb-4">
+              <MdError className="text-red-500 mr-3 text-2xl" />
+              <h3 className="text-xl font-semibold text-gray-700">
+                Perhatian
+              </h3>
+            </div>
+            <p className="mb-4 text-gray-600">Apakah Anda yakin ingin mengubah status pengguna ini?</p>
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleStatusChange}

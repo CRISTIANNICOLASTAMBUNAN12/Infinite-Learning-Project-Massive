@@ -1,35 +1,89 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaHome, FaUser } from 'react-icons/fa';
-import { MdArticle } from 'react-icons/md';
-import { MdMenuBook } from 'react-icons/md';
+import { MdArticle, MdMenuBook } from 'react-icons/md';
 
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
+  const location = useLocation();
 
-const Sidebar = () => {
+  const isActive = (path) => location.pathname === path;
+
+  // Fungsi untuk menutup sidebar setelah item diklik
+  const handleLinkClick = () => {
+    if (isOpen) {
+      toggleSidebar();
+    }
+  };
+
   return (
-    <div className="w-60 bg-white text-black border">
-      <ul>
-        <li className="p-4 hover:bg-green-600">
-          <Link to="/dashboard" className="flex items-center">
-            <FaHome className="mr-2" /> Dashboard
+    <div
+    className={`fixed top-0 left-0 w-64 h-full bg-white text-black border-r shadow-lg sm:z-auto z-50 transition-all duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0`}
+    >
+      {/* Tombol untuk menutup sidebar */}
+      <div className="p-4 flex justify-between items-center sm:hidden">
+        <button onClick={toggleSidebar} className="text-2xl">
+          ×
+        </button>
+      </div>
+
+      {/* Daftar menu sidebar */}
+      <ul className="space-y-1">
+        <li className="p-4">
+          <Link
+            to="/dashboard"
+            onClick={handleLinkClick} // Menutup sidebar ketika link diklik
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/dashboard') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
+          >
+            <FaHome className="mr-3" />
+            Dashboard
           </Link>
         </li>
-        <li className="p-4 hover:bg-green-600">
-          <Link to="/users" className="flex items-center">
-            <FaUser className="mr-2" /> Users
+        <li className="p-4">
+          <Link
+            to="/users"
+            onClick={handleLinkClick} // Menutup sidebar ketika link diklik
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/users') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
+          >
+            <FaUser className="mr-3" />
+            Users
           </Link>
         </li>
-        <li className="p-4 hover:bg-green-600">
-          <Link to="/berita" className="flex items-center">
-            <MdArticle className="mr-2" /> Berita
+        <li className="p-4">
+          <Link
+            to="/berita"
+            onClick={handleLinkClick} // Menutup sidebar ketika link diklik
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/berita') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
+          >
+            <MdArticle className="mr-3" />
+            Berita
           </Link>
         </li>
-        <li className="p-4 hover:bg-green-600">
-          <Link to="/edukasi" className="flex items-center">
-            <MdMenuBook className="mr-2" /> Edukasi
+        <li className="p-4">
+          <Link
+            to="/edukasi"
+            onClick={handleLinkClick} // Menutup sidebar ketika link diklik
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/edukasi') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
+          >
+            <MdMenuBook className="mr-3" />
+            Edukasi
           </Link>
         </li>
       </ul>
+
+      {/* Tombol Logout hanya tampil di tampilan mobile */}
+      <div className="flex sm:hidden items-center justify-center p-4">
+        <button
+          className="bg-green-800 text-white font-semibold text-sm px-10 py-2 rounded-full"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
+
+      {/* Tombol Logout disembunyikan pada tampilan desktop */}
+      <div className="hidden sm:flex items-center gap-4">
+        {/* Tombol logout tidak akan muncul di desktop */}
+      </div>
     </div>
   );
 };

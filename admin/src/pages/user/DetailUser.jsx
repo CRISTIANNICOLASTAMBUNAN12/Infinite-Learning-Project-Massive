@@ -53,7 +53,7 @@ const DetailUser = () => {
           </div>
         </div>
 
-        <div className="flex gap-4 justify-between items-center">
+        <div className="flex gap-20 justify-between items-center">
           <button
             onClick={handleBack}
             className="flex-1 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 hover:shadow-xl transition-transform transform hover:scale-105"

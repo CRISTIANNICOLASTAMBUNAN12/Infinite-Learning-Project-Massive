@@ -11,7 +11,7 @@ export default {
         plantGreen: '#4CAF50', // Hijau cerah
         lightGreen: '#81C784', // Hijau muda
         soilBrown: '#8D6E63', // Coklat tanah
-        softCream: '#F5F5DC', // Krem lembut
+        softGreen: '#daedd2', // Krem lembut
         goldenYellow: '#FFD54F', // Kuning padi
       },
     },

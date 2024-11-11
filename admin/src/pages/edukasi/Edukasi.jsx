@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MdError } from 'react-icons/md';
 
 const Edukasi = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Edukasi = () => {
       id: 2,
       title: 'Inovasi Teknologi dalam Pertanian',
       date: '2024-10-25',
-      imageUrl: 'https://example.com/edukasi2.jpg',
+      imageUrl: 'https://via.placeholder.com/800x400',
       description: 'Temukan inovasi terbaru dalam teknologi pertanian yang dapat membantu petani meningkatkan efisiensi.',
       status: 'draft',
     },
@@ -31,15 +32,7 @@ const Edukasi = () => {
       id: 3,
       title: 'Cara Mengatasi Penyakit Tanaman dengan Ramuan Alami',
       date: '2024-09-20',
-      imageUrl: 'https://example.com/edukasi3.jpg',
-      description: 'Pelajari bagaimana cara alami untuk mengatasi hama dan penyakit pada tanaman secara ramah lingkungan.',
-      status: 'published',
-    },
-    {
-      id: 4,
-      title: 'Cara Mengatasi Penyakit Tanaman dengan Ramuan Alami',
-      date: '2024-09-20',
-      imageUrl: 'https://example.com/edukasi3.jpg',
+      imageUrl: 'https://via.placeholder.com/800x400',
       description: 'Pelajari bagaimana cara alami untuk mengatasi hama dan penyakit pada tanaman secara ramah lingkungan.',
       status: 'published',
     },
@@ -114,7 +107,7 @@ const Edukasi = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-softCream bg-white">
+    <div className="p-6 bg-softCream bg-white h-full w-full">
       <h1 className="text-2xl font-medium text-gray-800 mb-2 text-center pb-10">Manajemen edukasi Edukasi</h1>
 
       <button
@@ -181,55 +174,64 @@ const Edukasi = () => {
             </div>
           </div>
         ))}
-
-        {/* Modal Konfirmasi Hapus */}
-        {isDeleteModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-            <div className="bg-white p-8 rounded-xl shadow-xl w-96 text-center transition-all duration-300 transform hover:scale-105">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-4">Perhatian</h3>
-              <p className="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus edukasi ini?</p>
-              <div className="flex justify-center gap-6">
-                <button
-                  onClick={() => handleDelete(userIdToDelete)}
-                  className="px-8 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Ya, Hapus
-                </button>
-                <button
-                  onClick={handleCancelDelete}
-                  className="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                >
-                  Tidak
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Konfirmasi Perubahan Status */}
-        {isStatusModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-            <div className="bg-white p-8 rounded-xl shadow-xl w-96 text-center transition-all duration-300 transform hover:scale-105">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-4">Perhatian</h3>
-              <p className="mb-4 text-gray-600">Apakah Anda yakin ingin mengubah status edukasi ini?</p>
-              <div className="flex justify-center gap-6">
-                <button
-                  onClick={() => handleToggleStatus(userIdToToggleStatus)}
-                  className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Ya, Ubah
-                </button>
-                <button
-                  onClick={handleCancelStatusChange}
-                  className="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                >
-                  Tidak
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+      {/* Modal Konfirmasi Hapus */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-center mb-4">
+              <MdError className="text-red-500 mr-3 text-2xl" />
+              <h3 className="text-xl font-semibold text-gray-700">
+                Perhatian
+              </h3>
+            </div>
+            <p className="mb-4 text-gray-600">Apakah Anda yakin ingin menghapus edukasi ini?</p>
+            <div className="flex justify-center gap-6">
+              <button
+                onClick={() => handleDelete(userIdToDelete)}
+                className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Ya, Hapus
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              >
+                Tidak
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Perubahan Status */}
+      {isStatusModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-96 text-center transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-center mb-4">
+              <MdError className="text-red-500 mr-3 text-2xl" />
+              <h3 className="text-xl font-semibold text-gray-700">
+                Perhatian
+              </h3>
+            </div>
+            <p className="mb-4 text-gray-600">Apakah Anda yakin ingin mengubah status edukasi ini?</p>
+            <div className="flex justify-center gap-6">
+              <button
+                onClick={() => handleToggleStatus(userIdToToggleStatus)}
+                className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >
+                Ya, Ubah
+              </button>
+              <button
+                onClick={handleCancelStatusChange}
+                className="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+              >
+                Tidak
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

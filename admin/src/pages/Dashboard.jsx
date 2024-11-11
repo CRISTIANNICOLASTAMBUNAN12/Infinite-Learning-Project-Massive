@@ -4,7 +4,7 @@ import { MdForum } from 'react-icons/md';
 
 const Dashboard = () => {
   return (
-    <div className="p-6 bg-softCream">
+    <div className="p-6 bg-white border h-full">
       <h1 className="text-3xl font-bold mb-6">Dashboard Admin</h1>
       
       {/* Ringkasan Statistik */}

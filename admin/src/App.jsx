@@ -20,48 +20,64 @@ import DetailEdukasi from './pages/edukasi/DetailEdukasi';
 import EditEdukasi from './pages/edukasi/EditEdukasi';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Status login
-  const [role, setRole] = useState(''); // Peran pengguna: admin atau user
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState('');
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Mengarahkan ke dashboard setelah login berhasil
+  // Fungsi untuk menangani login
   const handleLogin = (role) => {
     setIsAuthenticated(true);
     setRole(role);
     if (role === 'admin') {
-      navigate('/dashboard'); // Redirect ke dashboard jika admin
+      navigate('/dashboard');
     }
+  };
+
+  // Fungsi untuk menangani logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);  // Logout the user
+    setRole(''); // Reset role
+    navigate('/'); // Redirect ke halaman login
+  };
+
+  // Fungsi untuk toggle sidebar
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-
       <div className="flex flex-col h-screen">
-        {/* Navbar hanya muncul jika sudah login */}
-        {isAuthenticated && role === 'admin' && <Navbar setIsAuthenticated={setIsAuthenticated} />}
-
-        <div className="flex flex-1">
-          {/* Sidebar hanya muncul jika sudah login sebagai admin */}
-          {isAuthenticated && role === 'admin' && <Sidebar />}
-
-          {/* Bagian konten utama */}
-          <div className="flex-1 p-4 overflow-y-auto bg-softCream">
+        {/* Navbar hanya ditampilkan jika user sudah login dan role 'admin' */}
+        {isAuthenticated && role === 'admin' && (
+          <Navbar 
+            setIsAuthenticated={setIsAuthenticated} 
+            toggleSidebar={toggleSidebar} 
+            handleLogout={handleLogout} // Pass handleLogout ke Navbar
+          />
+        )}
+        <div className="flex flex-1 relative">
+          {/* Sidebar hanya ditampilkan jika user sudah login dan role 'admin' */}
+          {isAuthenticated && role === 'admin' && (
+            <Sidebar 
+              isOpen={isSidebarOpen} 
+              toggleSidebar={toggleSidebar} 
+              handleLogout={handleLogout} // Pass handleLogout ke Sidebar
+            />
+          )}
+          <div className="flex-1 p-4 overflow-y-auto bg-softGreen z-0">
+            {/* Routing untuk halaman utama */}
             <Routes>
-              {/* Halaman login jika belum login */}
-              <Route
-                path="/"
-                element={
-                  isAuthenticated ? (
-                    <Dashboard /> // Tampilkan Dashboard jika sudah login
-                  ) : (
-                    <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />
-                  )
-                }
+              <Route 
+                path="/" 
+                element={isAuthenticated ? <Dashboard /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />} 
               />
-              {/* Rute admin panel hanya tersedia jika sudah login dan admin */}
-              <Route path="/dashboard" element={isAuthenticated && role === 'admin' ? <Dashboard /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} />} />
-              
+              <Route 
+                path="/dashboard" 
+                element={isAuthenticated && role === 'admin' ? <Dashboard /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} />} 
+              />
               <Route path="/users" element={isAuthenticated && role === 'admin' ? <Users /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} />} />
               <Route path="/users/tambah" element={isAuthenticated && role === 'admin' ? <TambahUser /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} />} />
               <Route path="/users/detail/:id" element={isAuthenticated && role === 'admin' ? <DetailUser /> : <Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} />} />
