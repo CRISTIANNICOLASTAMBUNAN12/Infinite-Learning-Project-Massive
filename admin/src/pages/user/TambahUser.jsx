@@ -30,9 +30,9 @@ const TambahUser = () => {
   };
 
   return (
-    <div className="p-6 bg-softCream bg-white">
+    <div className="p-6 bg-white h-full w-full">
       <div className='text-center pb-4'>
-        <h1 className="text-2xl font-medium text-gray-800">Tambah Pengguna</h1>
+        <h1 className="text-2xl font-medium text-gray-800 p-10">Tambah Pengguna</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -75,7 +75,7 @@ const TambahUser = () => {
           </select>
         </div>
 
-        <div className="flex justify-between gap-20 pt-10">
+        <div className="flex justify-between gap-10 pt-10">
           <button
             onClick={handleBack}
             className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"

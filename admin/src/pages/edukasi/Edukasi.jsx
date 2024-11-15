@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdError } from 'react-icons/md';
+import { toast } from 'react-toastify'; // Menggunakan react-toastify untuk notifikasi
 
 const Edukasi = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const Edukasi = () => {
     const updatedEdukasiList = edukasiList.filter((edukasi) => edukasi.id !== id);
     setEdukasiList(updatedEdukasiList);
     setIsDeleteModalOpen(false);
+    toast.success('Edukasi berhasil dihapus');
     console.log('edukasi dengan ID', id, 'telah dihapus');
   };
 
@@ -74,6 +76,7 @@ const Edukasi = () => {
     );
     setEdukasiList(updatedEdukasiList);
     setIsStatusModalOpen(false);
+    toast.info(`Status edukasi berhasil diperbarui`);
     console.log('Status edukasi dengan ID', id, 'telah diubah');
   };
 

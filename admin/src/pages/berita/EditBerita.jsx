@@ -27,20 +27,20 @@ const EditBerita = () => {
   };
 
   return (
-    <div className="items-center justify-center p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8">
+    <div className="p-6 bg-white h-full w-full">
+      <div className="p-10">
         <div className='text-center pb-4'>
           <h1 className="text-2xl font-medium text-gray-800">Edit Berita</h1>
         </div>
         {berita.imageUrl && (
-          <div className="mb-6">
+          <div className="mb-10">
             <div className="flex justify-center items-center">
               <img
                 src={berita.imageUrl}
                 alt="Preview Gambar Berita"
                 className="h-48 object-cover rounded-md max-w-xl"
               />
-            </div> 
+            </div>
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -94,7 +94,7 @@ const EditBerita = () => {
             />
           </div>
 
-          <div className="flex gap-20">
+          <div className="flex justify-between gap-10 pt-10">
             <button
               onClick={handleBack}
               className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"

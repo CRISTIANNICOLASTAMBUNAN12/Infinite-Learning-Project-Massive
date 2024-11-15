@@ -28,9 +28,9 @@ const TambahEdukasi = () => {
     };
 
     return (
-        <div className="p-6 bg-softCream bg-white">
+        <div className="p-6 bg-white w-full h-full">
             <div className='text-center pb-4'>
-                <h1 className="text-2xl font-medium text-gray-800">Tambah Artikel Edukasi</h1>
+                <h1 className="text-2xl font-medium text-gray-800 p-10">Tambah Artikel Edukasi</h1>
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -66,7 +66,7 @@ const TambahEdukasi = () => {
                         required
                     />
                 </div>
-                <div className="flex justify-between gap-20">
+                <div className="flex justify-between gap-10 pt-10">
                     <button
                         onClick={handleBack}
                         type="button"

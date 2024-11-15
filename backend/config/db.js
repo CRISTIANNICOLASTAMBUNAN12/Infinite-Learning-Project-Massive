@@ -1,48 +1,29 @@
-import mysql from 'mysql2';
+// db.js
+import mysql from 'mysql2/promise';
 
-let connection;
+let pool;
 
+// Fungsi untuk menghubungkan ke database
 const connectDB = () => {
-  return new Promise((resolve, reject) => {
-    if (connection && connection.state === 'authenticated') {
-      console.log('Database connection already established');
-      resolve(connection);
-      return;
-    }
-
-    connection = mysql.createConnection({
+  if (!pool) {
+    pool = mysql.createPool({
       host: process.env.DB_HOST || 'localhost',
       user: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'db_petani_pintar',
       port: process.env.DB_PORT || 3306,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
     });
-
-    connection.connect((err) => {
-      if (err) {
-        console.error('Unable to connect to the database:', err.message);
-        reject(err);
-      } else {
-        console.log('Database connected successfully');
-        resolve(connection);
-      }
-    });
-
-    connection.on('error', (err) => {
-      console.error('Database connection error:', err.message);
-      if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        connectDB();
-      }
-    });
-  });
+    console.log('Database pool created successfully');
+  }
+  return pool;
 };
 
-const getDbConnection = async () => {
-  if (!connection || connection.state !== 'authenticated') {
-    console.log('Database connection is not established, attempting to connect...');
-    await connectDB();  // Tunggu sampai koneksi selesai
-  }
-  return connection.promise();  // Pastikan return connection dengan Promise
+// Fungsi untuk mendapatkan koneksi pool
+const getDbConnection = () => {
+  return connectDB(); // Mengembalikan pool dengan promise
 };
 
 export default { connectDB, getDbConnection };

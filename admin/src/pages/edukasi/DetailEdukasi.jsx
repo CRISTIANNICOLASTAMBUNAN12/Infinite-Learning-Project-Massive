@@ -14,7 +14,7 @@ const DetailEdukasi = () => {
       date: '2024-11-05',
       imageUrl: 'https://via.placeholder.com/800x400',
       description: 'Pelajari cara bertani organik yang efektif untuk meningkatkan hasil panen tanpa merusak lingkungan.',
-      status: 'published',
+      status: 'draft',
     };
     setEdukasi(fetchedEdukasi);
   }, [id]);
@@ -26,28 +26,33 @@ const DetailEdukasi = () => {
   if (!edukasi) return <div>Loading...</div>;
 
   return (
-    <div className="items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg pt-10">
-        {edukasi ? (
+    <div className="p-6 bg-softCream bg-white h-full w-full">
+      <div className="pt-10">
+      {edukasi ? (
           <div className="mb-6">
-            <div className="flex justify-center items-center">
+            <div className="relative flex justify-center items-center">
             <img
                 src={edukasi.imageUrl}
                 alt={edukasi.title}
-                className="h-48 object-cover rounded-md max-w-xl"
+                className="h-48 sm:h-64 object-cover rounded-md w-full max-w-xl"
               />
-              <div className="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-md">
-                {edukasi.status === 'published' ? 'Dipublikasikan' : 'Draft'}
-              </div>
             </div>
 
             <div className="p-10 mx-20">
-              <h1 className="text-2xl font-medium text-gray-800 mb-4">{edukasi.title}</h1>
-              <p className="text-sm text-gray-500 mb-4">Tanggal: {new Date(edukasi.date).toLocaleDateString()}</p>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+              <h1 className="text-2xl sm:text-3xl font-medium text-gray-800 mb-4">{edukasi.title}</h1>
+              <p className="text-sm sm:text-base text-gray-500 mb-4">Tanggal: {new Date(edukasi.date).toLocaleDateString()}</p>
+              <p
+                className={`text-sm sm:text-base mb-4 px-3 py-1 rounded-md inline-block ${edukasi.status === 'published'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-yellow-500 text-black'
+                  }`}
+              >
+                Status: {edukasi.status === 'published' ? 'Dipublikasikan' : 'Draft'}
+              </p>
+              <p className="text-lg sm:text-xl text-gray-700 mb-10 leading-relaxed">
                 Artikel tentang {edukasi.title.toLowerCase()} memberikan informasi mengenai berbagai aspek yang perlu diperhatikan dalam dunia pertanian.
               </p>
-              <div className="flex justify-between gap-6">
+              <div className="flex justify-between gap-10 pt-10">
                 <button
                   onClick={handleBack}
                   className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"

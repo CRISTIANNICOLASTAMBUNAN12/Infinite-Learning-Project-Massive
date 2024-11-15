@@ -17,7 +17,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
 
   return (
     <div
-    className={`fixed top-0 left-0 w-64 h-full bg-white text-black border-r shadow-lg sm:z-auto z-50 transition-all duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0`}
+      className={`fixed top-0 left-0 w-64 h-full bg-white text-black border-r shadow-lg sm:z-auto z-50 transition-all duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0`}
     >
       {/* Tombol untuk menutup sidebar */}
       <div className="p-4 flex justify-between items-center sm:hidden">
@@ -28,7 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
 
       {/* Daftar menu sidebar */}
       <ul className="space-y-1">
-        <li className="p-4">
+        <li className="px-4 sm:pt-6">
           <Link
             to="/dashboard"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
@@ -38,7 +38,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
             Dashboard
           </Link>
         </li>
-        <li className="p-4">
+        <li className="px-4 pt-2">
           <Link
             to="/users"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
@@ -48,7 +48,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
             Users
           </Link>
         </li>
-        <li className="p-4">
+        <li className="px-4 pt-2">
           <Link
             to="/berita"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
@@ -58,7 +58,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
             Berita
           </Link>
         </li>
-        <li className="p-4">
+        <li className="px-4 pt-2">
           <Link
             to="/edukasi"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
@@ -71,14 +71,15 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
       </ul>
 
       {/* Tombol Logout hanya tampil di tampilan mobile */}
-      <div className="flex sm:hidden items-center justify-center p-4">
+      <div className="flex sm:hidden items-center justify-center p-10">
         <button
-          className="bg-green-800 text-white font-semibold text-sm px-10 py-2 rounded-full"
+          className="w-full bg-green-800 text-white font-semibold text-sm px-10 py-2 rounded-md inline-block"
           onClick={handleLogout}
         >
           Logout
         </button>
       </div>
+
 
       {/* Tombol Logout disembunyikan pada tampilan desktop */}
       <div className="hidden sm:flex items-center gap-4">

@@ -54,8 +54,8 @@ const EditUser = () => {
   };
 
   return (
-    <div className="min-h-screen bg-softCream p-8">
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-lg space-y-6">
+    <div className="bg-softCream p-8 h-full w-full bg-white">
+      <form onSubmit={handleSubmit} className="p-6 rounded-xl space-y-6">
         <div className='text-center pb-4'>
           <h1 className="text-2xl font-medium text-gray-800">Tambah Pengguna</h1>
         </div>
@@ -101,7 +101,7 @@ const EditUser = () => {
           </select>
         </div>
 
-        <div className="flex justify-between gap-4">
+        <div className="flex justify-between gap-10">
           <button
             onClick={handleBack}
             type="button"

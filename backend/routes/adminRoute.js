@@ -1,17 +1,14 @@
-// adminRoute.js
 import express from 'express';
+import { verifyToken, checkRole } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
 
-// Define your admin routes here
-router.get('/', (req, res) => {
-  res.send('Admin Home');
+router.get('/dashboard', verifyToken, checkRole(['admin']), (req, res) => {
+  res.json({
+    success: true,
+    message: 'Admin Dashboard',
+    data: req.pengguna,
+  });
 });
 
-router.get('/dashboard', (req, res) => {
-  res.send('Admin Dashboard');
-});
-
-// Add more routes as needed...
-
-// Export the router as default
 export default router;

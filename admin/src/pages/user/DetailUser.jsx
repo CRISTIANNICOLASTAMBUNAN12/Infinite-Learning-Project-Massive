@@ -19,9 +19,13 @@ const DetailUser = () => {
     navigate('/users'); // Redirect ke halaman daftar pengguna
   };
 
+  const handleTambah = (id) => {
+    navigate(`/users/tambah`);
+  };
+
   return (
-    <div className="flex justify-center items-center p-4">
-      <div className="bg-white shadow-lg rounded-xl w-full max-w-3xl p-10 space-y-8">
+    <div className="p-6 bg-softCream bg-white h-full w-full">
+      <div className="p-6">
         <div className="text-center pb-6">
           <h1 className="text-3xl font-semibold text-gray-900">Detail Pengguna</h1>
           <p className="text-gray-600">Informasi lengkap mengenai pengguna ini</p>
@@ -53,18 +57,18 @@ const DetailUser = () => {
           </div>
         </div>
 
-        <div className="flex gap-20 justify-between items-center">
+        <div className="flex justify-between gap-10 pt-10">
           <button
             onClick={handleBack}
-            className="flex-1 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 hover:shadow-xl transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
           >
             Kembali
           </button>
           <button
-            onClick={() => navigate(`/users/edit/${user.id}`)}
-            className="flex-1 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 hover:shadow-xl transition-transform transform hover:scale-105"
+            onClick={handleTambah} type="submit"
+            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
           >
-            Edit Pengguna
+            Tambah Pengguna
           </button>
         </div>
       </div>

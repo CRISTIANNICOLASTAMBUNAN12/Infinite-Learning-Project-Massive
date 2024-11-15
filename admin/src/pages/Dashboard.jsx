@@ -1,10 +1,23 @@
 import React from 'react';
 import { FaUsers, FaBoxOpen, FaBook, FaChartLine } from 'react-icons/fa';
 import { MdForum } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+
 
 const Dashboard = () => {
+
+  const navigate = useNavigate();
+
+  const handleTambahPengguna = () => {
+    navigate('/users/tambah');
+  };
+
+  const handleTambahArtikel = () => {
+    navigate('/berita/tambah');
+  };
+
   return (
-    <div className="p-6 bg-white border h-full">
+    <div className="p-6 bg-white border h-full w-full">
       <h1 className="text-3xl font-bold mb-6">Dashboard Admin</h1>
       
       {/* Ringkasan Statistik */}
@@ -60,10 +73,10 @@ const Dashboard = () => {
 
       {/* Quick Access */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <button className="bg-green-600 text-white p-4 rounded-lg shadow-md flex items-center justify-center">
+        <button onClick={handleTambahPengguna} className="bg-green-600 text-white p-4 rounded-lg shadow-md flex items-center justify-center transition-all duration-300 transform hover:scale-105">
           <FaUsers className="mr-3" /> Tambah Pengguna Baru
         </button>
-        <button className="bg-yellow-500 text-white p-4 rounded-lg shadow-md flex items-center justify-center">
+        <button onClick={handleTambahArtikel} className="bg-yellow-500 text-white p-4 rounded-lg shadow-md flex items-center justify-center transition-all duration-300 transform hover:scale-105">
           <FaBook className="mr-3" /> Tambah Artikel Baru
         </button>
       </div>

@@ -32,7 +32,7 @@ const Navbar = ({ setIsAuthenticated, setRole, toggleSidebar, handleLogout }) =>
       {/* Tombol Logout hanya tampil pada tampilan besar */}
       <div className="hidden sm:flex items-center gap-4">
         <button
-          className="bg-green-600 text-white font-semibold text-sm px-10 py-2 rounded-full"
+          className="bg-green-600 text-white font-bold text-sm px-7 py-3 rounded-full transition-all duration-300 transform hover:scale-105"
           onClick={handleLogout} // Panggil handleLogout dari props
         >
           Logout
