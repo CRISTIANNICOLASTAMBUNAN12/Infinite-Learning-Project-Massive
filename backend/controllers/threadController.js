@@ -1,6 +1,5 @@
 import * as threadModel from "../models/threadModel.js";
 
-// Mendapatkan semua thread di forum tertentu
 export const getThreadsByForum = async (req, res) => {
   try {
     const { forumId } = req.params;
@@ -12,11 +11,10 @@ export const getThreadsByForum = async (req, res) => {
   }
 };
 
-// Menambahkan thread baru
 export const createThread = async (req, res) => {
   try {
     const { forumId } = req.params;
-    const penggunaId = req.user.id; // ID pengguna dari token JWT
+    const penggunaId = req.user.id;
     const { judul, konten } = req.body;
 
     if (!judul || !konten) {
@@ -38,7 +36,6 @@ export const createThread = async (req, res) => {
   }
 };
 
-// Menghapus thread berdasarkan ID
 export const removeThread = async (req, res) => {
   try {
     const { id } = req.params;
@@ -50,7 +47,6 @@ export const removeThread = async (req, res) => {
   }
 };
 
-// Mengupdate thread
 export const updateThread = async (req, res) => {
   try {
     const { id } = req.params;

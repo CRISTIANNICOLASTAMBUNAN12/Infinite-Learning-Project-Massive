@@ -1,9 +1,8 @@
 import * as pasarModel from "../models/pasarModel.js";
 
-// Controller untuk menambahkan pasar
 export const addPasar = async (req, res) => {
   const { produk_id, lokasi, deskripsi } = req.body;
-  const pengguna_id = req.user.id; // Mengambil pengguna_id dari token JWT yang sudah diverifikasi
+  const pengguna_id = req.user.id;
 
   try {
     const result = await pasarModel.addPasar(
@@ -21,7 +20,6 @@ export const addPasar = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan semua pasar
 export const getPasar = async (req, res) => {
   try {
     const pasar = await pasarModel.getPasar();
@@ -34,7 +32,6 @@ export const getPasar = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan pasar berdasarkan ID
 export const getPasarById = async (req, res) => {
   const { id } = req.params;
 
@@ -52,7 +49,6 @@ export const getPasarById = async (req, res) => {
   }
 };
 
-// Controller untuk menghapus pasar berdasarkan ID
 export const deletePasar = async (req, res) => {
   const { id } = req.params;
 
@@ -75,7 +71,6 @@ export const updatePasar = async (req, res) => {
   const { produk_id, lokasi, deskripsi } = req.body;
 
   try {
-    // Panggil model untuk memperbarui pasar
     const result = await pasarModel.updatePasar(
       id,
       produk_id,
@@ -83,7 +78,6 @@ export const updatePasar = async (req, res) => {
       deskripsi
     );
 
-    // Jika tidak ada pasar yang ditemukan dengan ID tersebut
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Pasar tidak ditemukan" });
     }

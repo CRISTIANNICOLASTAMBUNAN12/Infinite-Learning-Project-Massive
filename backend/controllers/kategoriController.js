@@ -1,6 +1,5 @@
 import * as kategoriModel from "../models/kategoriModel.js";
 
-// Menambahkan kategori baru
 export const addKategori = async (req, res) => {
   const { nama, jenis } = req.body;
 
@@ -19,7 +18,6 @@ export const addKategori = async (req, res) => {
   }
 };
 
-// Mendapatkan semua kategori
 export const getAllKategori = async (req, res) => {
   try {
     const kategori = await kategoriModel.getAllKategori();
@@ -32,7 +30,6 @@ export const getAllKategori = async (req, res) => {
   }
 };
 
-// Mendapatkan kategori berdasarkan ID
 export const getKategoriById = async (req, res) => {
   const { id } = req.params;
 
@@ -50,7 +47,6 @@ export const getKategoriById = async (req, res) => {
   }
 };
 
-// Mengupdate kategori berdasarkan ID
 export const updateKategori = async (req, res) => {
   const { id } = req.params;
   const { nama, jenis } = req.body;
@@ -72,7 +68,6 @@ export const updateKategori = async (req, res) => {
   }
 };
 
-// Menghapus kategori berdasarkan ID
 export const deleteKategori = async (req, res) => {
   const { id } = req.params;
 

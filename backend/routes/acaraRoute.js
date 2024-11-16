@@ -1,4 +1,3 @@
-// routes/acaraRouter.js
 import express from "express";
 import * as acaraController from "../controllers/acaraController.js";
 

@@ -52,7 +52,6 @@ export const addPengguna = async (req, res) => {
   }
 };
 
-// READ
 export const getAllPengguna = async (req, res) => {
   try {
     const pengguna = await penggunaModel.getAllPengguna();
@@ -86,8 +85,6 @@ export const getPenggunaById = async (req, res) => {
   }
 };
 
-// UPDATE
-// UPDATE
 export const updatePengguna = async (req, res) => {
   try {
     const { id } = req.params;
@@ -104,7 +101,6 @@ export const updatePengguna = async (req, res) => {
       peran,
     } = req.body;
 
-    // Periksa apakah ada data yang tidak ada atau undefined
     if (!nama || !email || !kata_sandi || !pengalaman || !tentang || !alamat) {
       return res
         .status(400)
@@ -120,11 +116,11 @@ export const updatePengguna = async (req, res) => {
       pengalaman,
       tentang,
       alamat,
-      jenis_kelamin: jenis_kelamin || null, // Jika tidak ada, set null
-      pekerjaan: pekerjaan || null, // Jika tidak ada, set null
-      no_hp: no_hp || null, // Jika tidak ada, set null
+      jenis_kelamin: jenis_kelamin || null,
+      pekerjaan: pekerjaan || null,
+      no_hp: no_hp || null,
       kata_sandi: hashedKataSandi,
-      peran: peran || null, // Jika tidak ada, set null
+      peran: peran || null,
     };
 
     await penggunaModel.updatePengguna(id, penggunaData);
@@ -139,19 +135,16 @@ export const updatePengguna = async (req, res) => {
   }
 };
 
-// DELETE
 export const deletePengguna = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Periksa apakah ID valid
     if (!id) {
       return res
         .status(400)
         .json({ success: false, message: "ID pengguna tidak valid" });
     }
 
-    // Periksa apakah pengguna dengan ID tersebut ada
     const pengguna = await penggunaModel.getPenggunaById(id);
     if (!pengguna) {
       return res
@@ -159,18 +152,14 @@ export const deletePengguna = async (req, res) => {
         .json({ success: false, message: "Pengguna tidak ditemukan" });
     }
 
-    // Pastikan hanya admin yang dapat menghapus pengguna
     const userRole = req.user?.peran;
     if (userRole !== "admin") {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Akses ditolak, hanya admin yang bisa menghapus",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Akses ditolak, hanya admin yang bisa menghapus",
+      });
     }
 
-    // Hapus pengguna
     await penggunaModel.deletePengguna(id);
     res
       .status(200)

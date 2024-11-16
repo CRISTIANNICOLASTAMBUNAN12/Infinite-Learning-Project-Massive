@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 
-// Mendapatkan semua thread berdasarkan forum_id
 export const getThreadsByForumId = async (forumId) => {
   try {
     const pool = db.getDbConnection();
@@ -14,7 +13,6 @@ export const getThreadsByForumId = async (forumId) => {
   }
 };
 
-// Menambahkan thread baru
 export const addThread = async (forumId, penggunaId, judul, konten) => {
   try {
     const pool = db.getDbConnection();
@@ -28,7 +26,6 @@ export const addThread = async (forumId, penggunaId, judul, konten) => {
   }
 };
 
-// Mendapatkan thread berdasarkan ID
 export const getThreadById = async (id) => {
   try {
     const pool = db.getDbConnection();
@@ -41,7 +38,6 @@ export const getThreadById = async (id) => {
   }
 };
 
-// Menghapus thread berdasarkan ID
 export const deleteThread = async (id) => {
   try {
     const pool = db.getDbConnection();

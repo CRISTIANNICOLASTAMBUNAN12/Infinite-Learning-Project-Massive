@@ -1,12 +1,10 @@
 import * as profilModel from "../models/profilModel.js";
 
-// Controller untuk menambahkan profil
 export const addProfil = async (req, res) => {
   try {
-    const penggunaId = req.user.id; // Mengambil ID pengguna dari token yang sudah diverifikasi
+    const penggunaId = req.user.id;
     const { nama, lokasi, metode_pertanian, produk_ditawarkan, bio } = req.body;
 
-    // Validasi data
     if (!nama || !lokasi || !metode_pertanian || !produk_ditawarkan || !bio) {
       return res.status(400).json({
         success: false,
@@ -14,7 +12,6 @@ export const addProfil = async (req, res) => {
       });
     }
 
-    // Tambahkan profil ke database
     await profilModel.addProfil(
       penggunaId,
       nama,
@@ -37,10 +34,9 @@ export const addProfil = async (req, res) => {
   }
 };
 
-// Mendapatkan profil pengguna
 export const getProfil = async (req, res) => {
   try {
-    const penggunaId = req.user.id; // Mengambil pengguna_id dari JWT token
+    const penggunaId = req.user.id;
 
     const profil = await profilModel.getProfilByPenggunaId(penggunaId);
 
@@ -64,13 +60,11 @@ export const getProfil = async (req, res) => {
   }
 };
 
-// Controller untuk membuat atau memperbarui profil
 export const upsertProfil = async (req, res) => {
   try {
-    const penggunaId = req.user.id; // Mengambil pengguna_id dari JWT token
+    const penggunaId = req.user.id;
     const { nama, lokasi, metode_pertanian, produk_ditawarkan, bio } = req.body;
 
-    // Panggil fungsi upsertProfil
     const result = await profilModel.upsertProfil(
       penggunaId,
       nama,
@@ -94,10 +88,9 @@ export const upsertProfil = async (req, res) => {
   }
 };
 
-// Menghapus profil pengguna
 export const deleteProfil = async (req, res) => {
   try {
-    const pengguna_id = req.user.id; // Mengambil ID pengguna dari token JWT
+    const pengguna_id = req.user.id;
 
     const result = await profilModel.deleteProfil(pengguna_id);
     res.status(200).json({ success: true, message: "Profil berhasil dihapus" });

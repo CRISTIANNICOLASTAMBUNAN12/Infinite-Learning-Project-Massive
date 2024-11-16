@@ -1,66 +1,60 @@
 import express from 'express';
 import 'dotenv/config';
 import db from './config/db.js';
-import adminRouter from './routes/adminRoute.js';
-import penggunaRouter from './routes/penggunaRoute.js';
-import autentikasiRouter from './routes/autentikasiRoute.js'; // Import route autentikasi
+import adminRoute from './routes/adminRoute.js';
+import penggunaRoute from './routes/penggunaRoute.js';
+import autentikasiRoute from './routes/autentikasiRoute.js'; 
 import { verifyToken, checkRole } from './middlewares/authMiddleware.js';
-import profilRoutes from "./routes/profilRoutes.js";
-import forumRoutes from "./routes/forumRoutes.js";
-import threadRoutes from "./routes/threadRoutes.js";
-import komentarRoutes from "./routes/komentarRoutes.js";
-import grupPenggunaRoutes from "./routes/grupPenggunaRoutes.js";
-import anggotaGrupRoutes from "./routes/anggotaGrupRoutes.js";
-import grupChatRoutes from "./routes/grupChatRoutes.js";
-import chatRouter from "./routes/chatRouter.js";  
-import blogRouter from "./routes/blogRouter.js";
-import beritaRouter from "./routes/beritaRouter.js";
-import acaraRouter from "./routes/acaraRouter.js";
-import kategoriRouter from "./routes/kategoriRouter.js";
-import produkRouter from "./routes/produkRouter.js";
+import profilRoute from "./routes/profilRoute.js";
+import forumRoute from "./routes/forumRoute.js";
+import threadRoute from "./routes/threadRoute.js";
+import komentarRoute from "./routes/komentarRoute.js";
+import grupPenggunaRoute from "./routes/grupPenggunaRoute.js";
+import anggotaGrupRoute from "./routes/anggotaGrupRoute.js";
+import grupChatRoute from "./routes/grupChatRoute.js";
+import chatRoute from "./routes/chatRoute.js";  
+import blogRoute from "./routes/blogRoute.js";
+import beritaRoute from "./routes/beritaRoute.js";
+import acaraRoute from "./routes/acaraRoute.js";
+import kategoriRoute from "./routes/kategoriRoute.js";
+import produkRoute from "./routes/produkRoute.js";
 import pasarRoute from "./routes/pasarRoute.js";
 import edukasiRoute from "./routes/edukasiRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Middleware untuk parsing JSON
 app.use(express.json());
 
-// Koneksi ke database (tidak perlu pakai .then() karena pool sudah diinisialisasi)
 try {
-  db.connectDB(); // Inisialisasi pool
+  db.connectDB(); 
   console.log('Database connection established, starting server...');
 
-  // Tambahkan route autentikasi tanpa middleware
-  app.use('/api/auth', autentikasiRouter);
+  app.use('/api/auth', autentikasiRoute);
 
-  // Gunakan middleware hanya pada route pengguna dan admin
-  app.use('/api/pengguna', verifyToken, checkRole(['petani', 'admin']), penggunaRouter);
-  app.use('/api/admin', verifyToken, checkRole(['admin']), adminRouter);
+  app.use('/api/pengguna', verifyToken, checkRole(['petani', 'admin']), penggunaRoute);
+  app.use('/api/admin', verifyToken, checkRole(['admin']), adminRoute);
 
-  app.use("/api/profil", profilRoutes);
-  app.use("/api/forum", forumRoutes);
-  app.use("/api/thread", threadRoutes);
-  app.use("/api/komentar", komentarRoutes);
-  app.use("/api/grup-pengguna", grupPenggunaRoutes);
-  app.use("/api/anggota-grup", anggotaGrupRoutes);
-  app.use("/api/grup-chat", grupChatRoutes);
-  app.use("/api/chat", chatRouter);
-  app.use("/api/blog", blogRouter);  // Menambahkan route blog
-  app.use("/api/berita", beritaRouter);  // Menambahkan route blog
-  app.use("/api/acara", acaraRouter);  // Menambahkan route blog
-  app.use("/api/kategori", kategoriRouter);  // Menambahkan route blog
-  app.use("/api/produk", produkRouter);  // Menambahkan route blog
-  app.use("/api/pasar", pasarRoute);  // Menambahkan route blog
+  app.use("/api/profil", profilRoute);
+  app.use("/api/forum", forumRoute);
+  app.use("/api/thread", threadRoute);
+  app.use("/api/komentar", komentarRoute);
+  app.use("/api/grup-pengguna", grupPenggunaRoute);
+  app.use("/api/anggota-grup", anggotaGrupRoute);
+  app.use("/api/grup-chat", grupChatRoute);
+  app.use("/api/chat", chatRoute);
+  app.use("/api/blog", blogRoute);  
+  app.use("/api/berita", beritaRoute);
+  app.use("/api/acara", acaraRoute);  
+  app.use("/api/kategori", kategoriRoute);
+  app.use("/api/produk", produkRoute); 
+  app.use("/api/pasar", pasarRoute);  
   app.use("/api/edukasi", edukasiRoute);
 
-  // Test route
   app.get('/', (req, res) => {
     res.send('API is working');
   });
 
-  // Start server
   app.listen(port, () => {
     console.log(`Server started on port ${port}`);
   });

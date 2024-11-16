@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 
-// Fungsi untuk menambahkan pasar
 export const addPasar = async (produk_id, pengguna_id, lokasi, deskripsi) => {
   try {
     const [result] = await db
@@ -15,7 +14,6 @@ export const addPasar = async (produk_id, pengguna_id, lokasi, deskripsi) => {
   }
 };
 
-// Fungsi untuk mengambil semua pasar
 export const getPasar = async () => {
   try {
     const [rows] = await db.getDbConnection().query("SELECT * FROM Pasar");
@@ -25,19 +23,17 @@ export const getPasar = async () => {
   }
 };
 
-// Fungsi untuk mengambil pasar berdasarkan id
 export const getPasarById = async (id) => {
   try {
     const [rows] = await db
       .getDbConnection()
       .query("SELECT * FROM Pasar WHERE id = ?", [id]);
-    return rows[0]; // Mengembalikan satu data pasar
+    return rows[0]; 
   } catch (error) {
     throw new Error("Gagal mengambil data pasar: " + error.message);
   }
 };
 
-// Fungsi untuk menghapus pasar
 export const deletePasar = async (id) => {
   try {
     const [result] = await db

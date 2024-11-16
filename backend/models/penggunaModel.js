@@ -1,4 +1,3 @@
-// penggunaModel.js
 import db from "../config/db.js";
 
 export const addPengguna = async (data) => {
@@ -20,7 +19,7 @@ export const addPengguna = async (data) => {
   } = data;
 
   try {
-    const connection = await db.getDbConnection(); // Ambil koneksi dari pool
+    const connection = await db.getDbConnection(); 
     const [rows] = await connection.execute(sql, [
       nama,
       email,
@@ -45,9 +44,9 @@ export const getAllPengguna = async () => {
   const sql = "SELECT * FROM Pengguna";
 
   try {
-    const connection = await db.getDbConnection(); // Ambil koneksi dari pool
-    const [rows] = await connection.execute(sql); // Menjalankan query
-    return rows; // Mengembalikan semua data pengguna
+    const connection = await db.getDbConnection(); 
+    const [rows] = await connection.execute(sql); 
+    return rows; 
   } catch (error) {
     console.error("Error fetching all pengguna:", error);
     throw error;
@@ -58,9 +57,9 @@ export const getPenggunaById = async (id) => {
   const sql = "SELECT * FROM Pengguna WHERE id = ?";
 
   try {
-    const connection = await db.getDbConnection(); // Ambil koneksi dari pool
-    const [rows] = await connection.execute(sql, [id]); // Menjalankan query dengan ID
-    return rows[0]; // Mengembalikan pengguna pertama (karena ID unik)
+    const connection = await db.getDbConnection(); 
+    const [rows] = await connection.execute(sql, [id]); 
+    return rows[0]; 
   } catch (error) {
     console.error("Error fetching pengguna by ID:", error);
     throw error;
@@ -96,7 +95,7 @@ export const updatePengguna = async (id, data) => {
       jenis_kelamin || null,
       pekerjaan || null,
       no_hp || null,
-      kata_sandi || null, // Kata sandi bisa dibiarkan null jika tidak diubah
+      kata_sandi || null, 
       peran || null,
       id,
     ]);
@@ -106,7 +105,6 @@ export const updatePengguna = async (id, data) => {
   }
 };
 
-// penggunaModel.js
 export const deletePengguna = async (id) => {
   const sql = "DELETE FROM Pengguna WHERE id = ?";
 
@@ -126,7 +124,7 @@ export const deletePengguna = async (id) => {
 
 export const getPenggunaByEmail = async (email) => {
   try {
-    const connection = await db.getDbConnection(); // Ambil koneksi dari pool
+    const connection = await db.getDbConnection();
     const query = "SELECT * FROM Pengguna WHERE email = ?";
     const [rows] = await connection.execute(query, [email]);
     return rows.length > 0 ? rows[0] : null;

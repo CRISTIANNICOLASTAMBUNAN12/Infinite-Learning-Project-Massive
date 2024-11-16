@@ -1,7 +1,5 @@
-// models/chatModel.js
 import db from "../config/db.js";
 
-// Menambahkan pesan ke tabel Chat
 export const addChat = async (pengirim_id, penerima_id, pesan) => {
   try {
     const [result] = await db
@@ -10,13 +8,12 @@ export const addChat = async (pengirim_id, penerima_id, pesan) => {
         "INSERT INTO Chat (pengirim_id, penerima_id, pesan) VALUES (?, ?, ?)",
         [pengirim_id, penerima_id, pesan]
       );
-    return result.insertId; // Mengembalikan ID pesan yang baru ditambahkan
+    return result.insertId;
   } catch (error) {
     throw new Error("Gagal menambahkan pesan: " + error.message);
   }
 };
 
-// Mengambil pesan antara pengirim dan penerima
 export const getChatByPengirimPenerima = async (pengirim_id, penerima_id) => {
   try {
     const [pesan] = await db
@@ -36,7 +33,7 @@ export const deleteChat = async (id) => {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM Chat WHERE id = ?", [id]);
-    return result.affectedRows > 0; // Mengembalikan true jika pesan berhasil dihapus
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menghapus pesan: " + error.message);
   }
@@ -47,7 +44,7 @@ export const getChatById = async (id) => {
     const [pesan] = await db
       .getDbConnection()
       .query("SELECT * FROM Chat WHERE id = ?", [id]);
-    return pesan[0]; // Mengembalikan objek pesan jika ditemukan
+    return pesan[0];
   } catch (error) {
     throw new Error("Gagal mengambil pesan: " + error.message);
   }

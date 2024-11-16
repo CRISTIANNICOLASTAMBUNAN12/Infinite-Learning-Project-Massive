@@ -1,6 +1,5 @@
-import db from "../config/db.js"; // Pastikan path sesuai dengan konfigurasi DB Anda
+import db from "../config/db.js";
 
-// Fungsi untuk menambahkan edukasi
 export const addEdukasi = async (judul, konten, kategori_id) => {
   try {
     const [result] = await db
@@ -15,7 +14,6 @@ export const addEdukasi = async (judul, konten, kategori_id) => {
   }
 };
 
-// Fungsi untuk mengambil semua edukasi
 export const getEdukasi = async () => {
   try {
     const [rows] = await db.getDbConnection().query("SELECT * FROM Edukasi");
@@ -25,19 +23,17 @@ export const getEdukasi = async () => {
   }
 };
 
-// Fungsi untuk mengambil edukasi berdasarkan ID
 export const getEdukasiById = async (id) => {
   try {
     const [rows] = await db
       .getDbConnection()
       .query("SELECT * FROM Edukasi WHERE id = ?", [id]);
-    return rows[0]; // Mengembalikan satu data edukasi
+    return rows[0];
   } catch (error) {
     throw new Error("Gagal mengambil data edukasi: " + error.message);
   }
 };
 
-// Fungsi untuk memperbarui edukasi berdasarkan ID
 export const updateEdukasi = async (id, judul, konten, kategori_id) => {
   try {
     const [result] = await db
@@ -52,13 +48,12 @@ export const updateEdukasi = async (id, judul, konten, kategori_id) => {
   }
 };
 
-// Fungsi untuk menghapus edukasi berdasarkan ID
 export const deleteEdukasi = async (id) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM Edukasi WHERE id = ?", [id]);
-    return result.affectedRows > 0; // Mengembalikan true jika ada data yang dihapus
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menghapus edukasi: " + error.message);
   }

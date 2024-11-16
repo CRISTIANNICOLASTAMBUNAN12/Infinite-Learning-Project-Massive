@@ -1,9 +1,7 @@
-// db.js
 import mysql from 'mysql2/promise';
 
 let pool;
 
-// Fungsi untuk menghubungkan ke database
 const connectDB = () => {
   if (!pool) {
     pool = mysql.createPool({
@@ -21,9 +19,8 @@ const connectDB = () => {
   return pool;
 };
 
-// Fungsi untuk mendapatkan koneksi pool
 const getDbConnection = () => {
-  return connectDB(); // Mengembalikan pool dengan promise
+  return connectDB(); 
 };
 
 export default { connectDB, getDbConnection };

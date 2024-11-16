@@ -1,4 +1,3 @@
-// routes/kategoriRouter.js
 import express from "express";
 import * as kategoriController from "../controllers/kategoriController.js";
 

@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 
-// Menambahkan grup pengguna baru
 export const addGrupPengguna = async (nama, deskripsi, dibuatOleh) => {
   try {
     const pool = db.getDbConnection();
@@ -14,7 +13,6 @@ export const addGrupPengguna = async (nama, deskripsi, dibuatOleh) => {
   }
 };
 
-// Mendapatkan semua grup pengguna
 export const getAllGrupPengguna = async () => {
   try {
     const pool = db.getDbConnection();
@@ -25,7 +23,6 @@ export const getAllGrupPengguna = async () => {
   }
 };
 
-// Mendapatkan grup pengguna berdasarkan ID
 export const getGrupPenggunaById = async (id) => {
   try {
     const pool = db.getDbConnection();
@@ -38,7 +35,6 @@ export const getGrupPenggunaById = async (id) => {
   }
 };
 
-// Mengupdate grup pengguna
 export const updateGrupPengguna = async (id, nama, deskripsi) => {
   try {
     const [result] = await db
@@ -59,8 +55,6 @@ export const deleteGrupPengguna = async (id) => {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM GrupPengguna WHERE id = ?", [id]);
-
-    // Memeriksa apakah ada baris yang dihapus
     return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Error while deleting group: " + error.message);

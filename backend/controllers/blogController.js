@@ -1,9 +1,8 @@
 import * as blogModel from "../models/blogModel.js";
 
-// Menambahkan blog
 export const addBlog = async (req, res) => {
   const { judul, konten, kategori } = req.body;
-  const pengguna_id = req.user.id; // Pengguna yang sedang login
+  const pengguna_id = req.user.id;
 
   try {
     const blogId = await blogModel.addBlog(
@@ -25,7 +24,6 @@ export const addBlog = async (req, res) => {
   }
 };
 
-// Mendapatkan semua blog
 export const getAllBlogs = async (req, res) => {
   try {
     const blogs = await blogModel.getAllBlogs();
@@ -38,7 +36,6 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
-// Mendapatkan blog berdasarkan ID
 export const getBlogById = async (req, res) => {
   const { id } = req.params;
 
@@ -56,7 +53,6 @@ export const getBlogById = async (req, res) => {
   }
 };
 
-// Menghapus blog berdasarkan ID
 export const deleteBlog = async (req, res) => {
   const { id } = req.params;
 
@@ -74,7 +70,6 @@ export const deleteBlog = async (req, res) => {
   }
 };
 
-// Mengupdate blog berdasarkan ID
 export const updateBlog = async (req, res) => {
   const { id } = req.params;
   const { judul, konten, kategori } = req.body;

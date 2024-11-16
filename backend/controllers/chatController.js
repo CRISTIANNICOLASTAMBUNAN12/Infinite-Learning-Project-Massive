@@ -1,10 +1,8 @@
-// controllers/chatController.js
 import * as chatModel from "../models/chatModel.js";
 
-// Mengirim pesan
 export const sendPesan = async (req, res) => {
-  const { penerima_id, pesan } = req.body; // Mengambil penerima_id dan pesan dari request body
-  const pengirim_id = req.user.id; // Mengambil pengirim_id dari token JWT yang sudah diverifikasi
+  const { penerima_id, pesan } = req.body;
+  const pengirim_id = req.user.id;
 
   try {
     const idPesan = await chatModel.addChat(pengirim_id, penerima_id, pesan);
@@ -21,7 +19,6 @@ export const sendPesan = async (req, res) => {
   }
 };
 
-// Mengambil pesan antara pengirim dan penerima
 export const getPesan = async (req, res) => {
   const { penerima_id } = req.params;
   const pengirim_id = req.user.id;
@@ -45,11 +42,10 @@ export const getPesan = async (req, res) => {
 };
 
 export const deletePesan = async (req, res) => {
-  const { id } = req.params; // Mengambil id pesan dari parameter URL
-  const pengguna_id = req.user.id; // Mengambil pengguna_id dari token JWT yang sudah diverifikasi
+  const { id } = req.params;
+  const pengguna_id = req.user.id;
 
   try {
-    // Cek apakah pesan dengan ID tersebut ada dan milik pengguna yang mengirimnya
     const pesan = await chatModel.getChatById(id);
     if (!pesan) {
       return res.status(404).json({ message: "Pesan tidak ditemukan" });

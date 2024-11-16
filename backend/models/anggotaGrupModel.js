@@ -38,7 +38,7 @@ export const getAnggotaByGrupAndPengguna = async (grup_id, pengguna_id) => {
         "SELECT * FROM AnggotaGrup WHERE grup_id = ? AND pengguna_id = ?",
         [grup_id, pengguna_id]
       );
-    return anggota.length > 0; // Mengembalikan true jika sudah ada
+    return anggota.length > 0;
   } catch (error) {
     throw new Error("Gagal mengecek anggota: " + error.message);
   }
@@ -52,14 +52,12 @@ export const deleteAnggotaGrup = async (grup_id, pengguna_id) => {
         grup_id,
         pengguna_id,
       ]);
-    // Pastikan ada pengaruh perubahan dalam database
     return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menghapus anggota: " + error.message);
   }
 };
 
-// Mendapatkan pesan berdasarkan grup_id dan pesan_id
 export const getPesanById = async (grup_id, pesan_id) => {
   try {
     const [pesan] = await db
@@ -68,7 +66,7 @@ export const getPesanById = async (grup_id, pesan_id) => {
         grup_id,
         pesan_id,
       ]);
-    return pesan.length > 0 ? pesan[0] : null; // Mengembalikan pesan jika ditemukan
+    return pesan.length > 0 ? pesan[0] : null;
   } catch (error) {
     throw new Error("Gagal mengambil pesan: " + error.message);
   }

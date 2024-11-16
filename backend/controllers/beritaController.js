@@ -1,7 +1,5 @@
-// controllers/beritaController.js
 import * as beritaModel from "../models/beritaModel.js";
 
-// Menambahkan berita baru
 export const addBerita = async (req, res) => {
   const { judul, konten } = req.body;
 
@@ -20,7 +18,6 @@ export const addBerita = async (req, res) => {
   }
 };
 
-// Mendapatkan semua berita
 export const getAllBerita = async (req, res) => {
   try {
     const berita = await beritaModel.getAllBerita();
@@ -33,7 +30,6 @@ export const getAllBerita = async (req, res) => {
   }
 };
 
-// Mendapatkan berita berdasarkan ID
 export const getBeritaById = async (req, res) => {
   const { id } = req.params;
 
@@ -51,7 +47,6 @@ export const getBeritaById = async (req, res) => {
   }
 };
 
-// Mengupdate berita berdasarkan ID
 export const updateBerita = async (req, res) => {
   const { id } = req.params;
   const { judul, konten } = req.body;
@@ -73,7 +68,6 @@ export const updateBerita = async (req, res) => {
   }
 };
 
-// Menghapus berita berdasarkan ID
 export const deleteBerita = async (req, res) => {
   const { id } = req.params;
 

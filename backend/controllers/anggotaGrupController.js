@@ -2,25 +2,21 @@ import * as anggotaGrupModel from "../models/anggotaGrupModel.js";
 import * as grupPenggunaModel from "../models/grupPenggunaModel.js";
 import * as penggunaModel from "../models/penggunaModel.js";
 
-// Menambahkan anggota ke grup
 export const addAnggotaToGrup = async (req, res) => {
   const { grup_id } = req.params;
-  const pengguna_id = req.user.id; // Mengambil pengguna_id dari token JWT yang sudah diverifikasi
+  const pengguna_id = req.user.id;
 
   try {
     console.log("Received grup_id:", grup_id);
     console.log("Logged in pengguna_id:", pengguna_id);
 
-    // Memeriksa apakah grup ada
     const grup = await grupPenggunaModel.getGrupPenggunaById(grup_id);
     if (!grup) {
       return res.status(404).json({ message: "Grup tidak ditemukan" });
     }
 
-    // Menambahkan anggota ke grup
     const anggota = await anggotaGrupModel.addAnggotaGrup(grup_id, pengguna_id);
 
-    // Mengecek jika anggota berhasil ditambahkan
     if (!anggota) {
       return res.status(400).json({
         message:
@@ -35,7 +31,6 @@ export const addAnggotaToGrup = async (req, res) => {
   } catch (error) {
     console.error("Error adding member:", error);
 
-    // Menangani duplikasi dan error lain
     if (error.message.includes("Duplicate entry")) {
       return res.status(400).json({
         message: "Anggota sudah ada dalam grup ini",
@@ -49,7 +44,6 @@ export const addAnggotaToGrup = async (req, res) => {
   }
 };
 
-// Mendapatkan semua anggota dari grup
 export const getAnggotaFromGrup = async (req, res) => {
   const { grup_id } = req.params;
 
@@ -64,20 +58,25 @@ export const getAnggotaFromGrup = async (req, res) => {
   }
 };
 
-// Menghapus anggota dari grup
 export const deleteAnggotaFromGrup = async (req, res) => {
   const { grup_id } = req.params;
-  const pengguna_id = req.user.id; // Mengambil pengguna_id dari token JWT yang sudah diverifikasi
+  const pengguna_id = req.user.id;
 
   try {
-    // Memastikan anggota ada sebelum mencoba menghapus
-    const anggotaExists = await anggotaGrupModel.getAnggotaByGrupAndPengguna(grup_id, pengguna_id);
+    const anggotaExists = await anggotaGrupModel.getAnggotaByGrupAndPengguna(
+      grup_id,
+      pengguna_id
+    );
     if (!anggotaExists) {
-      return res.status(404).json({ message: "Anggota tidak ditemukan dalam grup ini" });
+      return res
+        .status(404)
+        .json({ message: "Anggota tidak ditemukan dalam grup ini" });
     }
 
-    // Menghapus anggota
-    const deleted = await anggotaGrupModel.deleteAnggotaGrup(grup_id, pengguna_id);
+    const deleted = await anggotaGrupModel.deleteAnggotaGrup(
+      grup_id,
+      pengguna_id
+    );
     if (!deleted) {
       return res.status(404).json({ message: "Gagal menghapus anggota" });
     }
@@ -91,5 +90,3 @@ export const deleteAnggotaFromGrup = async (req, res) => {
     });
   }
 };
-
-

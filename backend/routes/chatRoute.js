@@ -1,7 +1,6 @@
-// routes/chatRouter.js
 import express from "express";
 import * as chatController from "../controllers/chatController.js";
-import { verifyToken } from "../middlewares/authMiddleware.js";  // Pastikan middleware verifikasi token ada
+import { verifyToken } from "../middlewares/authMiddleware.js";  
 
 const router = express.Router();
 

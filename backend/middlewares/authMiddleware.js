@@ -4,7 +4,9 @@ export const verifyToken = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ message: "Akses ditolak, token tidak ditemukan" });
+    return res
+      .status(401)
+      .json({ message: "Akses ditolak, token tidak ditemukan" });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -13,24 +15,24 @@ export const verifyToken = (req, res, next) => {
     }
 
     req.user = decoded;
-    console.log("Decoded JWT Payload:", decoded);  // Debug log di sini
+    console.log("Decoded JWT Payload:", decoded);
     next();
   });
 };
 
-
 export const checkRole = (allowedRoles) => {
   return (req, res, next) => {
-    const userRole = req.user?.peran; // Ambil peran dari request user yang sudah diverifikasi
+    const userRole = req.user?.peran;
 
-    console.log("User Role in Middleware:", userRole);  // Debug log untuk memastikan peran yang diterima
-    console.log("Allowed Roles:", allowedRoles);  // Log roles yang diizinkan
+    console.log("User Role in Middleware:", userRole);
+    console.log("Allowed Roles:", allowedRoles);
 
     if (!allowedRoles.includes(userRole)) {
-      return res.status(403).json({ message: "Akses ditolak, peran tidak sesuai" });
+      return res
+        .status(403)
+        .json({ message: "Akses ditolak, peran tidak sesuai" });
     }
 
     next();
   };
 };
-

@@ -1,21 +1,19 @@
 import db from "../config/db.js";
 
-// Menambahkan berita baru
 export const addBerita = async (judul, konten) => {
   try {
     const [result] = await db
       .getDbConnection()
-      .query(
-        "INSERT INTO Berita (judul, konten) VALUES (?, ?)",
-        [judul, konten]
-      );
-    return result.insertId; // Mengembalikan ID berita yang baru dibuat
+      .query("INSERT INTO Berita (judul, konten) VALUES (?, ?)", [
+        judul,
+        konten,
+      ]);
+    return result.insertId;
   } catch (error) {
     throw new Error("Gagal menambahkan berita: " + error.message);
   }
 };
 
-// Mendapatkan semua berita
 export const getAllBerita = async () => {
   try {
     const [berita] = await db.getDbConnection().query("SELECT * FROM Berita");
@@ -25,7 +23,6 @@ export const getAllBerita = async () => {
   }
 };
 
-// Mendapatkan berita berdasarkan ID
 export const getBeritaById = async (id) => {
   try {
     const [berita] = await db
@@ -37,28 +34,27 @@ export const getBeritaById = async (id) => {
   }
 };
 
-// Mengupdate berita berdasarkan ID
 export const updateBerita = async (id, judul, konten) => {
   try {
     const [result] = await db
       .getDbConnection()
-      .query(
-        "UPDATE Berita SET judul = ?, konten = ? WHERE id = ?",
-        [judul, konten, id]
-      );
-    return result.affectedRows > 0; // Mengembalikan true jika berita berhasil diperbarui
+      .query("UPDATE Berita SET judul = ?, konten = ? WHERE id = ?", [
+        judul,
+        konten,
+        id,
+      ]);
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal memperbarui berita: " + error.message);
   }
 };
 
-// Menghapus berita berdasarkan ID
 export const deleteBerita = async (id) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM Berita WHERE id = ?", [id]);
-    return result.affectedRows > 0; // Mengembalikan true jika berita berhasil dihapus
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menghapus berita: " + error.message);
   }

@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 
-// Fungsi untuk menambahkan profil
 export const addProfil = async (
   penggunaId,
   nama,

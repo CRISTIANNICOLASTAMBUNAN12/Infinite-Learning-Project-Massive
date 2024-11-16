@@ -1,6 +1,5 @@
 import * as edukasiModel from "../models/edukasiModel.js";
 
-// Controller untuk menambahkan edukasi
 export const addEdukasi = async (req, res) => {
   const { judul, konten, kategori_id } = req.body;
 
@@ -15,7 +14,6 @@ export const addEdukasi = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan semua edukasi
 export const getEdukasi = async (req, res) => {
   try {
     const edukasi = await edukasiModel.getEdukasi();
@@ -28,7 +26,6 @@ export const getEdukasi = async (req, res) => {
   }
 };
 
-// Controller untuk mendapatkan edukasi berdasarkan ID
 export const getEdukasiById = async (req, res) => {
   const { id } = req.params;
 
@@ -46,13 +43,17 @@ export const getEdukasiById = async (req, res) => {
   }
 };
 
-// Controller untuk memperbarui edukasi
 export const updateEdukasi = async (req, res) => {
   const { id } = req.params;
   const { judul, konten, kategori_id } = req.body;
 
   try {
-    const result = await edukasiModel.updateEdukasi(id, judul, konten, kategori_id);
+    const result = await edukasiModel.updateEdukasi(
+      id,
+      judul,
+      konten,
+      kategori_id
+    );
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Edukasi tidak ditemukan" });
     }
@@ -65,7 +66,6 @@ export const updateEdukasi = async (req, res) => {
   }
 };
 
-// Controller untuk menghapus edukasi
 export const deleteEdukasi = async (req, res) => {
   const { id } = req.params;
 

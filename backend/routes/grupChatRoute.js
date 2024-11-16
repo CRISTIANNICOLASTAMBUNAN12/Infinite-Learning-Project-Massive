@@ -1,6 +1,6 @@
 import express from "express";
 import * as grupChatController from "../controllers/grupChatController.js";
-import { verifyToken } from "../middlewares/authMiddleware.js"; // Middleware untuk validasi token JWT
+import { verifyToken } from "../middlewares/authMiddleware.js"; 
 
 const router = express.Router();
 

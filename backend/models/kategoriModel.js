@@ -1,18 +1,16 @@
 import db from "../config/db.js";
 
-// Menambahkan kategori baru
 export const addKategori = async (nama, jenis) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query("INSERT INTO Kategori (nama, jenis) VALUES (?, ?)", [nama, jenis]);
-    return result.insertId; // Mengembalikan ID kategori yang baru dibuat
+    return result.insertId;
   } catch (error) {
     throw new Error("Gagal menambahkan kategori: " + error.message);
   }
 };
 
-// Mendapatkan semua kategori
 export const getAllKategori = async () => {
   try {
     const [kategori] = await db.getDbConnection().query("SELECT * FROM Kategori");
@@ -22,7 +20,6 @@ export const getAllKategori = async () => {
   }
 };
 
-// Mendapatkan kategori berdasarkan ID
 export const getKategoriById = async (id) => {
   try {
     const [kategori] = await db
@@ -34,7 +31,6 @@ export const getKategoriById = async (id) => {
   }
 };
 
-// Mengupdate kategori berdasarkan ID
 export const updateKategori = async (id, nama, jenis) => {
   try {
     const [result] = await db
@@ -44,19 +40,18 @@ export const updateKategori = async (id, nama, jenis) => {
         jenis,
         id,
       ]);
-    return result.affectedRows > 0; // Mengembalikan true jika kategori berhasil diperbarui
+    return result.affectedRows > 0; 
   } catch (error) {
     throw new Error("Gagal memperbarui kategori: " + error.message);
   }
 };
 
-// Menghapus kategori berdasarkan ID
 export const deleteKategori = async (id) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM Kategori WHERE id = ?", [id]);
-    return result.affectedRows > 0; // Mengembalikan true jika kategori berhasil dihapus
+    return result.affectedRows > 0; 
   } catch (error) {
     throw new Error("Gagal menghapus kategori: " + error.message);
   }

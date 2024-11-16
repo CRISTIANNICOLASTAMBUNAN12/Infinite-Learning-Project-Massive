@@ -1,6 +1,6 @@
 import express from "express";
 import * as grupPenggunaController from "../controllers/grupPenggunaController.js";
-import { verifyToken, checkRole } from "../middlewares/authMiddleware.js"; // Pastikan sudah ada middleware untuk token
+import { verifyToken, checkRole } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

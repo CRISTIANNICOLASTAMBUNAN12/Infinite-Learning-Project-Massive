@@ -1,13 +1,11 @@
 import * as grupChatModel from "../models/grupChatModel.js";
 
-// Mengirim pesan ke grup
 export const sendPesanToGrup = async (req, res) => {
   const { grup_id } = req.params;
-  const pengguna_id = req.user.id; // ID pengguna yang mengirim pesan
-  const { pesan } = req.body; // Isi pesan yang dikirim
+  const pengguna_id = req.user.id;
+  const { pesan } = req.body;
 
   try {
-    // Menambahkan pesan ke GrupChat
     const pesanTerkirim = await grupChatModel.addPesanToGrupChat(
       grup_id,
       pengguna_id,
@@ -35,7 +33,6 @@ export const sendPesanToGrup = async (req, res) => {
   }
 };
 
-// Mendapatkan pesan dari grup
 export const getPesanFromGrup = async (req, res) => {
   const { grup_id } = req.params;
 
@@ -62,16 +59,14 @@ export const getPesanFromGrup = async (req, res) => {
 };
 
 export const deletePesanFromGrupChat = async (req, res) => {
-  const { grup_id, pesan_id } = req.params; // Mengambil grup_id dan pesan_id dari parameter
+  const { grup_id, pesan_id } = req.params;
 
   try {
-    // Memeriksa apakah pesan ada di grup
     const pesan = await grupChatModel.getPesanById(grup_id, pesan_id);
     if (!pesan) {
       return res.status(404).json({ message: "Pesan tidak ditemukan" });
     }
 
-    // Hapus pesan dari grup
     const deleted = await grupChatModel.deletePesanGrupChat(grup_id, pesan_id);
     if (!deleted) {
       return res.status(400).json({ message: "Gagal menghapus pesan" });

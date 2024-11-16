@@ -9,13 +9,12 @@ export const addPesanToGrupChat = async (grup_id, pengguna_id, pesan) => {
         "INSERT INTO GrupChat (grup_id, pengguna_id, pesan) VALUES (?, ?, ?)",
         [grup_id, pengguna_id, pesan]
       );
-    return result.affectedRows > 0; // Mengembalikan true jika pesan berhasil ditambahkan
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menambahkan pesan: " + error.message);
   }
 };
 
-// Mengambil pesan berdasarkan grup ID
 export const getPesanByGrup = async (grup_id) => {
   try {
     const [pesan] = await db
@@ -29,7 +28,6 @@ export const getPesanByGrup = async (grup_id) => {
   }
 };
 
-// Menghapus pesan dari GrupChat
 export const deletePesanGrupChat = async (grup_id, pesan_id) => {
   try {
     const [result] = await db
@@ -44,7 +42,6 @@ export const deletePesanGrupChat = async (grup_id, pesan_id) => {
   }
 };
 
-// models/grupChatModel.js
 export const getPesanById = async (grup_id, pesan_id) => {
   try {
     const [result] = await db
@@ -53,8 +50,8 @@ export const getPesanById = async (grup_id, pesan_id) => {
         grup_id,
         pesan_id,
       ]);
-    console.log("Result of getPesanById:", result); // Menambahkan log untuk hasil query
-    return result.length > 0 ? result[0] : null; // Mengembalikan pesan jika ditemukan
+    console.log("Result of getPesanById:", result);
+    return result.length > 0 ? result[0] : null;
   } catch (error) {
     console.error("Error fetching message:", error);
     throw new Error("Gagal mengambil pesan: " + error.message);

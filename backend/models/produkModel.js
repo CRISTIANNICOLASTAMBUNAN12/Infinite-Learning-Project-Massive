@@ -1,6 +1,5 @@
 import db from "../config/db.js";
 
-// Menambahkan produk baru
 export const addProduk = async (
   pengguna_id,
   nama,
@@ -17,13 +16,12 @@ export const addProduk = async (
         "INSERT INTO Produk (pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok]
       );
-    return result.insertId; // Mengembalikan ID produk yang baru dibuat
+    return result.insertId;
   } catch (error) {
     throw new Error("Gagal menambahkan produk: " + error.message);
   }
 };
 
-// Mendapatkan semua produk
 export const getAllProduk = async () => {
   try {
     const [produk] = await db.getDbConnection().query("SELECT * FROM Produk");
@@ -33,7 +31,6 @@ export const getAllProduk = async () => {
   }
 };
 
-// Mendapatkan produk berdasarkan ID
 export const getProdukById = async (id) => {
   try {
     const [produk] = await db
@@ -45,7 +42,6 @@ export const getProdukById = async (id) => {
   }
 };
 
-// Mengupdate produk berdasarkan ID
 export const updateProduk = async (
   produk_id,
   pengguna_id,
@@ -82,13 +78,12 @@ export const updateProduk = async (
   }
 };
 
-// Menghapus produk berdasarkan ID
 export const deleteProduk = async (id) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query("DELETE FROM Produk WHERE id = ?", [id]);
-    return result.affectedRows > 0; // Mengembalikan true jika produk berhasil dihapus
+    return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal menghapus produk: " + error.message);
   }

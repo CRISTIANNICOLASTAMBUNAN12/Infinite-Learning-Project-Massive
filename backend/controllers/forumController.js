@@ -1,6 +1,5 @@
 import * as forumModel from "../models/forumModel.js";
 
-// Mendapatkan semua forum
 export const getAllForum = async (req, res) => {
   try {
     const forums = await forumModel.getAllForum();
@@ -11,7 +10,6 @@ export const getAllForum = async (req, res) => {
   }
 };
 
-// Mendapatkan forum berdasarkan ID
 export const getForumById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -34,8 +32,7 @@ export const addForum = async (req, res) => {
       return res.status(400).json({ message: "Nama dan deskripsi diperlukan" });
     }
 
-    // Gunakan addForum dari forumModel
-    const forum = await forumModel.addForum(nama, deskripsi); // Ganti dengan addForum
+    const forum = await forumModel.addForum(nama, deskripsi);
     res
       .status(201)
       .json({ message: "Forum berhasil ditambahkan", data: forum });
@@ -47,7 +44,6 @@ export const addForum = async (req, res) => {
   }
 };
 
-// Mengupdate forum
 export const updateForum = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,7 +56,6 @@ export const updateForum = async (req, res) => {
   }
 };
 
-// Menghapus forum
 export const deleteForum = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,7 +1,6 @@
-// routes/blogRouter.js
 import express from "express";
 import * as blogController from "../controllers/blogController.js";
-import { verifyToken } from "../middlewares/authMiddleware.js"; // Pastikan middleware untuk token ada
+import { verifyToken } from "../middlewares/authMiddleware.js"; 
 
 const router = express.Router();
 

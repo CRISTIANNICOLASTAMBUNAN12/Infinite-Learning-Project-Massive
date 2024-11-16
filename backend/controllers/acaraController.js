@@ -1,7 +1,5 @@
-// controllers/acaraController.js
 import * as acaraModel from "../models/acaraModel.js";
 
-// Menambahkan acara baru
 export const addAcara = async (req, res) => {
   const { nama, deskripsi, tanggal, lokasi } = req.body;
 
@@ -20,7 +18,6 @@ export const addAcara = async (req, res) => {
   }
 };
 
-// Mendapatkan semua acara
 export const getAllAcara = async (req, res) => {
   try {
     const acara = await acaraModel.getAllAcara();
@@ -33,7 +30,6 @@ export const getAllAcara = async (req, res) => {
   }
 };
 
-// Mendapatkan acara berdasarkan ID
 export const getAcaraById = async (req, res) => {
   const { id } = req.params;
 
@@ -51,13 +47,18 @@ export const getAcaraById = async (req, res) => {
   }
 };
 
-// Mengupdate acara berdasarkan ID
 export const updateAcara = async (req, res) => {
   const { id } = req.params;
   const { nama, deskripsi, tanggal, lokasi } = req.body;
 
   try {
-    const updated = await acaraModel.updateAcara(id, nama, deskripsi, tanggal, lokasi);
+    const updated = await acaraModel.updateAcara(
+      id,
+      nama,
+      deskripsi,
+      tanggal,
+      lokasi
+    );
     if (!updated) {
       return res.status(404).json({ message: "Acara tidak ditemukan" });
     }
@@ -73,7 +74,6 @@ export const updateAcara = async (req, res) => {
   }
 };
 
-// Menghapus acara berdasarkan ID
 export const deleteAcara = async (req, res) => {
   const { id } = req.params;
 

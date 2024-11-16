@@ -1,7 +1,6 @@
 import * as komentarModel from "../models/komentarModel.js";
-import * as threadModel from "../models/threadModel.js"; // Tambahkan ini
+import * as threadModel from "../models/threadModel.js";
 
-// Mendapatkan semua komentar berdasarkan thread_id
 export const getKomentarByThreadId = async (req, res) => {
   try {
     const { threadId } = req.params;
@@ -13,20 +12,17 @@ export const getKomentarByThreadId = async (req, res) => {
   }
 };
 
-// Menambahkan komentar baru
 export const addKomentar = async (req, res) => {
   try {
     const { threadId } = req.params;
-    const { id: penggunaId } = req.user; // Ambil ID pengguna dari JWT
+    const { id: penggunaId } = req.user;
     const { konten } = req.body;
 
-    // Validasi: Cek apakah threadId valid
     const thread = await threadModel.getThreadById(threadId);
     if (!thread) {
       return res.status(404).json({ message: "Thread tidak ditemukan" });
     }
 
-    // Tambahkan komentar
     const komentar = await komentarModel.addKomentar(
       threadId,
       penggunaId,
@@ -50,7 +46,6 @@ export const updateKomentar = async (req, res) => {
   const { konten } = req.body;
 
   try {
-    // Melakukan update komentar
     const updatedKomentar = await komentarModel.updateKomentar(id, konten);
     if (!updatedKomentar) {
       return res.status(404).json({ message: "Komentar tidak ditemukan" });
@@ -69,12 +64,10 @@ export const updateKomentar = async (req, res) => {
   }
 };
 
-// Delete Komentar
 export const deleteKomentar = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Melakukan delete komentar
     const deletedKomentar = await komentarModel.deleteKomentar(id);
     if (!deletedKomentar) {
       return res.status(404).json({ message: "Komentar tidak ditemukan" });

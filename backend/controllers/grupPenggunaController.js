@@ -1,9 +1,8 @@
 import * as grupPenggunaModel from "../models/grupPenggunaModel.js";
 
-// Menambahkan grup pengguna baru
 export const addGrupPengguna = async (req, res) => {
   const { nama, deskripsi } = req.body;
-  const { id: penggunaId } = req.user; // Pengguna yang sedang login
+  const { id: penggunaId } = req.user;
 
   try {
     const grup = await grupPenggunaModel.addGrupPengguna(
@@ -24,7 +23,6 @@ export const addGrupPengguna = async (req, res) => {
   }
 };
 
-// Mendapatkan semua grup pengguna
 export const getAllGrupPengguna = async (req, res) => {
   try {
     const grupPengguna = await grupPenggunaModel.getAllGrupPengguna();
@@ -38,26 +36,23 @@ export const getAllGrupPengguna = async (req, res) => {
   }
 };
 
-// Mengupdate grup pengguna
 export const updateGrupPengguna = async (req, res) => {
-  const { id } = req.params; // ID grup dari URL parameter
-  const { nama, deskripsi } = req.body; // Nama dan deskripsi dari body request
+  const { id } = req.params;
+  const { nama, deskripsi } = req.body;
 
   try {
-    // Memperbarui grup pengguna dengan memanggil fungsi model
     const updatedGrup = await grupPenggunaModel.updateGrupPengguna(
       id,
       nama,
       deskripsi
-    ); // Gunakan grupPenggunaModel
+    );
     if (!updatedGrup) {
       return res.status(404).json({ message: "Grup tidak ditemukan" });
     }
 
-    // Mengirimkan response setelah sukses memperbarui
     res.status(200).json({
       message: "Grup berhasil diperbarui",
-      data: updatedGrup, // Data yang sudah diperbarui
+      data: updatedGrup,
     });
   } catch (error) {
     console.error(error);
@@ -66,16 +61,14 @@ export const updateGrupPengguna = async (req, res) => {
 };
 
 export const deleteGrupPengguna = async (req, res) => {
-  const { id } = req.params; // ID grup dari URL parameter
+  const { id } = req.params;
 
   try {
-    // Memanggil fungsi model untuk menghapus grup pengguna
     const deletedGrup = await grupPenggunaModel.deleteGrupPengguna(id);
     if (!deletedGrup) {
       return res.status(404).json({ message: "Grup tidak ditemukan" });
     }
 
-    // Mengirimkan response setelah sukses menghapus
     res.status(200).json({
       message: "Grup berhasil dihapus",
     });
