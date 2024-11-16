@@ -9,6 +9,10 @@ import profilRoutes from "./routes/profilRoutes.js";
 import forumRoutes from "./routes/forumRoutes.js";
 import threadRoutes from "./routes/threadRoutes.js";
 import komentarRoutes from "./routes/komentarRoutes.js";
+import grupPenggunaRoutes from "./routes/grupPenggunaRoutes.js";
+import anggotaGrupRoutes from "./routes/anggotaGrupRoutes.js";
+import grupChatRoutes from "./routes/grupChatRoutes.js"; // Mengimpor route grup chat
+import chatRouter from "./routes/chatRouter.js";  // Pastikan path router benar
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -32,6 +36,10 @@ try {
   app.use("/api/forum", forumRoutes);
   app.use("/api/thread", threadRoutes);
   app.use("/api/komentar", komentarRoutes);
+  app.use("/api/grup-pengguna", grupPenggunaRoutes);
+  app.use("/api/anggota-grup", anggotaGrupRoutes);
+  app.use("/api/grup-chat", grupChatRoutes);
+  app.use("/api/chat", chatRouter);
 
   // Test route
   app.get('/', (req, res) => {
