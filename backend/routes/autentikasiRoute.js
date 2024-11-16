@@ -3,11 +3,13 @@ import * as autentikasiController from '../controllers/autentikasiController.js'
 
 const router = express.Router();
 
-// Login route untuk pengguna (petani)
 router.post('/login', autentikasiController.loginPengguna);
-
-// Logout route
+router.post("/register", autentikasiController.registrasiPengguna);
 router.post('/logout', autentikasiController.logoutPengguna);
+router.put("/pengguna/:id", autentikasiController.updatePengguna);
+router.delete("/pengguna/:id", autentikasiController.deletePengguna);
+router.get("/pengguna", autentikasiController.getAllPengguna);
+router.get("/pengguna/:id", autentikasiController.getPenggunaById);
 
 export default router;
     

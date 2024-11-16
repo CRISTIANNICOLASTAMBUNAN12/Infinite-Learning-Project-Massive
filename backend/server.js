@@ -11,8 +11,15 @@ import threadRoutes from "./routes/threadRoutes.js";
 import komentarRoutes from "./routes/komentarRoutes.js";
 import grupPenggunaRoutes from "./routes/grupPenggunaRoutes.js";
 import anggotaGrupRoutes from "./routes/anggotaGrupRoutes.js";
-import grupChatRoutes from "./routes/grupChatRoutes.js"; // Mengimpor route grup chat
-import chatRouter from "./routes/chatRouter.js";  // Pastikan path router benar
+import grupChatRoutes from "./routes/grupChatRoutes.js";
+import chatRouter from "./routes/chatRouter.js";  
+import blogRouter from "./routes/blogRouter.js";
+import beritaRouter from "./routes/beritaRouter.js";
+import acaraRouter from "./routes/acaraRouter.js";
+import kategoriRouter from "./routes/kategoriRouter.js";
+import produkRouter from "./routes/produkRouter.js";
+import pasarRoute from "./routes/pasarRoute.js";
+import edukasiRoute from "./routes/edukasiRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -40,6 +47,13 @@ try {
   app.use("/api/anggota-grup", anggotaGrupRoutes);
   app.use("/api/grup-chat", grupChatRoutes);
   app.use("/api/chat", chatRouter);
+  app.use("/api/blog", blogRouter);  // Menambahkan route blog
+  app.use("/api/berita", beritaRouter);  // Menambahkan route blog
+  app.use("/api/acara", acaraRouter);  // Menambahkan route blog
+  app.use("/api/kategori", kategoriRouter);  // Menambahkan route blog
+  app.use("/api/produk", produkRouter);  // Menambahkan route blog
+  app.use("/api/pasar", pasarRoute);  // Menambahkan route blog
+  app.use("/api/edukasi", edukasiRoute);
 
   // Test route
   app.get('/', (req, res) => {

@@ -24,16 +24,17 @@ export const addPengguna = async (data) => {
     const [rows] = await connection.execute(sql, [
       nama,
       email,
-      pengalaman,
-      tentang,
-      alamat,
-      jenis_kelamin,
-      pekerjaan,
-      no_hp,
+      pengalaman || null,
+      tentang || null,
+      alamat || null,
+      jenis_kelamin || null,
+      pekerjaan || null,
+      no_hp || null,
       kata_sandi,
       peran,
     ]);
     console.log("Rows hasil query: ", rows);
+    return rows;
   } catch (error) {
     console.log("Error adding pengguna: ", error);
     throw error;
@@ -41,36 +42,35 @@ export const addPengguna = async (data) => {
 };
 
 export const getAllPengguna = async () => {
+  const sql = "SELECT * FROM Pengguna";
+
   try {
     const connection = await db.getDbConnection(); // Ambil koneksi dari pool
-    const [rows] = await connection.execute("SELECT * FROM Pengguna");
-    console.log("Fetched Pengguna: ", rows); // Log data pengguna
-    return rows;
+    const [rows] = await connection.execute(sql); // Menjalankan query
+    return rows; // Mengembalikan semua data pengguna
   } catch (error) {
-    console.log("Error fetching pengguna: ", error);
+    console.error("Error fetching all pengguna:", error);
     throw error;
   }
 };
 
 export const getPenggunaById = async (id) => {
+  const sql = "SELECT * FROM Pengguna WHERE id = ?";
+
   try {
     const connection = await db.getDbConnection(); // Ambil koneksi dari pool
-    const [rows] = await connection.execute(
-      "SELECT * FROM Pengguna WHERE id = ?",
-      [id]
-    );
-    return rows[0];
+    const [rows] = await connection.execute(sql, [id]); // Menjalankan query dengan ID
+    return rows[0]; // Mengembalikan pengguna pertama (karena ID unik)
   } catch (error) {
-    console.log("Error fetching pengguna by ID: ", error);
+    console.error("Error fetching pengguna by ID:", error);
     throw error;
   }
 };
 
-// penggunaModel.js
 export const updatePengguna = async (id, data) => {
   const sql = `UPDATE Pengguna SET 
-    nama=?, email=?, pengalaman=?, tentang=?, alamat=?, jenis_kelamin=?, pekerjaan=?, no_hp=?, kata_sandi=?, peran=? 
-    WHERE id=?`;
+    nama = ?, email = ?, pengalaman = ?, tentang = ?, alamat = ?, jenis_kelamin = ?, pekerjaan = ?, no_hp = ?, kata_sandi = ?, peran = ?
+    WHERE id = ?`;
 
   const {
     nama,
@@ -90,18 +90,18 @@ export const updatePengguna = async (id, data) => {
     await connection.execute(sql, [
       nama,
       email,
-      pengalaman,
-      tentang,
-      alamat,
-      jenis_kelamin || null, // Mengirim null jika tidak ada nilai
+      pengalaman || null, 
+      tentang || null,
+      alamat || null,
+      jenis_kelamin || null,
       pekerjaan || null,
       no_hp || null,
-      kata_sandi,
+      kata_sandi || null, // Kata sandi bisa dibiarkan null jika tidak diubah
       peran || null,
       id,
     ]);
   } catch (error) {
-    console.log("Error updating pengguna: ", error);
+    console.log("Error updating pengguna:", error);
     throw error;
   }
 };
