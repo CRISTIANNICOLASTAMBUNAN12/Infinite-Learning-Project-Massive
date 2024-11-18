@@ -5,30 +5,7 @@ import { toast } from 'react-toastify'; // Menggunakan react-toastify untuk noti
 
 const Berita = () => {
   const navigate = useNavigate();
-  const [beritaList, setBeritaList] = useState([
-    {
-      id: 1,
-      title: 'Peningkatan Produksi Tanaman Padi',
-      date: '2024-11-01',
-      status: 'published',
-      imageUrl: 'https://via.placeholder.com/800x400',
-    },
-    {
-      id: 2,
-      title: 'Mengenal Teknologi Pertanian Modern',
-      date: '2024-10-15',
-      status: 'draft',
-      imageUrl: 'https://via.placeholder.com/800x400',
-    },
-    {
-      id: 3,
-      title: 'Strategi Pengendalian Hama Tanaman',
-      date: '2024-09-25',
-      status: 'published',
-      imageUrl: 'https://via.placeholder.com/800x400',
-    },
-  ]);
-
+  const [beritaList, setBeritaList] = useState([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
@@ -36,18 +13,40 @@ const Berita = () => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const dropdownRefs = useRef({});
 
+  // Ambil berita dari API saat komponen pertama kali dimuat
+  useEffect(() => {
+    const fetchBerita = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/berita');
+        const data = await response.json();
+        if (response.ok) {
+          setBeritaList(data);
+        } else {
+          console.error('Gagal mengambil data berita:', data.message);
+        }
+      } catch (error) {
+        console.error('Terjadi kesalahan saat mengambil data berita:', error);
+      }
+    };
+    fetchBerita();
+  }, []);
+
+  // Fungsi tambah berita
   const handleTambah = () => {
     navigate('/berita/tambah');
   };
 
+  // Fungsi melihat detail berita
   const handleDetail = (id) => {
     navigate(`/berita/detail/${id}`);
   };
 
+  // Fungsi edit berita
   const handleEdit = (id) => {
     navigate(`/berita/edit/${id}`);
   };
 
+  // Fungsi hapus berita
   const handleDelete = (id) => {
     const updatedBeritaList = beritaList.filter((berita) => berita.id !== id);
     setBeritaList(updatedBeritaList);
@@ -124,7 +123,6 @@ const Berita = () => {
               <th className="px-6 py-3">Gambar</th>
               <th className="px-6 py-3">Judul</th>
               <th className="px-6 py-3">Tanggal</th>
-              <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Aksi</th>
             </tr>
           </thead>
@@ -134,20 +132,20 @@ const Berita = () => {
                 <td className="px-6 py-3">
                   <img
                     src={berita.imageUrl}
-                    alt={berita.title}
+                    alt={berita.judul}
                     className="w-20 h-20 object-cover rounded-md"
                   />
                 </td>
-                <td className="px-6 py-3">{berita.title}</td>
-                <td className="px-6 py-3">{berita.date}</td>
+                <td className="px-6 py-3">{berita.judul}</td>
                 <td className="px-6 py-3">
-                  <span
-                    className={`px-4 py-2 rounded-full ${berita.status === 'published' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-black'
-                      }`}
-                  >
-                    {berita.status === 'published' ? 'Dipublikasikan' : 'Draft'}
-                  </span>
-                </td>
+                  {(() => {
+                    const date = new Date(berita.diterbitkan_pada);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = String(date.getFullYear());
+                    return `${day}/${month}/${year}`;
+                  })()}
+                </td>                
                 <td className="px-6 py-3 relative">
                   <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[berita.id] = el)}>
                     <button
@@ -175,12 +173,6 @@ const Berita = () => {
                           className="block w-full text-left px-6 py-3 text-red-600 hover:bg-red-100"
                         >
                           Hapus
-                        </button>
-                        <button
-                          onClick={() => handleStatusChangeConfirmation(berita.id)}
-                          className={`block w-full text-left px-6 py-3 ${berita.status === 'published' ? 'text-blue-600 hover:bg-blue-100' : 'text-green-600 hover:bg-green-100'}`}
-                        >
-                          {berita.status === 'published' ? 'Set Draft' : 'Publish'}
                         </button>
                       </div>
                     )}
@@ -211,35 +203,6 @@ const Berita = () => {
               </button>
               <button
                 onClick={handleCancelDelete}
-                className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-              >
-                Tidak
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Konfirmasi Perubahan Status */}
-      {isStatusModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-96 text-center transition-all duration-300 transform hover:scale-105">
-            <div className="flex items-center justify-center mb-4">
-              <MdError className="text-red-500 mr-3 text-2xl" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                Perhatian
-              </h3>
-            </div>
-            <p className="mb-4 text-gray-600">Apakah Anda yakin ingin mengubah status berita ini?</p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => handleToggleStatus(userIdToToggleStatus)}
-                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              >
-                Ya, Ubah Status
-              </button>
-              <button
-                onClick={handleCancelStatusChange}
                 className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
               >
                 Tidak

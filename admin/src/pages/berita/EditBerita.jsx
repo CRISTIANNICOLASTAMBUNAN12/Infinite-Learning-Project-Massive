@@ -4,22 +4,56 @@ import { useNavigate, useParams } from 'react-router-dom';
 const EditBerita = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [berita, setBerita] = useState({ title: '', date: '', status: 'draft', imageUrl: '' });
+  const [berita, setBerita] = useState({ title: '', content: '', date: '', status: 'draft', imageUrl: '' });
 
   // Mengambil data berita berdasarkan ID untuk diedit
   useEffect(() => {
-    const beritaData = {
-      1: { title: 'Peningkatan Produksi Tanaman Padi', date: '2024-11-01', status: 'published', imageUrl: 'https://via.placeholder.com/800x400' },
-      2: { title: 'Mengenal Teknologi Pertanian Modern', date: '2024-10-15', status: 'draft', imageUrl: 'https://via.placeholder.com/800x400' },
-      3: { title: 'Strategi Pengendalian Hama Tanaman', date: '2024-09-25', status: 'published', imageUrl: 'https://via.placeholder.com/800x400' },
+    const fetchBerita = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/berita/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setBerita({
+            title: data.judul,
+            content: data.konten,
+            imageUrl: data.imageUrl || '', // Memastikan gambar tetap ada
+          });
+        } else {
+          console.error("Berita tidak ditemukan");
+        }
+      } catch (error) {
+        console.error("Error fetching berita:", error);
+      }
     };
-    setBerita(beritaData[id]);
+
+    fetchBerita();
   }, [id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Berita setelah diedit:', berita);
-    navigate('/berita');
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/berita/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          judul: berita.title,
+          konten: berita.content,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Berita setelah diedit:', data);
+        navigate('/berita'); // Kembali ke halaman daftar berita
+      } else {
+        console.error("Gagal menyimpan perubahan berita");
+      }
+    } catch (error) {
+      console.error('Error updating berita:', error);
+    }
   };
 
   const handleBack = () => {
@@ -57,28 +91,14 @@ const EditBerita = () => {
           </div>
 
           <div>
-            <label htmlFor="date" className="block text-lg text-gray-700">Tanggal</label>
-            <input
-              type="date"
-              id="date"
-              className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-              value={berita.date}
-              onChange={(e) => setBerita({ ...berita, date: e.target.value })}
+            <label htmlFor="content" className="block text-lg text-gray-700">Konten</label>
+            <textarea
+              id="content"
+              value={berita.content}
+              onChange={(e) => setBerita({ ...berita, content: e.target.value })}
+              className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400"
               required
             />
-          </div>
-
-          <div>
-            <label htmlFor="status" className="block text-lg text-gray-700">Status</label>
-            <select
-              id="status"
-              className="w-full px-4 py-3 mt-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-              value={berita.status}
-              onChange={(e) => setBerita({ ...berita, status: e.target.value })}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
           </div>
 
           <div>
@@ -90,7 +110,6 @@ const EditBerita = () => {
               value={berita.imageUrl}
               onChange={(e) => setBerita({ ...berita, imageUrl: e.target.value })}
               placeholder="Masukkan URL gambar"
-              required
             />
           </div>
 

@@ -6,7 +6,7 @@ const Navbar = ({ setIsAuthenticated, setRole, toggleSidebar, handleLogout }) =>
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    navigate('/dashboard');
+    navigate('/admin-dashboard');
   };
 
   return (

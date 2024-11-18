@@ -1,30 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const TambahEdukasi = () => {
     const navigate = useNavigate();
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [judul, setJudul] = useState('');
+    const [konten, setKonten] = useState('');
+    const [kategoriId, setKategoriId] = useState('');
+    const [kategoriList, setKategoriList] = useState([]);
     const [imageUrl, setImageUrl] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    // Fungsi untuk mengambil data kategori dari backend
+    const fetchKategori = async () => {
+        try {
+            const response = await fetch('http://localhost:4000/api/kategori');
+            const data = await response.json();
+            setKategoriList(data);
+        } catch (error) {
+            console.error("Gagal mengambil data kategori:", error);
+            toast.error("Gagal mengambil data kategori");
+        }
+    };
+
+    // Mengambil data kategori saat komponen dimuat
+    useEffect(() => {
+        fetchKategori();
+    }, []);
+
+    // Fungsi untuk mengirim data edukasi baru ke backend
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
         const newEdukasi = {
-            id: Date.now(), // Generate a unique ID for the new edukasi
-            title,
-            description,
-            imageUrl,
-            date: new Date().toLocaleDateString(),
-            status: 'draft', // Set default status to draft
+            judul,
+            konten,
+            kategori_id: kategoriId, // Kirim kategori_id
         };
-        // Assuming we are adding the new edukasi to a global state or API here
-        console.log('Artikel Baru:', newEdukasi);
-        navigate('/edukasi'); // Redirect back to the Edukasi page
+
+        try {
+            const response = await fetch('http://localhost:4000/api/edukasi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newEdukasi),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Gagal menambahkan edukasi');
+            }
+
+            toast.success('Edukasi berhasil ditambahkan!');
+            navigate('/edukasi'); // Redirect ke halaman daftar edukasi
+        } catch (error) {
+            toast.error(`Error: ${error.message}`);
+            console.error('Error adding edukasi:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Fungsi untuk tombol kembali
     const handleBack = () => {
-        navigate('/edukasi'); // Redirect ke halaman daftar berita
+        navigate('/edukasi');
     };
 
     return (
@@ -34,26 +76,43 @@ const TambahEdukasi = () => {
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label htmlFor="title" className="block text-lg text-gray-700">Judul Artikel</label>
+                    <label htmlFor="judul" className="block text-lg text-gray-700">Judul Artikel</label>
                     <input
                         type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        id="judul"
+                        value={judul}
+                        onChange={(e) => setJudul(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         required
                     />
                 </div>
                 <div>
-                    <label htmlFor="description" className="block text-lg text-gray-700">Deskripsi</label>
+                    <label htmlFor="konten" className="block text-lg text-gray-700">Konten</label>
                     <textarea
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        id="konten"
+                        value={konten}
+                        onChange={(e) => setKonten(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         rows="5"
                         required
                     />
+                </div>
+                <div>
+                    <label htmlFor="kategoriId" className="block text-lg text-gray-700">Kategori</label>
+                    <select
+                        id="kategoriId"
+                        value={kategoriId}
+                        onChange={(e) => setKategoriId(e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        required
+                    >
+                        <option value="">Pilih Kategori</option>
+                        {kategoriList.map((kategori) => (
+                            <option key={kategori.id} value={kategori.id}>
+                                {kategori.nama}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label htmlFor="imageUrl" className="block text-lg text-gray-700">URL Gambar</label>
@@ -63,7 +122,6 @@ const TambahEdukasi = () => {
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        required
                     />
                 </div>
                 <div className="flex justify-between gap-10 pt-10">
@@ -76,9 +134,10 @@ const TambahEdukasi = () => {
                     </button>
                     <button
                         type="submit"
+                        disabled={loading}
                         className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
                     >
-                        Simpan Edukasi
+                        {loading ? 'Menyimpan...' : 'Simpan Edukasi'}
                     </button>
                 </div>
             </form>

@@ -6,23 +6,52 @@ const EditEdukasi = () => {
   const navigate = useNavigate();
   const [edukasi, setEdukasi] = useState(null);
 
+  // Mengambil data edukasi berdasarkan ID dari backend
   useEffect(() => {
-    // Here you would fetch the edukasi data from an API or global state
-    const fetchedEdukasi = {
-      id,
-      title: 'Teknik Pertanian Organik yang Efektif',
-      date: '2024-11-05',
-      imageUrl: 'https://via.placeholder.com/800x400',
-      description: 'Pelajari cara bertani organik yang efektif untuk meningkatkan hasil panen tanpa merusak lingkungan.',
-      status: 'published',
+    const fetchEdukasi = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/edukasi/${id}`);
+        const data = await response.json();
+        if (response.ok) {
+          setEdukasi(data);
+        } else {
+          console.error('Gagal mengambil data edukasi:', data.message);
+        }
+      } catch (error) {
+        console.error('Terjadi kesalahan saat mengambil data edukasi:', error);
+      }
     };
-    setEdukasi(fetchedEdukasi);
+    fetchEdukasi();
   }, [id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Berita setelah diedit:', berita);
-    navigate('/berita');
+
+    const updatedEdukasi = {
+      judul: edukasi.judul,
+      konten: edukasi.konten,
+      kategori_id: edukasi.kategori_id,  // Pastikan kategori_id sudah tersedia
+    };
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/edukasi/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedEdukasi),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Edukasi berhasil diperbarui:', data);
+        navigate('/edukasi');
+      } else {
+        console.error('Gagal memperbarui edukasi:', data.message);
+      }
+    } catch (error) {
+      console.error('Terjadi kesalahan saat memperbarui edukasi:', error);
+    }
   };
 
   const handleBack = () => {
@@ -50,22 +79,22 @@ const EditEdukasi = () => {
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-lg text-gray-700">Judul Artikel</label>
+            <label htmlFor="judul" className="block text-lg text-gray-700">Judul Artikel</label>
             <input
               type="text"
-              id="title"
-              value={edukasi.title}
-              onChange={(e) => setEdukasi({ ...edukasi, title: e.target.value })}
+              id="judul"
+              value={edukasi.judul}
+              onChange={(e) => setEdukasi({ ...edukasi, judul: e.target.value })}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-lg text-gray-700">Deskripsi</label>
+            <label htmlFor="konten" className="block text-lg text-gray-700">Deskripsi</label>
             <textarea
-              id="description"
-              value={edukasi.description}
-              onChange={(e) => setEdukasi({ ...edukasi, description: e.target.value })}
+              id="konten"
+              value={edukasi.konten}
+              onChange={(e) => setEdukasi({ ...edukasi, konten: e.target.value })}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
               rows="5"
               required

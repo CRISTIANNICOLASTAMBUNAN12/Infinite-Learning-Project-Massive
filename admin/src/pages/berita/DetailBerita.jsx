@@ -1,19 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DetailBerita = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [berita, setBerita] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state for better UX
 
   // Mengambil data berita berdasarkan ID
   useEffect(() => {
-    const beritaData = {
-      1: { title: 'Peningkatan Produksi Tanaman Padi', date: '2024-11-01', status: 'published', imageUrl: 'https://via.placeholder.com/800x400' },
-      2: { title: 'Mengenal Teknologi Pertanian Modern', date: '2024-10-15', status: 'draft', imageUrl: 'https://via.placeholder.com/800x400' },
-      3: { title: 'Strategi Pengendalian Hama Tanaman', date: '2024-09-25', status: 'published', imageUrl: 'https://via.placeholder.com/800x400' },
+    const fetchBerita = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Ambil token dari localStorage
+        if (!token) {
+          toast.error('Token tidak ditemukan');
+          return;
+        }
+
+        const response = await fetch(`http://localhost:4000/api/berita/${id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Gagal memuat berita');
+        }
+
+        const data = await response.json();
+        setBerita(data);
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat memuat berita');
+        console.error('Error fetching berita:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-    setBerita(beritaData[id]);
+
+    fetchBerita();
   }, [id]);
 
   const handleBack = () => {
@@ -23,7 +49,12 @@ const DetailBerita = () => {
   return (
     <div className="p-6 bg-white h-full w-full">
       <div className="pt-10">
-        {berita ? (
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-800"></div>
+            <p className="ml-4 text-gray-600">Memuat data berita...</p>
+          </div>
+        ) : berita ? (
           <div className="mb-6">
             <div className="relative flex justify-center items-center">
               <img
@@ -34,40 +65,37 @@ const DetailBerita = () => {
             </div>
 
             <div className="p-10 mx-20">
-              <h1 className="text-2xl sm:text-3xl font-medium text-gray-800 mb-4">{berita.title}</h1>
-              <p className="text-sm sm:text-base text-gray-500 mb-4">Tanggal: {new Date(berita.date).toLocaleDateString()}</p>
-              <p
-                className={`text-sm sm:text-base mb-4 px-3 py-1 rounded-md inline-block ${berita.status === 'published'
-                    ? 'bg-green-500 text-white'
-                    : 'bg-yellow-500 text-black'
-                  }`}
-              >
-                Status: {berita.status === 'published' ? 'Dipublikasikan' : 'Draft'}
+              <h1 className="text-2xl sm:text-3xl font-medium text-gray-800 mb-4">{berita.judul}</h1>
+              <p className="text-sm sm:text-base text-gray-500 mb-4">
+                {(() => {
+                  const date = new Date(berita.diterbitkan_pada);
+                  const day = String(date.getDate()).padStart(2, '0');
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const year = String(date.getFullYear());
+                  return `${day}/${month}/${year}`;
+                })()}
               </p>
               <p className="text-lg sm:text-xl text-gray-700 mb-10 leading-relaxed">
-                Artikel tentang {berita.title.toLowerCase()} memberikan informasi mengenai berbagai aspek yang perlu diperhatikan dalam dunia pertanian.
+                {berita.konten}
               </p>
               <div className="flex justify-between gap-10 pt-10">
-              <button
+                <button
                   onClick={handleBack}
                   className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
-                  >
+                >
                   Kembali
                 </button>
                 <button
                   onClick={() => navigate(`/berita/edit/${id}`)}
                   className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
-                  >
+                >
                   Edit Berita
                 </button>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-800"></div>
-            <p className="ml-4 text-gray-600">Memuat data berita...</p>
-          </div>
+          <p className="text-center text-gray-600">Berita tidak ditemukan</p>
         )}
       </div>
     </div>

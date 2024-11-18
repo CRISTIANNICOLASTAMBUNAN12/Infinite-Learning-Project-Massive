@@ -1,4 +1,5 @@
 import * as beritaModel from "../models/beritaModel.js";
+import db from '../config/db.js';
 
 export const addBerita = async (req, res) => {
   const { judul, konten } = req.body;
@@ -15,7 +16,7 @@ export const addBerita = async (req, res) => {
       .getDbConnection()
       .execute(
         "INSERT INTO aktivitas (jenis_aktivitas, deskripsi) VALUES (?, ?)",
-        ["Berita Terbaru", `Berita terbaru : ${judul}`]
+        ["Berita Terbaru", `Berita terbaru ${judul}`]
       );
   } catch (error) {
     console.error("Error adding berita:", error);

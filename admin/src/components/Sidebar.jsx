@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
           <Link
             to="/admin-dashboard"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
-            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/dashboard') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/admin-dashboard') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
           >
             <FaHome className="mr-3" />
             Dashboard
