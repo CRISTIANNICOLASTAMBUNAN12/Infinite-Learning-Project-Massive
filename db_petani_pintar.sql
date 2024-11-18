@@ -166,6 +166,14 @@ CREATE TABLE Edukasi (
     FOREIGN KEY (kategori_id) REFERENCES Kategori(id) ON DELETE CASCADE
 );
 
+CREATE TABLE aktivitas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    jenis_aktivitas VARCHAR(255) NOT NULL,    -- Jenis aktivitas seperti "pengguna baru", "berita pasar"
+    deskripsi TEXT NOT NULL,                   -- Deskripsi lebih lanjut tentang aktivitas
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 
 
