@@ -58,3 +58,15 @@ export const deleteEdukasi = async (id) => {
     throw new Error("Gagal menghapus edukasi: " + error.message);
   }
 };
+
+export const getJumlahEdukasiFromDB = async () => {
+  try {
+    const [rows] = await db
+      .getDbConnection()
+      .query("SELECT COUNT(*) AS edukasi_count FROM Edukasi");
+    return rows[0].edukasi_count;
+  } catch (error) {
+    console.error("Error fetching Edukasi count:", error);
+    throw error;
+  }
+};

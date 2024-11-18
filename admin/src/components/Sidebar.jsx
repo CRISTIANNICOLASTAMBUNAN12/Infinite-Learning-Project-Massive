@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
       <ul className="space-y-1">
         <li className="px-4 sm:pt-6">
           <Link
-            to="/dashboard"
+            to="/admin-dashboard"
             onClick={handleLinkClick} // Menutup sidebar ketika link diklik
             className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${isActive('/dashboard') ? 'bg-green-600 text-white' : 'hover:bg-green-100'}`}
           >

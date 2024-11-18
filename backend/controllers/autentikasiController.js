@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as penggunaModel from "../models/penggunaModel.js";
 import * as autentikasiModel from "../models/autentikasiModel.js";
+import db from '../config/db.js'; // Sesuaikan dengan path yang benar
+import { getAktivitasTerbaruFromDB } from '../models/aktivitasModel.js'; 
 
 export const loginPengguna = async (req, res) => {
   const { email, kata_sandi } = req.body;
@@ -87,6 +89,18 @@ export const registrasiPengguna = async (req, res) => {
       peran,
     });
 
+    // Log aktivitas pengguna baru dengan memanfaatkan fungsi aktivitasModel
+    await db.getDbConnection().execute(
+      "INSERT INTO aktivitas (jenis_aktivitas, deskripsi) VALUES (?, ?)",
+      [
+        "Pengguna Baru",
+        `Pengguna baru dengan nama ${nama} telah mendaftar.`
+      ]
+    );
+
+    // Mengambil aktivitas terbaru setelah berhasil registrasi
+    const aktivitasTerbaru = await getAktivitasTerbaruFromDB();
+    
     res.status(201).json({
       message: "Registrasi berhasil",
       pengguna: {
@@ -95,6 +109,7 @@ export const registrasiPengguna = async (req, res) => {
         email,
         peran,
       },
+      aktivitasTerbaru, // Menyertakan aktivitas terbaru dalam respon
     });
   } catch (err) {
     console.error("Registrasi error:", err);

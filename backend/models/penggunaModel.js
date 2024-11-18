@@ -19,7 +19,7 @@ export const addPengguna = async (data) => {
   } = data;
 
   try {
-    const connection = await db.getDbConnection(); 
+    const connection = await db.getDbConnection();
     const [rows] = await connection.execute(sql, [
       nama,
       email,
@@ -44,9 +44,9 @@ export const getAllPengguna = async () => {
   const sql = "SELECT * FROM Pengguna";
 
   try {
-    const connection = await db.getDbConnection(); 
-    const [rows] = await connection.execute(sql); 
-    return rows; 
+    const connection = await db.getDbConnection();
+    const [rows] = await connection.execute(sql);
+    return rows;
   } catch (error) {
     console.error("Error fetching all pengguna:", error);
     throw error;
@@ -57,9 +57,9 @@ export const getPenggunaById = async (id) => {
   const sql = "SELECT * FROM Pengguna WHERE id = ?";
 
   try {
-    const connection = await db.getDbConnection(); 
-    const [rows] = await connection.execute(sql, [id]); 
-    return rows[0]; 
+    const connection = await db.getDbConnection();
+    const [rows] = await connection.execute(sql, [id]);
+    return rows[0];
   } catch (error) {
     console.error("Error fetching pengguna by ID:", error);
     throw error;
@@ -89,13 +89,13 @@ export const updatePengguna = async (id, data) => {
     await connection.execute(sql, [
       nama,
       email,
-      pengalaman || null, 
+      pengalaman || null,
       tentang || null,
       alamat || null,
       jenis_kelamin || null,
       pekerjaan || null,
       no_hp || null,
-      kata_sandi || null, 
+      kata_sandi || null,
       peran || null,
       id,
     ]);
@@ -130,6 +130,33 @@ export const getPenggunaByEmail = async (email) => {
     return rows.length > 0 ? rows[0] : null;
   } catch (error) {
     console.log("Error fetching pengguna by email: ", error);
+    throw error;
+  }
+};
+
+export const getJumlahPenggunaFromDB = async () => {
+  try {
+    const [rows] = await db
+      .getDbConnection()
+      .query("SELECT COUNT(*) AS pengguna_count FROM Pengguna");
+    return rows[0].pengguna_count;
+  } catch (error) {
+    console.error("Error fetching Pengguna count:", error);
+    throw error;
+  }
+};
+
+export const getThreeLatestPengguna = async () => {
+  try {
+    // Mendapatkan koneksi dari pool
+    const connection = await db.getDbConnection();
+
+    // Melakukan query untuk mendapatkan 3 pengguna terbaru
+    const [rows] = await connection.query('SELECT * FROM pengguna ORDER BY dibuat_pada DESC LIMIT 3');
+
+    return rows;
+  } catch (error) {
+    console.error('Error fetching latest pengguna:', error);
     throw error;
   }
 };

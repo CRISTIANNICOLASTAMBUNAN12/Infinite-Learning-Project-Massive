@@ -1,27 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DetailUser = () => {
-  const { id } = useParams();
+  const { id } = useParams();  // Mendapatkan ID pengguna dari URL
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);  // State untuk menyimpan data pengguna
+  const [loading, setLoading] = useState(true);  // State untuk loading
 
-  // Dummy data (nanti bisa diambil dari API atau state)
-  const user = {
-    id,
-    name: 'John Doe',
-    email: 'johndoe@gmail.com',
-    role: 'user',
-    status: 'active',
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Anda perlu login terlebih dahulu');
+          navigate('/login');  // Redirect ke login jika token tidak ada
+          return;
+        }
+
+        const response = await fetch(`http://localhost:4000/api/pengguna/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Gagal mengambil data pengguna');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          setUser(data.data);  // Menyimpan data pengguna dalam state
+        } else {
+          toast.error('Pengguna tidak ditemukan');
+          navigate('/users');
+        }
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat mengambil data pengguna');
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);  // Mengubah status loading setelah data diambil
+      }
+    };
+
+    fetchUserData();
+  }, [id, navigate]);  // Dependensi id dan navigate untuk menjalankan ulang efek
 
   // Fungsi untuk tombol kembali
   const handleBack = () => {
-    navigate('/users'); // Redirect ke halaman daftar pengguna
+    navigate('/users');  // Redirect ke halaman daftar pengguna
   };
 
-  const handleTambah = (id) => {
-    navigate(`/users/tambah`);
+  // Fungsi untuk tombol tambah pengguna
+  const handleTambah = () => {
+    navigate('/users/tambah');  // Redirect ke halaman tambah pengguna
   };
+
+  if (loading) {
+    return <div>Loading...</div>;  // Menampilkan loading jika data belum selesai diambil
+  }
+
+  if (!user) {
+    return <div>Pengguna tidak ditemukan</div>;  // Menampilkan pesan jika pengguna tidak ditemukan
+  }
 
   return (
     <div className="p-6 bg-softCream bg-white h-full w-full">
@@ -34,7 +75,7 @@ const DetailUser = () => {
         <div className="space-y-6">
           <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Nama</p>
-            <p className="text-lg text-gray-800 font-medium">{user.name}</p>
+            <p className="text-lg text-gray-800 font-medium">{user.nama}</p>
           </div>
 
           <div className="flex justify-between items-center border-b pb-4">
@@ -44,16 +85,7 @@ const DetailUser = () => {
 
           <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Peran</p>
-            <p className="text-lg text-gray-800 font-medium">{user.role}</p>
-          </div>
-
-          <div className="flex justify-between items-center border-b pb-4">
-            <p className="text-lg font-semibold text-gray-600">Status</p>
-            <span
-              className={`px-4 py-2 rounded-full font-medium ${user.status === 'active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
-            >
-              {user.status === 'active' ? 'Aktif' : 'Nonaktif'}
-            </span>
+            <p className="text-lg text-gray-800 font-medium">{user.peran}</p>
           </div>
         </div>
 
@@ -65,7 +97,7 @@ const DetailUser = () => {
             Kembali
           </button>
           <button
-            onClick={handleTambah} type="submit"
+            onClick={handleTambah}
             className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
           >
             Tambah Pengguna

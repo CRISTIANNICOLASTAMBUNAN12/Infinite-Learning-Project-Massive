@@ -8,5 +8,6 @@ router.get("/", edukasiController.getEdukasi);
 router.get("/:id", edukasiController.getEdukasiById);
 router.put("/:id", edukasiController.updateEdukasi);
 router.delete("/:id", edukasiController.deleteEdukasi);
+router.get('/jumlah/jumlah-terbaru', edukasiController.getJumlahEdukasi);
 
 export default router;

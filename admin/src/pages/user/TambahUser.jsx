@@ -7,8 +7,14 @@ const TambahUser = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: 'user',
-    status: 'active',
+    experience: '', // Menambahkan kolom pengalaman
+    about: '', // Menambahkan kolom tentang
+    address: '', // Menambahkan kolom alamat
+    gender: '', // Menambahkan kolom jenis kelamin
+    job: '', // Menambahkan kolom pekerjaan
+    phone: '', // Menambahkan kolom nomor HP
+    password: '', // Menambahkan password untuk registrasi
+    role: 'petani', // Menggunakan 'petani' sesuai pilihan Anda
   });
 
   const navigate = useNavigate();
@@ -18,11 +24,40 @@ const TambahUser = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('User added:', formData);
-    toast.success('Pengguna berhasil ditambahkan');
-    navigate('/users'); // Redirect ke halaman daftar pengguna
+    try {
+      const response = await fetch('http://localhost:4000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nama: formData.name,
+          email: formData.email,
+          pengalaman: formData.experience, // Menyertakan pengalaman
+          tentang: formData.about, // Menyertakan tentang
+          alamat: formData.address, // Menyertakan alamat
+          jenis_kelamin: formData.gender, // Menyertakan jenis kelamin
+          pekerjaan: formData.job, // Menyertakan pekerjaan
+          no_hp: formData.phone, // Menyertakan no_hp
+          kata_sandi: formData.password,  // Menyertakan password
+          peran: formData.role,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Pengguna berhasil ditambahkan');
+        navigate('/users'); // Redirect ke halaman daftar pengguna
+      } else {
+        toast.error(data.message || 'Gagal menambahkan pengguna');
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat menambahkan pengguna');
+      console.error('Error adding user:', error);  // Menampilkan kesalahan di konsol
+    }
   };
 
   const handleBack = () => {
@@ -63,15 +98,106 @@ const TambahUser = () => {
         </div>
 
         <div>
+          <label className="block text-gray-700 font-medium mb-2">Pengalaman</label>
+          <textarea
+            name="experience"
+            placeholder="Masukkan pengalaman"
+            value={formData.experience}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Tentang</label>
+          <textarea
+            name="about"
+            placeholder="Masukkan tentang diri Anda"
+            value={formData.about}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Alamat</label>
+          <textarea
+            name="address"
+            placeholder="Masukkan alamat"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Jenis Kelamin</label>
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
+          >
+            <option value="male">Laki-laki</option>
+            <option value="female">Perempuan</option>
+            <option value="other">Lainnya</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Pekerjaan</label>
+          <input
+            type="text"
+            name="job"
+            placeholder="Masukkan pekerjaan"
+            value={formData.job}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">No. HP</label>
+          <input
+            type="text"
+            name="phone"
+            placeholder="Masukkan nomor handphone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Masukkan password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+          />
+        </div>
+
+        <div>
           <label className="block text-gray-700 font-medium mb-2">Peran</label>
           <select
             name="role"
             value={formData.role}
             onChange={handleChange}
+            required
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
           >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
+            <option value="petani">Petani</option>
+            {/* Tambahkan opsi lain jika diperlukan */}
           </select>
         </div>
 

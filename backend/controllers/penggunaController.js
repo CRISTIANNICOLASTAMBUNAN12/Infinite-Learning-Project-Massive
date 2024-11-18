@@ -1,7 +1,7 @@
-// penggunaController.js
 import bcrypt from "bcrypt";
 import * as penggunaModel from "../models/penggunaModel.js";
 import jwt from "jsonwebtoken";
+import { getJumlahPenggunaFromDB } from "../models/penggunaModel.js";
 
 export const addPengguna = async (req, res) => {
   try {
@@ -44,6 +44,7 @@ export const addPengguna = async (req, res) => {
     res
       .status(201)
       .json({ success: true, message: "Pengguna berhasil ditambahkan" });
+
   } catch (error) {
     console.error("Error adding pengguna:", error);
     res
@@ -100,12 +101,6 @@ export const updatePengguna = async (req, res) => {
       no_hp,
       peran,
     } = req.body;
-
-    if (!nama || !email || !kata_sandi || !pengalaman || !tentang || !alamat) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Data tidak lengkap" });
-    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedKataSandi = await bcrypt.hash(kata_sandi, salt);
@@ -202,4 +197,28 @@ export const loginPengguna = async (req, res) => {
     message: "Login berhasil",
     token,
   });
+};
+
+export const getJumlahPengguna = async (req, res) => {
+  try {
+    const jumlahPengguna = await getJumlahPenggunaFromDB();
+    res.json({ count: jumlahPengguna });
+  } catch (error) {
+    console.error("Error fetching product count:", error);
+    res.status(500).send("Server Error");
+  }
+};
+
+export const getLatestPengguna = async (req, res) => {
+  try {
+    const pengguna = await penggunaModel.getThreeLatestPengguna();
+    res.status(200).json({ success: true, data: pengguna });
+  } catch (error) {
+    console.error("Error fetching latest pengguna:", error);
+    res.status(500).json({
+      success: false,
+      message: "Gagal mendapatkan data pengguna",
+      error,
+    });
+  }
 };

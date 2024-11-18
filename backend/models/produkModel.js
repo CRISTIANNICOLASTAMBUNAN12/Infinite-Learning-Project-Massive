@@ -88,3 +88,15 @@ export const deleteProduk = async (id) => {
     throw new Error("Gagal menghapus produk: " + error.message);
   }
 };
+
+export const getJumlahProdukFromDB = async () => {
+  try {
+    const [rows] = await db
+      .getDbConnection()
+      .query("SELECT COUNT(*) AS product_count FROM Produk");
+    return rows[0].product_count;
+  } catch (error) {
+    console.error("Error fetching product count:", error);
+    throw error;
+  }
+};

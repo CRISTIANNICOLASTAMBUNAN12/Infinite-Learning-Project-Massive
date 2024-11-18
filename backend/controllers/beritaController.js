@@ -9,6 +9,14 @@ export const addBerita = async (req, res) => {
       message: "Berita berhasil ditambahkan",
       data: { id, judul, konten },
     });
+
+    // Log aktivitas berita terbaru
+    await db
+      .getDbConnection()
+      .execute(
+        "INSERT INTO aktivitas (jenis_aktivitas, deskripsi) VALUES (?, ?)",
+        ["Berita Terbaru", `Berita terbaru : ${judul}`]
+      );
   } catch (error) {
     console.error("Error adding berita:", error);
     res.status(500).json({
@@ -84,3 +92,4 @@ export const deleteBerita = async (req, res) => {
     });
   }
 };
+

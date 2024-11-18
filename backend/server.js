@@ -20,9 +20,17 @@ import kategoriRoute from "./routes/kategoriRoute.js";
 import produkRoute from "./routes/produkRoute.js";
 import pasarRoute from "./routes/pasarRoute.js";
 import edukasiRoute from "./routes/edukasiRoute.js";
+import aktivitasRoutes from "./routes/aktivitasRoutes.js";
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT || 4000;
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Hanya mengizinkan frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Metode HTTP yang diizinkan
+  credentials: true // Jika menggunakan cookie
+}));
 
 app.use(express.json());
 
@@ -50,6 +58,7 @@ try {
   app.use("/api/produk", produkRoute); 
   app.use("/api/pasar", pasarRoute);  
   app.use("/api/edukasi", edukasiRoute);
+  app.use("/api/aktivitas", aktivitasRoutes);
 
   app.get('/', (req, res) => {
     res.send('API is working');

@@ -6,59 +6,137 @@ const EditUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const initialData = {
-    name: 'John Doe',
-    email: 'johndoe@gmail.com',
-    role: 'user',
-    status: 'active',
-  };
-
-  const [formData, setFormData] = useState(initialData);
+  // Initial state with empty fields for form data
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    peran: '',
+    pengalaman: '',
+    tentang: '',
+    alamat: '',
+    jenis_kelamin: '',
+    pekerjaan: '',
+    no_hp: '',
+    kata_sandi: '',  // Menambahkan field kata_sandi
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Memeriksa apakah ada perubahan data
-  const hasChanges = Object.keys(initialData).some((key) => initialData[key] !== formData[key]);
+  // Fetch data when component is mounted
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Anda perlu login terlebih dahulu');
+          navigate('/login'); // Redirect to login if no token
+          return;
+        }
 
+        const response = await fetch(`http://localhost:4000/api/pengguna/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Gagal mengambil data pengguna');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          setFormData({
+            name: data.data.nama,
+            email: data.data.email,
+            peran: data.data.peran,
+            pengalaman: data.data.pengalaman || '',
+            tentang: data.data.tentang || '',
+            alamat: data.data.alamat || '',
+            jenis_kelamin: data.data.jenis_kelamin || '',
+            pekerjaan: data.data.pekerjaan || '',
+            no_hp: data.data.no_hp || '',
+            kata_sandi: '',  // Initial kosong untuk kata_sandi
+          });
+        } else {
+          toast.error('Pengguna tidak ditemukan');
+          navigate('/users');
+        }
+      } catch (error) {
+        toast.error('Terjadi kesalahan saat mengambil data pengguna');
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [id, navigate]);
+
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  // Handle form submit to update user data
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lakukan proses pengeditan pengguna (API call atau state update)
-    console.log('User updated:', formData);
-    toast.success('Pengguna berhasil diperbarui');
-    navigate('/users');
-  };
 
-  // Fungsi untuk menampilkan modal konfirmasi
-  const handleBack = () => {
-    // Hanya menampilkan modal jika ada perubahan data
-    if (hasChanges) {
-      setIsModalOpen(true);
-    } else {
-      navigate('/users'); // Jika tidak ada perubahan, langsung kembali
+    // Menangani nilai null untuk peran, jika peran tidak dipilih, set default value
+    const peranToSend = formData.peran ? formData.peran : null;  // Kirim null jika tidak ada peran yang dipilih
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/pengguna/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          nama: formData.name,
+          email: formData.email,
+          kata_sandi: formData.kata_sandi,
+          pengalaman: formData.pengalaman,
+          tentang: formData.tentang,
+          alamat: formData.alamat,
+          jenis_kelamin: formData.jenis_kelamin,
+          pekerjaan: formData.pekerjaan,
+          no_hp: formData.no_hp,
+          peran: peranToSend,  // Pastikan peran tidak null
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        toast.success('Pengguna berhasil diperbarui');
+        navigate('/users');
+      } else {
+        toast.error(data.message || 'Gagal memperbarui pengguna');
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat memperbarui pengguna');
+      console.error('Error updating user:', error);
     }
   };
 
-  // Fungsi untuk menutup modal konfirmasi tanpa menyimpan
+
+  const handleBack = () => {
+    setIsModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  // Fungsi untuk melanjutkan kembali tanpa menyimpan
   const handleConfirmBack = () => {
     setIsModalOpen(false);
-    navigate('/users'); // Redirect ke halaman daftar pengguna
+    navigate('/users');
   };
 
   return (
     <div className="bg-softCream p-8 h-full w-full bg-white">
       <form onSubmit={handleSubmit} className="p-6 rounded-xl space-y-6">
-        <div className='text-center pb-4'>
-          <h1 className="text-2xl font-medium text-gray-800">Tambah Pengguna</h1>
+        <div className="text-center pb-4">
+          <h1 className="text-2xl font-medium text-gray-800">Edit Pengguna</h1>
         </div>
+
         <div>
           <label htmlFor="name" className="block text-lg font-semibold text-gray-700">Nama</label>
           <input
@@ -88,32 +166,105 @@ const EditUser = () => {
         </div>
 
         <div>
-          <label htmlFor="role" className="block text-lg font-semibold text-gray-700">Peran</label>
+          <label htmlFor="peran" className="block text-lg font-semibold text-gray-700">Peran</label>
           <select
-            id="role"
-            name="role"
-            value={formData.role}
+            id="peran"
+            name="peran"
+            value={formData.peran || ''}  // Nilai default menjadi string kosong jika null
             onChange={handleChange}
             className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
           >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
+            <option value="">Pilih Peran</option>  {/* Opsi default kosong */}
+            <option value="petani">Petani</option>
           </select>
         </div>
 
-        <div className="flex justify-between gap-10">
+
+        <div>
+          <label htmlFor="pengalaman" className="block text-lg font-semibold text-gray-700">Pengalaman</label>
+          <input
+            type="text"
+            id="pengalaman"
+            name="pengalaman"
+            value={formData.pengalaman}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="tentang" className="block text-lg font-semibold text-gray-700">Tentang</label>
+          <input
+            type="text"
+            id="tentang"
+            name="tentang"
+            value={formData.tentang}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="alamat" className="block text-lg font-semibold text-gray-700">Alamat</label>
+          <input
+            type="text"
+            id="alamat"
+            name="alamat"
+            value={formData.alamat}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="pekerjaan" className="block text-lg font-semibold text-gray-700">Pekerjaan</label>
+          <input
+            type="text"
+            id="pekerjaan"
+            name="pekerjaan"
+            value={formData.pekerjaan}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="no_hp" className="block text-lg font-semibold text-gray-700">No. HP</label>
+          <input
+            type="text"
+            id="no_hp"
+            name="no_hp"
+            value={formData.no_hp}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="kata_sandi" className="block text-lg font-semibold text-gray-700">Kata Sandi</label>
+          <input
+            type="password"
+            id="kata_sandi"
+            name="kata_sandi"
+            value={formData.kata_sandi}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div className="flex justify-between gap-10 pt-10">
           <button
-            onClick={handleBack}
             type="button"
+            onClick={handleBack}
             className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
           >
             Kembali
           </button>
           <button
             type="submit"
-            className="flex-1 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 hover:shadow-lg transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
           >
-            Simpan Perubahan
+            Perbarui Pengguna
           </button>
         </div>
       </form>

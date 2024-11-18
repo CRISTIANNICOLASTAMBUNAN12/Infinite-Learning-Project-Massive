@@ -1,6 +1,7 @@
 import * as produkModel from "../models/produkModel.js";
 import * as kategoriModel from "../models/kategoriModel.js";
-
+import { getJumlahProdukFromDB } from "../models/produkModel.js";
+  
 export const addProduk = async (req, res) => {
   if (!req.user || !req.user.id) {
     return res.status(401).json({ message: "Pengguna tidak terverifikasi" });
@@ -113,5 +114,15 @@ export const deleteProduk = async (req, res) => {
       message: "Gagal menghapus produk",
       error: error.message,
     });
+  }
+};
+
+export const getJumlahProduk = async (req, res) => {
+  try {
+    const jumlahProduk = await getJumlahProdukFromDB();
+    res.json({ count: jumlahProduk });
+  } catch (error) {
+    console.error("Error fetching product count:", error);
+    res.status(500).send("Server Error");
   }
 };

@@ -9,5 +9,7 @@ router.get('/', verifyToken, checkRole(['admin', 'petani']), penggunaController.
 router.get('/:id', verifyToken, checkRole(['admin', 'petani']), penggunaController.getPenggunaById);
 router.put('/:id', verifyToken, checkRole(['admin', 'petani']), penggunaController.updatePengguna);
 router.delete('/:id', verifyToken, checkRole(['admin']), penggunaController.deletePengguna);
+router.get('/jumlah/jumlah-terbaru', penggunaController.getJumlahPengguna);
+router.get("/daftar/tiga/terbaru", penggunaController.getLatestPengguna);
 
 export default router;

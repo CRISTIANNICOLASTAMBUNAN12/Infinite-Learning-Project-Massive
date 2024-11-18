@@ -83,7 +83,7 @@ const EditEdukasi = () => {
             />
           </div>
           <div className="flex justify-between gap-10 pt-10">
-          <button
+            <button
               onClick={handleBack}
               className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
             >
