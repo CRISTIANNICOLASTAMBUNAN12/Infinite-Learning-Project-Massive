@@ -1,12 +1,12 @@
 import db from "../config/db.js";
 
-export const addEdukasi = async (judul, konten, kategori_id) => {
+export const addEdukasi = async (judul, konten, kategori_id, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "INSERT INTO Edukasi (judul, konten, kategori_id) VALUES (?, ?, ?)",
-        [judul, konten, kategori_id]
+        "INSERT INTO Edukasi (judul, konten, kategori_id, gambar) VALUES (?, ?, ?, ?)",
+        [judul, konten, kategori_id, gambar]
       );
     return result;
   } catch (error) {
@@ -34,13 +34,13 @@ export const getEdukasiById = async (id) => {
   }
 };
 
-export const updateEdukasi = async (id, judul, konten, kategori_id) => {
+export const updateEdukasi = async (id, judul, konten, kategori_id, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "UPDATE Edukasi SET judul = ?, konten = ?, kategori_id = ? WHERE id = ?",
-        [judul, konten, kategori_id, id]
+        "UPDATE Edukasi SET judul = ?, konten = ?, kategori_id = ?, gambar = ? WHERE id = ?",
+        [judul, konten, kategori_id, gambar, id]
       );
     return result;
   } catch (error) {

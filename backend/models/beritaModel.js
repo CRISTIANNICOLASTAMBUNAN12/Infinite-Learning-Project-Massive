@@ -1,12 +1,13 @@
 import db from "../config/db.js";
 
-export const addBerita = async (judul, konten) => {
+export const addBerita = async (judul, konten, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
-      .query("INSERT INTO Berita (judul, konten) VALUES (?, ?)", [
+      .query("INSERT INTO Berita (judul, konten, gambar) VALUES (?, ?, ?)", [
         judul,
         konten,
+        gambar,
       ]);
     return result.insertId;
   } catch (error) {
@@ -34,15 +35,14 @@ export const getBeritaById = async (id) => {
   }
 };
 
-export const updateBerita = async (id, judul, konten) => {
+export const updateBerita = async (id, judul, konten, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
-      .query("UPDATE Berita SET judul = ?, konten = ? WHERE id = ?", [
-        judul,
-        konten,
-        id,
-      ]);
+      .query(
+        "UPDATE Berita SET judul = ?, konten = ?, gambar = ? WHERE id = ?",
+        [judul, konten, gambar, id]
+      );
     return result.affectedRows > 0;
   } catch (error) {
     throw new Error("Gagal memperbarui berita: " + error.message);

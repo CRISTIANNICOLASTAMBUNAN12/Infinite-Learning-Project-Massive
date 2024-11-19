@@ -1,12 +1,18 @@
 import db from "../config/db.js";
 
-export const addPasar = async (produk_id, pengguna_id, lokasi, deskripsi) => {
+export const addPasar = async (
+  produk_id,
+  pengguna_id,
+  lokasi,
+  deskripsi,
+  gambar
+) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "INSERT INTO Pasar (produk_id, pengguna_id, lokasi, deskripsi) VALUES (?, ?, ?, ?)",
-        [produk_id, pengguna_id, lokasi, deskripsi]
+        "INSERT INTO Pasar (produk_id, pengguna_id, lokasi, deskripsi, gambar) VALUES (?, ?, ?, ?, ?)",
+        [produk_id, pengguna_id, lokasi, deskripsi, gambar]
       );
     return result;
   } catch (error) {
@@ -28,7 +34,7 @@ export const getPasarById = async (id) => {
     const [rows] = await db
       .getDbConnection()
       .query("SELECT * FROM Pasar WHERE id = ?", [id]);
-    return rows[0]; 
+    return rows[0];
   } catch (error) {
     throw new Error("Gagal mengambil data pasar: " + error.message);
   }
@@ -45,13 +51,13 @@ export const deletePasar = async (id) => {
   }
 };
 
-export const updatePasar = async (id, produk_id, lokasi, deskripsi) => {
+export const updatePasar = async (id, produk_id, lokasi, deskripsi, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "UPDATE Pasar SET produk_id = ?, lokasi = ?, deskripsi = ? WHERE id = ?",
-        [produk_id, lokasi, deskripsi, id]
+        "UPDATE Pasar SET produk_id = ?, lokasi = ?, deskripsi = ?, gambar = ? WHERE id = ?",
+        [produk_id, lokasi, deskripsi, gambar, id]
       );
     return result;
   } catch (error) {

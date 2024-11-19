@@ -13,14 +13,27 @@ export const getThreadsByForumId = async (forumId) => {
   }
 };
 
-export const addThread = async (forumId, penggunaId, judul, konten) => {
+export const addThread = async (
+  forumId,
+  penggunaId,
+  judul,
+  konten,
+  gambarPath
+) => {
   try {
     const pool = db.getDbConnection();
     const [result] = await pool.query(
-      "INSERT INTO Thread (forum_id, pengguna_id, judul, konten) VALUES (?, ?, ?, ?)",
-      [forumId, penggunaId, judul, konten]
+      "INSERT INTO Thread (forum_id, pengguna_id, judul, konten, gambar) VALUES (?, ?, ?, ?, ?)",
+      [forumId, penggunaId, judul, konten, gambarPath]
     );
-    return { id: result.insertId, forumId, penggunaId, judul, konten };
+    return {
+      id: result.insertId,
+      forumId,
+      penggunaId,
+      judul,
+      konten,
+      gambar: gambarPath,
+    };
   } catch (error) {
     throw new Error("Error while creating thread: " + error.message);
   }
@@ -47,12 +60,12 @@ export const deleteThread = async (id) => {
   }
 };
 
-export const updateThread = async (id, judul, konten) => {
+export const updateThread = async (id, judul, konten, gambarPath) => {
   try {
     const pool = db.getDbConnection();
     const [result] = await pool.query(
-      "UPDATE Thread SET judul = ?, konten = ? WHERE id = ?",
-      [judul, konten, id]
+      "UPDATE Thread SET judul = ?, konten = ?, gambar = ? WHERE id = ?",
+      [judul, konten, gambarPath, id]
     );
     return result;
   } catch (error) {

@@ -1,8 +1,8 @@
 CREATE DATABASE IF NOT EXISTS db_petani_pintar;
 USE db_petani_pintar;
 
+
 /* Tabel User dan Authentication */
-/* Tabel Pengguna */
 CREATE TABLE Pengguna (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nama VARCHAR(255) NOT NULL,
@@ -35,6 +35,7 @@ CREATE TABLE Profil (
     metode_pertanian TEXT,
     produk_ditawarkan TEXT,
     bio TEXT,
+    gambar VARCHAR(255), 
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
 );
@@ -54,6 +55,7 @@ CREATE TABLE Thread (
     pengguna_id INT,
     judul VARCHAR(255) NOT NULL,
     konten TEXT,
+	gambar VARCHAR(255),
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (forum_id) REFERENCES Forum(id) ON DELETE CASCADE,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
@@ -118,6 +120,7 @@ CREATE TABLE Blog (
     judul VARCHAR(255) NOT NULL,
     konten TEXT,
     kategori VARCHAR(255),
+	gambar VARCHAR(255),
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
 );
@@ -127,6 +130,7 @@ CREATE TABLE Berita (
     id INT PRIMARY KEY AUTO_INCREMENT,
     judul VARCHAR(255) NOT NULL,
     konten TEXT,
+	gambar VARCHAR(255),
     diterbitkan_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -158,6 +162,7 @@ CREATE TABLE Produk (
     harga DECIMAL(10, 2),
     lokasi VARCHAR(255),
     stok INT,
+	gambar VARCHAR(255),
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE,
     FOREIGN KEY (kategori_id) REFERENCES Kategori(id) ON DELETE CASCADE
@@ -170,6 +175,7 @@ CREATE TABLE Pasar (
     pengguna_id INT,
     lokasi VARCHAR(255),
     deskripsi TEXT,
+	gambar VARCHAR(255),
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (produk_id) REFERENCES Produk(id) ON DELETE CASCADE,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
@@ -181,6 +187,7 @@ CREATE TABLE Edukasi (
     judul VARCHAR(255) NOT NULL,
     konten TEXT,
     kategori_id INT,
+	gambar VARCHAR(255),
     diterbitkan_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (kategori_id) REFERENCES Kategori(id) ON DELETE CASCADE
 );
@@ -201,16 +208,16 @@ CREATE TABLE Aktivitas (
 /* Data Dummy Pengguna */
 INSERT INTO Pengguna (nama, email, alamat, jenis_kelamin, pekerjaan, no_hp, kata_sandi, peran)
 VALUES 
-('John Doe', 'admin@example.com', 'Jl. Merdeka 10, Bandung', 'Laki-laki', 'Admin', '081234567890', '$2b$10$ZPlbvzYqw8LZt0YO/BiBEuKDk532cRtywv5xlNFsAtWS1ZYqIIcQy', 'admin'),
-('Jane Doe', 'jane@example.com', 'Jl. Kemerdekaan 15, Jakarta', 'Perempuan', 'Petani', '082234567891', '$2b$10$ZPlbvzYqw8LZt0YO/BiBEuKDk532cRtywv5xlNFsAtWS1ZYqIIcQy', 'petani'),
+('Admin', 'admin@example.com', 'Jl. Merdeka 10, Bandung', 'Laki-laki', 'Admin', '081234567890', '$2b$10$ZPlbvzYqw8LZt0YO/BiBEuKDk532cRtywv5xlNFsAtWS1ZYqIIcQy', 'admin'),
+('john doe', 'johndoe@example.com', 'Jl. Kemerdekaan 15, Jakarta', 'Perempuan', 'Petani', '082234567891', '$2b$10$ZPlbvzYqw8LZt0YO/BiBEuKDk532cRtywv5xlNFsAtWS1ZYqIIcQy', 'petani'),
 ('Siti Aminah', 'siti@example.com', 'Jl. Sudirman 20, Surabaya', 'Perempuan', 'Petani Sayur', '083234567892', '$2b$10$ZPlbvzYqw8LZt0YO/BiBEuKDk532cRtywv5xlNFsAtWS1ZYqIIcQy', 'petani');
 
 /* Data Dummy Profil */
-INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio)
+INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio, gambar)
 VALUES 
-(1, 'John Doe', 'Bandung', 'Hidroponik', 'Sayuran Organik', 'Petani dengan pengalaman lebih dari 5 tahun'),
-(2, 'Jane Doe', 'Jakarta', 'Tradisional', 'Padi dan Jagung', 'Mengelola komunitas petani di daerah Jakarta'),
-(3, 'Siti Aminah', 'Surabaya', 'Organik', 'Sayuran Hijau', 'Berfokus pada pertanian sayuran organik');
+(1, 'John Doe', 'Bandung', 'Hidroponik', 'Sayuran Organik', 'Petani dengan pengalaman lebih dari 5 tahun', '/uploads/1732021427380.png'),
+(2, 'Jane Doe', 'Jakarta', 'Tradisional', 'Padi dan Jagung', 'Mengelola komunitas petani di daerah Jakarta', '/uploads/1732021427380.png'),
+(3, 'Siti Aminah', 'Surabaya', 'Organik', 'Sayuran Hijau', 'Berfokus pada pertanian sayuran organik', '/uploads/1732021427380.png');
 
 /* Data Dummy Forum */
 INSERT INTO Forum (nama, deskripsi)
@@ -278,7 +285,7 @@ VALUES
 
 /* Data Dummy Acara */
 INSERT INTO Acara (nama, deskripsi, tanggal, lokasi)
-VALUES 
+VALUES
 ('Pameran Pertanian', 'Pameran teknologi pertanian terbaru', '2024-12-15 09:00:00', 'Jakarta Convention Center'),
 ('Pelatihan Hidroponik', 'Pelatihan metode pertanian hidroponik', '2024-11-25 10:00:00', 'Bandung'),
 ('Seminar Pertanian Organik', 'Seminar untuk petani organik', '2024-12-10 13:00:00', 'Surabaya');

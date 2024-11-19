@@ -2,13 +2,25 @@ import * as edukasiModel from "../models/edukasiModel.js";
 import { getJumlahEdukasiFromDB } from "../models/edukasiModel.js";
 import db from "../config/db.js"; // Sesuaikan dengan path yang benar
 import { getAktivitasTerbaruFromDB } from "../models/aktivitasModel.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const addEdukasi = async (req, res) => {
   const { judul, konten, kategori_id } = req.body;
+  const gambar = req.file ? req.file.path : null; // Mengambil path gambar dari file yang diupload
 
   try {
     // Menambahkan edukasi ke database
-    const result = await edukasiModel.addEdukasi(judul, konten, kategori_id);
+    const result = await edukasiModel.addEdukasi(
+      judul,
+      konten,
+      kategori_id,
+      gambar
+    );
 
     // Mengirimkan respons sukses
     res.status(201).json({ message: "Edukasi berhasil ditambahkan", result });
@@ -64,17 +76,32 @@ export const getEdukasiById = async (req, res) => {
 export const updateEdukasi = async (req, res) => {
   const { id } = req.params;
   const { judul, konten, kategori_id } = req.body;
+  const gambar = req.file ? req.file.path : null; // Menangkap gambar yang diupload
 
   try {
+    const edukasi = await edukasiModel.getEdukasiById(id);
+
+    if (!edukasi) {
+      return res.status(404).json({ message: "Edukasi tidak ditemukan" });
+    }
+
+    // Menghapus gambar lama jika ada
+    if (edukasi.gambar && gambar) {
+      const gambarPath = path.join(__dirname, "..", edukasi.gambar);
+      if (fs.existsSync(gambarPath)) {
+        fs.unlinkSync(gambarPath); // Hapus gambar lama dari folder
+      }
+    }
+
+    // Memperbarui edukasi
     const result = await edukasiModel.updateEdukasi(
       id,
       judul,
       konten,
-      kategori_id
+      kategori_id,
+      gambar
     );
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Edukasi tidak ditemukan" });
-    }
+
     res.status(200).json({ message: "Edukasi berhasil diperbarui", result });
   } catch (error) {
     res.status(500).json({
@@ -88,6 +115,15 @@ export const deleteEdukasi = async (req, res) => {
   const { id } = req.params;
 
   try {
+    const edukasi = await edukasiModel.getEdukasiById(id);
+
+    if (edukasi.gambar) {
+      const gambarPath = path.join(__dirname, "..", edukasi.gambar);
+      if (fs.existsSync(gambarPath)) {
+        fs.unlinkSync(gambarPath); // Hapus gambar dari folder
+      }
+    }
+
     const deleted = await edukasiModel.deleteEdukasi(id);
     if (!deleted) {
       return res.status(404).json({ message: "Edukasi tidak ditemukan" });

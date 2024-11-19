@@ -1,12 +1,12 @@
 import db from "../config/db.js";
 
-export const addBlog = async (pengguna_id, judul, konten, kategori) => {
+export const addBlog = async (pengguna_id, judul, konten, kategori, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "INSERT INTO Blog (pengguna_id, judul, konten, kategori) VALUES (?, ?, ?, ?)",
-        [pengguna_id, judul, konten, kategori]
+        "INSERT INTO Blog (pengguna_id, judul, konten, kategori, gambar) VALUES (?, ?, ?, ?, ?)",
+        [pengguna_id, judul, konten, kategori, gambar]
       );
     return result.insertId;
   } catch (error) {
@@ -47,13 +47,13 @@ export const deleteBlog = async (id) => {
   }
 };
 
-export const updateBlog = async (id, judul, konten, kategori) => {
+export const updateBlog = async (id, judul, konten, kategori, gambar) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "UPDATE Blog SET judul = ?, konten = ?, kategori = ? WHERE id = ?",
-        [judul, konten, kategori, id]
+        "UPDATE Blog SET judul = ?, konten = ?, kategori = ?, gambar = ? WHERE id = ?",
+        [judul, konten, kategori, gambar, id]
       );
     return result.affectedRows > 0;
   } catch (error) {

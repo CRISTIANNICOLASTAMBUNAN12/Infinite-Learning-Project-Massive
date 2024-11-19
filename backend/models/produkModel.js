@@ -7,14 +7,15 @@ export const addProduk = async (
   kategori_id,
   harga,
   lokasi,
-  stok
+  stok,
+  gambar
 ) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "INSERT INTO Produk (pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok]
+        "INSERT INTO Produk (pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok, gambar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, stok, gambar]
       );
     return result.insertId;
   } catch (error) {
@@ -43,34 +44,25 @@ export const getProdukById = async (id) => {
 };
 
 export const updateProduk = async (
-  produk_id,
-  pengguna_id,
+  id,
   nama,
   deskripsi,
   kategori_id,
   harga,
   lokasi,
-  stok
+  stok,
+  gambar
 ) => {
   try {
     const [result] = await db
       .getDbConnection()
       .query(
-        "UPDATE Produk SET nama = ?, deskripsi = ?, kategori_id = ?, harga = ?, lokasi = ?, stok = ? WHERE id = ? AND pengguna_id = ?",
-        [
-          nama,
-          deskripsi,
-          kategori_id,
-          harga,
-          lokasi,
-          stok,
-          produk_id,
-          pengguna_id,
-        ]
+        "UPDATE Produk SET nama = ?, deskripsi = ?, kategori_id = ?, harga = ?, lokasi = ?, stok = ?, gambar = ? WHERE id = ?",
+        [nama, deskripsi, kategori_id, harga, lokasi, stok, gambar, id]
       );
 
     if (result.affectedRows === 0) {
-      throw new Error("Produk tidak ditemukan atau Anda tidak memiliki akses");
+      throw new Error("Produk tidak ditemukan");
     }
     return result;
   } catch (error) {

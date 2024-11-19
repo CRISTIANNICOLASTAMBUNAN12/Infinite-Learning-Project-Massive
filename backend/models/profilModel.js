@@ -6,11 +6,12 @@ export const addProfil = async (
   lokasi,
   metode_pertanian,
   produk_ditawarkan,
-  bio
+  bio,
+  gambar
 ) => {
   const sql = `
-    INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio, gambar)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
@@ -22,6 +23,7 @@ export const addProfil = async (
       metode_pertanian,
       produk_ditawarkan,
       bio,
+      gambar,
     ]);
     return result;
   } catch (error) {
@@ -52,18 +54,20 @@ export const upsertProfil = async (
   lokasi,
   metode_pertanian,
   produk_ditawarkan,
-  bio
+  bio,
+  gambar
 ) => {
   const sql = `
-      INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio)
-      VALUES (?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE
-        nama = VALUES(nama),
-        lokasi = VALUES(lokasi),
-        metode_pertanian = VALUES(metode_pertanian),
-        produk_ditawarkan = VALUES(produk_ditawarkan),
-        bio = VALUES(bio)
-    `;
+    INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio, gambar)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      nama = VALUES(nama),
+      lokasi = VALUES(lokasi),
+      metode_pertanian = VALUES(metode_pertanian),
+      produk_ditawarkan = VALUES(produk_ditawarkan),
+      bio = VALUES(bio),
+      gambar = VALUES(gambar)
+  `;
 
   try {
     const connection = await db.getDbConnection();
@@ -74,6 +78,7 @@ export const upsertProfil = async (
       metode_pertanian,
       produk_ditawarkan,
       bio,
+      gambar,
     ]);
     return result;
   } catch (error) {
@@ -99,3 +104,4 @@ export const deleteProfil = async (pengguna_id) => {
     throw error;
   }
 };
+
