@@ -22,14 +22,19 @@ import pasarRoute from "./routes/pasarRoute.js";
 import edukasiRoute from "./routes/edukasiRoute.js";
 import aktivitasRoutes from "./routes/aktivitasRoutes.js";
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const port = process.env.PORT || 4000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Hanya mengizinkan frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Metode HTTP yang diizinkan
-  credentials: true // Jika menggunakan cookie
+  origin: 'http://localhost:5173', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  credentials: true 
 }));
 
 app.use(express.json());
@@ -37,12 +42,13 @@ app.use(express.json());
 try {
   db.connectDB(); 
   console.log('Database connection established, starting server...');
+  app.use(cors());
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
   app.use('/api/auth', autentikasiRoute);
-
   app.use('/api/pengguna', verifyToken, checkRole(['petani', 'admin']), penggunaRoute);
   app.use('/api/admin', verifyToken, checkRole(['admin']), adminRoute);
-
   app.use("/api/profil", profilRoute);
   app.use("/api/forum", forumRoute);
   app.use("/api/thread", threadRoute);
@@ -59,11 +65,15 @@ try {
   app.use("/api/pasar", pasarRoute);  
   app.use("/api/edukasi", edukasiRoute);
   app.use("/api/aktivitas", aktivitasRoutes);
+  
 
+  app.use('/uploads', (req, res, next) => {
+    console.log(`Menerima permintaan untuk file: ${req.path}`);
+    next();
+  });
   app.get('/', (req, res) => {
     res.send('API is working');
   });
-
   app.listen(port, () => {
     console.log(`Server started on port ${port}`);
   });

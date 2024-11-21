@@ -66,7 +66,6 @@ export const getJumlahEdukasiFromDB = async () => {
       .query("SELECT COUNT(*) AS edukasi_count FROM Edukasi");
     return rows[0].edukasi_count;
   } catch (error) {
-    console.error("Error fetching Edukasi count:", error);
-    throw error;
+    throw new Error("Gagal mengambil jumlah edukasi: " + error.message);
   }
 };

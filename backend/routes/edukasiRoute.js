@@ -9,6 +9,6 @@ router.get("/", edukasiController.getEdukasi);
 router.get("/:id", edukasiController.getEdukasiById);
 router.put("/:id", upload.single("gambar"), edukasiController.updateEdukasi);
 router.delete("/:id", edukasiController.deleteEdukasi);
-router.get('/jumlah/jumlah-terbaru', edukasiController.getJumlahEdukasi);
+router.get("/jumlah/jumlah-terbaru", edukasiController.getJumlahEdukasi);
 
 export default router;

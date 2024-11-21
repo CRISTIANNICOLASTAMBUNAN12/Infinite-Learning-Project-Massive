@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdError } from 'react-icons/md';
-import { toast } from 'react-toastify'; // Menggunakan react-toastify untuk notifikasi
+import { toast } from 'react-toastify';
 
 const Berita = () => {
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ const Berita = () => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const dropdownRefs = useRef({});
 
-  // Ambil berita dari API saat komponen pertama kali dimuat
   useEffect(() => {
     const fetchBerita = async () => {
       try {
@@ -31,28 +30,41 @@ const Berita = () => {
     fetchBerita();
   }, []);
 
-  // Fungsi tambah berita
   const handleTambah = () => {
     navigate('/berita/tambah');
   };
 
-  // Fungsi melihat detail berita
   const handleDetail = (id) => {
     navigate(`/berita/detail/${id}`);
   };
 
-  // Fungsi edit berita
   const handleEdit = (id) => {
     navigate(`/berita/edit/${id}`);
   };
 
-  // Fungsi hapus berita
-  const handleDelete = (id) => {
-    const updatedBeritaList = beritaList.filter((berita) => berita.id !== id);
-    setBeritaList(updatedBeritaList);
-    setIsDeleteModalOpen(false);
-    toast.success('Berita berhasil dihapus');
-    console.log('Berita dengan ID', id, 'telah dihapus');
+  const handleDelete = async (id) => {
+    try {
+      // Request API ke backend untuk menghapus berita
+      const response = await fetch(`http://localhost:4000/api/berita/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Perbarui daftar berita di frontend
+        const updatedBeritaList = beritaList.filter((berita) => berita.id !== id);
+        setBeritaList(updatedBeritaList);
+        setIsDeleteModalOpen(false);
+
+        toast.success('Berita berhasil dihapus');
+        console.log('Berita dengan ID', id, 'telah dihapus');
+      } else {
+        const result = await response.json();
+        toast.error(result.message || 'Gagal menghapus berita');
+      }
+    } catch (error) {
+      console.error('Error deleting berita:', error);
+      toast.error('Terjadi kesalahan saat menghapus berita');
+    }
   };
 
   const handleDeleteConfirmation = (id) => {
@@ -71,18 +83,6 @@ const Berita = () => {
 
   const handleCancelStatusChange = () => {
     setIsStatusModalOpen(false);
-  };
-
-  const handleToggleStatus = (id) => {
-    const updatedBeritaList = beritaList.map((berita) =>
-      berita.id === id
-        ? { ...berita, status: berita.status === 'published' ? 'draft' : 'published' }
-        : berita
-    );
-    setBeritaList(updatedBeritaList);
-    setIsStatusModalOpen(false);
-    toast.info(`Status berita berhasil diperbarui`);
-    console.log('Status berita dengan ID', id, 'telah diubah');
   };
 
   const handleDropdownToggle = (id) => {
@@ -131,7 +131,7 @@ const Berita = () => {
               <tr key={berita.id} className="border-b">
                 <td className="px-6 py-3">
                   <img
-                    src={berita.imageUrl}
+                    src={`http://localhost:4000${berita.gambar}`}
                     alt={berita.judul}
                     className="w-20 h-20 object-cover rounded-md"
                   />
@@ -145,7 +145,7 @@ const Berita = () => {
                     const year = String(date.getFullYear());
                     return `${day}/${month}/${year}`;
                   })()}
-                </td>                
+                </td>
                 <td className="px-6 py-3 relative">
                   <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[berita.id] = el)}>
                     <button

@@ -6,9 +6,8 @@ const DetailBerita = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [berita, setBerita] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state for better UX
+  const [loading, setLoading] = useState(true); 
 
-  // Mengambil data berita berdasarkan ID
   useEffect(() => {
     const fetchBerita = async () => {
       try {
@@ -26,10 +25,17 @@ const DetailBerita = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Gagal memuat berita');
+          const errorData = await response.json();
+          setError(errorData.message || 'Data tidak ditemukan');
+          setLoading(false);
+          return;
         }
 
         const data = await response.json();
+        if (data.gambar && !data.gambar.startsWith('http')) {
+          data.gambar = `http://localhost:4000${data.gambar}`;
+        }
+
         setBerita(data);
       } catch (error) {
         toast.error('Terjadi kesalahan saat memuat berita');
@@ -58,9 +64,9 @@ const DetailBerita = () => {
           <div className="mb-6">
             <div className="relative flex justify-center items-center">
               <img
-                src={berita.imageUrl}
+                src={berita.gambar}
                 alt={berita.title}
-                className="h-48 sm:h-64 object-cover rounded-md w-full max-w-xl"
+                className="h-auto max-h-96 max-w-96 object-cover rounded-md"
               />
             </div>
 

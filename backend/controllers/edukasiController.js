@@ -1,7 +1,5 @@
 import * as edukasiModel from "../models/edukasiModel.js";
-import { getJumlahEdukasiFromDB } from "../models/edukasiModel.js";
-import db from "../config/db.js"; // Sesuaikan dengan path yang benar
-import { getAktivitasTerbaruFromDB } from "../models/aktivitasModel.js";
+import db from "../config/db.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -11,10 +9,9 @@ const __dirname = path.dirname(__filename);
 
 export const addEdukasi = async (req, res) => {
   const { judul, konten, kategori_id } = req.body;
-  const gambar = req.file ? req.file.path : null; // Mengambil path gambar dari file yang diupload
+  const gambar = req.file ? req.file.path : null;
 
   try {
-    // Menambahkan edukasi ke database
     const result = await edukasiModel.addEdukasi(
       judul,
       konten,
@@ -22,25 +19,21 @@ export const addEdukasi = async (req, res) => {
       gambar
     );
 
-    // Mengirimkan respons sukses
-    res.status(201).json({ message: "Edukasi berhasil ditambahkan", result });
-
-    // Log aktivitas setelah respons dikirim
     await db
       .getDbConnection()
       .execute(
         "INSERT INTO aktivitas (jenis_aktivitas, deskripsi) VALUES (?, ?)",
         [
           "Edukasi terbaru",
-          `Edukasi terbaru dengan judul ${judul} telah dipublikasikan.`,
+          `Edukasi dengan judul "${judul}" telah dipublikasikan.`,
         ]
       );
+
+    res.status(201).json({ message: "Edukasi berhasil ditambahkan", result });
   } catch (error) {
-    // Jika terjadi error, kirimkan respons error
-    res.status(500).json({
-      message: "Gagal menambahkan edukasi",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "Gagal menambahkan edukasi", error: error.message });
   }
 };
 
@@ -50,7 +43,7 @@ export const getEdukasi = async (req, res) => {
     res.status(200).json(edukasi);
   } catch (error) {
     res.status(500).json({
-      message: "Gagal mengambil data edukasi",
+      message: "Terjadi kesalahan saat mengambil data edukasi",
       error: error.message,
     });
   }
@@ -64,19 +57,23 @@ export const getEdukasiById = async (req, res) => {
     if (!edukasi) {
       return res.status(404).json({ message: "Edukasi tidak ditemukan" });
     }
-    res.status(200).json(edukasi);
-  } catch (error) {
-    res.status(500).json({
-      message: "Gagal mengambil data edukasi",
-      error: error.message,
+    res.status(200).json({
+      ...edukasi,
+      gambar: edukasi.gambar
+        ? "/uploads/" + path.basename(edukasi.gambar)
+        : null, 
     });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data edukasi", error: error.message });
   }
 };
 
 export const updateEdukasi = async (req, res) => {
   const { id } = req.params;
   const { judul, konten, kategori_id } = req.body;
-  const gambar = req.file ? req.file.path : null; // Menangkap gambar yang diupload
+  const gambar = req.file ? req.file.path : null; 
 
   try {
     const edukasi = await edukasiModel.getEdukasiById(id);
@@ -84,30 +81,27 @@ export const updateEdukasi = async (req, res) => {
     if (!edukasi) {
       return res.status(404).json({ message: "Edukasi tidak ditemukan" });
     }
+    const imageToSave = gambar || edukasi.gambar;
 
-    // Menghapus gambar lama jika ada
-    if (edukasi.gambar && gambar) {
+    if (gambar && edukasi.gambar) {
       const gambarPath = path.join(__dirname, "..", edukasi.gambar);
       if (fs.existsSync(gambarPath)) {
-        fs.unlinkSync(gambarPath); // Hapus gambar lama dari folder
+        fs.unlinkSync(gambarPath); 
       }
     }
 
-    // Memperbarui edukasi
     const result = await edukasiModel.updateEdukasi(
       id,
       judul,
       konten,
       kategori_id,
-      gambar
+      imageToSave
     );
-
     res.status(200).json({ message: "Edukasi berhasil diperbarui", result });
   } catch (error) {
-    res.status(500).json({
-      message: "Gagal memperbarui edukasi",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "Gagal memperbarui edukasi", error: error.message });
   }
 };
 
@@ -117,10 +111,14 @@ export const deleteEdukasi = async (req, res) => {
   try {
     const edukasi = await edukasiModel.getEdukasiById(id);
 
+    if (!edukasi) {
+      return res.status(404).json({ message: "Edukasi tidak ditemukan" });
+    }
+
     if (edukasi.gambar) {
       const gambarPath = path.join(__dirname, "..", edukasi.gambar);
       if (fs.existsSync(gambarPath)) {
-        fs.unlinkSync(gambarPath); // Hapus gambar dari folder
+        fs.unlinkSync(gambarPath);
       }
     }
 
@@ -128,21 +126,23 @@ export const deleteEdukasi = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ message: "Edukasi tidak ditemukan" });
     }
+
     res.status(200).json({ message: "Edukasi berhasil dihapus" });
   } catch (error) {
-    res.status(500).json({
-      message: "Gagal menghapus edukasi",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({ message: "Gagal menghapus edukasi", error: error.message });
   }
 };
 
 export const getJumlahEdukasi = async (req, res) => {
   try {
-    const jumlahEdukasi = await getJumlahEdukasiFromDB();
+    const jumlahEdukasi = await edukasiModel.getJumlahEdukasiFromDB();
     res.json({ count: jumlahEdukasi });
   } catch (error) {
-    console.error("Error fetching Edukasi count:", error);
-    res.status(500).send("Server Error");
+    res.status(500).json({
+      message: "Gagal mengambil jumlah edukasi",
+      error: error.message,
+    });
   }
 };

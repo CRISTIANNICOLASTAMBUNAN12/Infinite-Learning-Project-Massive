@@ -120,10 +120,11 @@ const Edukasi = () => {
         {edukasiList.map((edukasi) => (
           <div key={edukasi.id} className="flex bg-white border">
             <img
-              src={edukasi.imageUrl}
-              alt={edukasi.title}
+              src={`http://localhost:4000/${edukasi.gambar}`}
+              alt={edukasi.judul}
               className="w-48 h-48 object-cover rounded-l-xl"
             />
+
             <div className="p-6 flex-1">
               <h2 className="text-1xl font-medium text-gray-800 mb-2">{edukasi.judul}</h2>
               <p className="text-gray-600 text-sm mb-4">
@@ -146,13 +147,13 @@ const Edukasi = () => {
               </button>
               {openDropdownId === edukasi.id && (
                 <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
-                  <button onClick={() => handleDetail(edukasi.id)} className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  <button onClick={() => handleDetail(edukasi.id)} className="block w-full text-left px-6 py-3 text-gray-800 hover:bg-gray-100">
                     Detail
                   </button>
-                  <button onClick={() => handleEdit(edukasi.id)} className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  <button onClick={() => handleEdit(edukasi.id)} className="block w-full text-left px-6 py-3 text-yellow-600 hover:bg-gray-100">
                     Edit
                   </button>
-                  <button onClick={() => handleDeleteConfirmation(edukasi.id)} className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-100">
+                  <button onClick={() => handleDeleteConfirmation(edukasi.id)} className="block w-full text-left px-6 py-3 text-red-600 hover:bg-red-100">
                     Hapus
                   </button>
                 </div>
