@@ -8,7 +8,7 @@ import Berita from './pages/berita/Berita';
 import Edukasi from './pages/edukasi/Edukasi';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Login from './pages/Login'; // Halaman login
+import Login from './pages/Login'; 
 import TambahUser from './pages/user/TambahUser';
 import DetailUser from './pages/user/DetailUser';
 import EditUser from './pages/user/EditUser';
@@ -18,7 +18,11 @@ import EditBerita from './pages/berita/EditBerita';
 import TambahEdukasi from './pages/edukasi/TambahEdukasi';
 import DetailEdukasi from './pages/edukasi/DetailEdukasi';
 import EditEdukasi from './pages/edukasi/EditEdukasi';
-import PrivateRoute from './components/PrivateRoute'; // Import komponen PrivateRoute
+import PrivateRoute from './components/PrivateRoute'; 
+import Profile from './pages/profil/Profile';
+import Settings from './pages/pengaturan/Settings';
+import EditProfile from './pages/profil/EditProfile';
+import EditSetting from './pages/pengaturan/EditSetting';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,7 +31,6 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Memeriksa apakah ada token di localStorage
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
@@ -45,7 +48,7 @@ function App() {
     if (role === 'admin') {
       navigate('/admin-dashboard');
     } else {
-      navigate('/'); // Pengguna non-admin ke halaman utama
+      navigate('/');
     }
   };
 
@@ -54,7 +57,7 @@ function App() {
     setRole('');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    navigate('/login'); // Redirect ke halaman login setelah logout
+    navigate('/login'); 
   };
 
   const toggleSidebar = () => {
@@ -80,20 +83,15 @@ function App() {
               handleLogout={handleLogout}
             />
           )}
-          <div className="flex-1 p-4 overflow-y-auto bg-softGreen z-0">
+          <div className="flex-1 p-4 overflow-y-auto bg-WhiteSmoke z-0">
             <Routes>
-              {/* Route Login */}
               <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />} />
-
-              {/* Protected Routes */}
               <Route path="/" element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/admin-dashboard"element={ <PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/users" element={<PrivateRoute element={<Users />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/users/tambah" element={<PrivateRoute element={<TambahUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/users/detail/:id" element={<PrivateRoute element={<DetailUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/users/edit/:id" element={<PrivateRoute element={<EditUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-
-              {/* Halaman lainnya */}
               <Route path="/berita" element={<PrivateRoute element={<Berita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/berita/tambah" element={<PrivateRoute element={<TambahBerita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/berita/detail/:id" element={<PrivateRoute element={<DetailBerita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
@@ -102,6 +100,10 @@ function App() {
               <Route path="/edukasi/tambah" element={<PrivateRoute element={<TambahEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/edukasi/detail/:id" element={<PrivateRoute element={<DetailEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
               <Route path="/edukasi/edit/:id" element={<PrivateRoute element={<EditEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
+              <Route path="/profil" element={<PrivateRoute element={<Profile />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
+              <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
+              <Route path="/pengaturan" element={<PrivateRoute element={<Settings />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
+              <Route path="/edit-pengaturan" element={<PrivateRoute element={<EditSetting />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
             </Routes>
           </div>
         </div>

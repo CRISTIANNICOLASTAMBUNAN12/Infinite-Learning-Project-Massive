@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const DetailUser = () => {
-  const { id } = useParams();  // Mendapatkan ID pengguna dari URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);  // State untuk menyimpan data pengguna
-  const [loading, setLoading] = useState(true);  // State untuk loading
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -14,7 +14,7 @@ const DetailUser = () => {
         const token = localStorage.getItem('token');
         if (!token) {
           toast.error('Anda perlu login terlebih dahulu');
-          navigate('/login');  // Redirect ke login jika token tidak ada
+          navigate('/login');
           return;
         }
 
@@ -30,7 +30,7 @@ const DetailUser = () => {
 
         const data = await response.json();
         if (data.success) {
-          setUser(data.data);  // Menyimpan data pengguna dalam state
+          setUser(data.data);
         } else {
           toast.error('Pengguna tidak ditemukan');
           navigate('/users');
@@ -39,29 +39,27 @@ const DetailUser = () => {
         toast.error('Terjadi kesalahan saat mengambil data pengguna');
         console.error('Error fetching user data:', error);
       } finally {
-        setLoading(false);  // Mengubah status loading setelah data diambil
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [id, navigate]);  // Dependensi id dan navigate untuk menjalankan ulang efek
+  }, [id, navigate]);
 
-  // Fungsi untuk tombol kembali
   const handleBack = () => {
-    navigate('/users');  // Redirect ke halaman daftar pengguna
+    navigate('/users');
   };
 
-  // Fungsi untuk tombol tambah pengguna
   const handleTambah = () => {
-    navigate('/users/tambah');  // Redirect ke halaman tambah pengguna
+    navigate('/users/tambah');
   };
 
   if (loading) {
-    return <div>Loading...</div>;  // Menampilkan loading jika data belum selesai diambil
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <div>Pengguna tidak ditemukan</div>;  // Menampilkan pesan jika pengguna tidak ditemukan
+    return <div>Pengguna tidak ditemukan</div>;
   }
 
   return (
@@ -84,8 +82,43 @@ const DetailUser = () => {
           </div>
 
           <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Pengalaman</p>
+            <p className="text-lg text-gray-800 font-medium">{user.pengalaman}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Tentang</p>
+            <p className="text-lg text-gray-800 font-medium">{user.tentang}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Alamat</p>
+            <p className="text-lg text-gray-800 font-medium">{user.alamat}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Jenis Kelamin</p>
+            <p className="text-lg text-gray-800 font-medium">{user.jenis_kelamin}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Pekerjaan</p>
+            <p className="text-lg text-gray-800 font-medium">{user.pekerjaan}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">No.Telepon</p>
+            <p className="text-lg text-gray-800 font-medium">{user.no_hp}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Peran</p>
             <p className="text-lg text-gray-800 font-medium">{user.peran}</p>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-4">
+            <p className="text-lg font-semibold text-gray-600">Akun dibuat pada</p>
+            <p className="text-lg text-gray-800 font-medium">{user.dibuat_pada}</p>
           </div>
         </div>
 

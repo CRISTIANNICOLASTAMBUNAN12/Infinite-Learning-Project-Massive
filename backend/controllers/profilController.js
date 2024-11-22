@@ -20,7 +20,6 @@ export const addProfil = async (req, res) => {
 
     let gambarPath = gambarUrl || null;
 
-    // Jika gambar di-upload, simpan path file gambar
     if (req.file) {
       gambarPath = `/uploads/${req.file.filename}`;
     }
@@ -88,32 +87,27 @@ export const upsertProfil = async (req, res) => {
 
     let gambarPath = null;
 
-    // Ambil profil lama dari database untuk memeriksa gambar sebelumnya
     const profilLama = await profilModel.getProfilByPenggunaId(penggunaId);
 
-    // Menghapus gambar lama jika ada
     if (profilLama && profilLama.gambar) {
-      const gambarLamaPath = path.join(__dirname, "..", profilLama.gambar); // Path absolut
+      const gambarLamaPath = path.join(__dirname, "..", profilLama.gambar);
       console.log("Path gambar lama: ", gambarLamaPath);
 
       if (fs.existsSync(gambarLamaPath)) {
-        fs.unlinkSync(gambarLamaPath); // Menghapus gambar lama
+        fs.unlinkSync(gambarLamaPath);
         console.log("Gambar lama berhasil dihapus: ", gambarLamaPath);
       } else {
         console.log("Gambar lama tidak ditemukan di direktori.");
       }
     }
 
-    // Cek apakah ada gambar baru yang di-upload
     if (req.file) {
-      gambarPath = `/uploads/${req.file.filename}`; // Menyimpan path relatif untuk gambar baru
-      console.log("Path gambar baru: ", gambarPath); // Cek apakah gambar baru berhasil di-upload
+      gambarPath = `/uploads/${req.file.filename}`;
+      console.log("Path gambar baru: ", gambarPath);
     } else if (profilLama && profilLama.gambar) {
-      // Jika tidak ada gambar baru, gunakan gambar lama yang sudah ada
       gambarPath = profilLama.gambar;
     }
 
-    // Lakukan upsert profil ke database
     const result = await profilModel.upsertProfil(
       penggunaId,
       nama,
@@ -142,7 +136,6 @@ export const deleteProfil = async (req, res) => {
   try {
     const penggunaId = req.user.id;
 
-    // Ambil data profil untuk mendapatkan gambar yang terkait
     const profil = await profilModel.getProfilByPenggunaId(penggunaId);
 
     if (!profil) {
@@ -152,18 +145,16 @@ export const deleteProfil = async (req, res) => {
       });
     }
 
-    // Cek apakah gambar ada, jika ada, hapus gambar dari direktori
     if (profil.gambar) {
-      const gambarPath = path.join(__dirname, "..", profil.gambar); // Path absolut
+      const gambarPath = path.join(__dirname, "..", profil.gambar);
       if (fs.existsSync(gambarPath)) {
-        fs.unlinkSync(gambarPath); // Hapus gambar
+        fs.unlinkSync(gambarPath);
         console.log("Gambar berhasil dihapus:", gambarPath);
       } else {
         console.log("Gambar tidak ditemukan di direktori.");
       }
     }
 
-    // Hapus profil dari database
     const result = await profilModel.deleteProfil(penggunaId);
 
     res.status(200).json({

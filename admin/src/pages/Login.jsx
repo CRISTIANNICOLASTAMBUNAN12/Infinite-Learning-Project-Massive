@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = ({ setIsAuthenticated, setRole }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');  // State untuk error message
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -27,15 +27,15 @@ const Login = ({ setIsAuthenticated, setRole }) => {
         setRole(data.pengguna.peran);
         localStorage.setItem('token', data.token);
 
-        // Cek peran pengguna dan arahkan sesuai peran
         if (data.pengguna.peran === 'admin') {
-          navigate('/admin-dashboard');  // Jika admin, arahkan ke dashboard admin
+          navigate('/admin-dashboard');
+        } else if (data.pengguna.peran === 'user') {
+          navigate('/user-dashboard');
         } else {
-          setErrorMessage('Anda tidak memiliki akses');
-          // Arahkan ke halaman login jika bukan admin dan tampilkan pesan error
+          setErrorMessage('Akses ditolak: Peran tidak dikenal');
         }
       } else {
-        setErrorMessage(data.message || 'Login gagal');  // Jika login gagal, tampilkan pesan error
+        setErrorMessage(data.message || 'Login gagal');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -43,31 +43,38 @@ const Login = ({ setIsAuthenticated, setRole }) => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
+  };
+
   return (
     <div className="p-6 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded shadow-lg w-80 text-center">
         <h2 className="text-xl font-bold mb-4">Login</h2>
         {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-        <input
-          type="email"
-          className="w-full p-2 mb-4 border rounded"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          className="w-full p-2 mb-4 border rounded"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          className="w-full bg-green-600 text-white py-2 rounded"
-          onClick={handleLogin}
-        >
-          Login
-        </button>
+        <form onSubmit={handleSubmit} className="w-full">
+          <input
+            type="email"
+            className="w-full p-2 mb-4 border rounded"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="w-full p-2 mb-4 border rounded"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded"
+          >
+            Login
+          </button>
+        </form>
       </div>
     </div>
   );

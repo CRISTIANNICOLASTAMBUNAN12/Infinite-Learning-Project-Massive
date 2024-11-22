@@ -5,14 +5,12 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // State untuk menyimpan data
   const [usersCount, setUsersCount] = useState(0);
   const [productsCount, setProductsCount] = useState(0);
   const [edukasiCount, setEdukasiCount] = useState(0);
   const [recentActivities, setRecentActivities] = useState([]);
   const [pengguna, setPengguna] = useState([]);
 
-  // Ambil data dari backend saat komponen dimuat
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,7 +58,6 @@ const Dashboard = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            // Tambahkan token jika diperlukan
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
@@ -77,10 +74,10 @@ const Dashboard = () => {
 
     const fetchRecentActivities = async () => {
       try {
-        const response = await fetch('/api/aktivitas'); // Ganti dengan URL endpoint API Anda
+        const response = await fetch('/api/aktivitas');
         if (response.ok) {
           const data = await response.json();
-          setRecentActivities(data.activities); // Menyimpan data aktivitas di state
+          setRecentActivities(data.activities);
         } else {
           console.error('Failed to fetch activities');
         }
@@ -92,93 +89,80 @@ const Dashboard = () => {
     fetchRecentActivities();
   }, []);
 
-  const handleTambahPengguna = () => {
-    navigate('/users/tambah');
-  };
-
-  const handleTambahArtikel = () => {
-    navigate('/berita/tambah');
-  };
-
   return (
-    <div className="p-6 bg-white border h-full w-full">
-      <h1 className="text-3xl font-bold mb-6">Dashboard Admin</h1>
-
-      {/* Ringkasan Statistik */}
+    <div className="p-6 h-full w-full">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <FaUsers className="text-4xl text-green-600 mr-4" />
-          <div>
-            <h2 className="text-lg font-semibold">Pengguna Terdaftar</h2>
-            <p className="text-xl font-bold">{usersCount}</p>
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+            <FaUsers className="text-4xl text-green-600" />
+          </div>
+          <div className="px-4">
+            <h2 className="text-[1rem] font-fontStatistik text-title">Pengguna Terdaftar</h2>
+            <p className="text-[1.75rem] leading-[1.167] font-fontStatistik font-bold">{usersCount}</p>
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <FaBoxOpen className="text-4xl text-yellow-500 mr-4" />
-          <div>
-            <h2 className="text-lg font-semibold">Produk Terdaftar</h2>
-            <p className="text-xl font-bold">{productsCount}</p>
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+            <FaBoxOpen className="text-4xl text-yellow-500" />
+          </div>
+          <div className="px-4">
+            <h2 className="text-[1rem] font-fontStatistik text-title">Produk Terdaftar</h2>
+            <p className="text-[1.75rem] leading-[1.167] font-fontStatistik font-bold">{productsCount}</p>
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <FaBook className="text-4xl text-blue-600 mr-4" />
-          <div>
-            <h2 className="text-lg font-semibold">Edukasi Terbit</h2>
-            <p className="text-xl font-bold">{edukasiCount}</p>
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+            <FaBook className="text-4xl text-blue-600" />
+          </div>
+          <div className="px-4">
+            <h2 className="text-[1rem] font-fontStatistik text-title">Edukasi Terbit</h2>
+            <p className="text-[1.75rem] leading-[1.167] font-fontStatistik font-bold">{edukasiCount}</p>
           </div>
         </div>
       </div>
 
-      {/* Tabel Pengguna / Transaksi */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Pengguna Terbaru</h2>
-        <table className="min-w-full text-left">
+        <h2 className="text-title mb-3 capitalize font-medium text-lg">Pengguna Terbaru</h2>
+        <table className="min-w-full text-left border-collapse border-spacing-0">
           <thead>
-            <tr className="border-b">
-              <th className="py-2 px-4">Nama</th>
-              <th className="py-2 px-4">Email</th>
-              <th className="py-2 px-4">Pekerjaan</th>
+            <tr className="border-b bg-gray-100">
+              <th className="py-3 px-4 font-medium text-gray-700">Nama</th>
+              <th className="py-3 px-4 font-medium text-gray-700">Email</th>
+              <th className="py-3 px-4 font-medium text-gray-700">Pekerjaan</th>
             </tr>
           </thead>
           <tbody>
             {pengguna.length > 0 ? (
               pengguna.map((penggunaItem) => (
-                <tr className="border-b" key={penggunaItem.id}>
-                  <td className="py-2 px-4">{penggunaItem.nama}</td>
-                  <td className="py-2 px-4">{penggunaItem.email}</td>
-                  <td className="py-2 px-4">{penggunaItem.pekerjaan}</td>
+                <tr className="hover:bg-gray-50 border-b" key={penggunaItem.id}>
+                  <td className="py-3 px-4">{penggunaItem.nama}</td>
+                  <td className="py-3 px-4">{penggunaItem.email}</td>
+                  <td className="py-3 px-4">{penggunaItem.pekerjaan}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="py-2 px-4 text-center">Tidak ada pengguna terbaru</td>
+                <td
+                  colSpan="3"
+                  className="py-3 px-4 text-center text-gray-500 italic"
+                >
+                  Tidak ada pengguna terbaru
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
 
-      {/* Quick Access */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <button onClick={handleTambahPengguna} className="bg-green-600 text-white p-4 rounded-lg shadow-md flex items-center justify-center transition-all duration-300 transform hover:scale-105">
-          <FaUsers className="mr-3" /> Tambah Pengguna Baru
-        </button>
-        <button onClick={handleTambahArtikel} className="bg-yellow-500 text-white p-4 rounded-lg shadow-md flex items-center justify-center transition-all duration-300 transform hover:scale-105">
-          <FaBook className="mr-3" /> Tambah Artikel Baru
-        </button>
-      </div>
-
-      {/* Recent Activity */}
       <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-        <h2 className="text-2xl font-semibold mb-4">Aktivitas Terbaru</h2>
-        <ul>
+        <h2 className="text-title mb-3 capitalize font-medium text-lg">Aktivitas Terbaru</h2>
+        <ul className="min-w-full text-left border-collapse border-spacing-0">
           {recentActivities.length > 0 ? (
-            // Membatasi hanya 4 aktivitas terbaru yang ditampilkan
             recentActivities.slice(0, 4).map((activity, index) => (
-              <li key={index} className="border-b py-2">{activity.deskripsi}</li>
+              <li key={index} className="border-b py-3 px-4 hover:bg-gray-50">{activity.deskripsi}</li>
             ))
           ) : (
-            <li className="py-2">Tidak ada aktivitas terbaru.</li>
+            <li className="py-3 px-4 text-center text-gray-500 italic">Tidak ada aktivitas terbaru.</li>
           )}
         </ul>
       </div>
