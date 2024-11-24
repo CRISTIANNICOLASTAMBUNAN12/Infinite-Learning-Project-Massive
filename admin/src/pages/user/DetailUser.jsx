@@ -118,7 +118,13 @@ const DetailUser = () => {
 
           <div className="flex justify-between items-center border-b pb-4">
             <p className="text-lg font-semibold text-gray-600">Akun dibuat pada</p>
-            <p className="text-lg text-gray-800 font-medium">{user.dibuat_pada}</p>
+            <p className="text-lg text-gray-800 font-medium">
+              {new Date(user.dibuat_pada).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </p>
           </div>
         </div>
 

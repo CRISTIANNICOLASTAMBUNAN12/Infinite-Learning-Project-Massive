@@ -10,7 +10,10 @@ const Users = () => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const navigate = useNavigate();
   const dropdownRefs = useRef({});
+  const [itemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch users from the API
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -42,6 +45,7 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  // Handle delete confirmation
   const handleDeleteConfirmation = (id) => {
     setUserIdToDelete(id);
     setIsDeleteModalOpen(true);
@@ -114,9 +118,17 @@ const Users = () => {
     };
   }, []);
 
+  // Pagination logic
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const currentUsers = users.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white w-full h-full">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Manajemen Pengguna</h1>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Manajemen Pengguna</h1>
       <button
         className="bg-green-600 text-white px-6 py-2 rounded-lg mb-4 hover:bg-green-700 transition-colors duration-300"
         onClick={() => navigate('/users/tambah')}
@@ -128,6 +140,7 @@ const Users = () => {
         <table className="min-w-full bg-white rounded-lg shadow-lg">
           <thead className="bg-green-600 text-white">
             <tr>
+              <th className="px-6 py-3 text-left">No</th>
               <th className="px-6 py-3 text-left">Nama</th>
               <th className="px-6 py-3 text-left">Email</th>
               <th className="px-6 py-3 text-left">Peran</th>
@@ -135,51 +148,78 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-4">{user.nama}</td>
-                <td className="px-6 py-4">{user.email}</td>
-                <td className="px-6 py-4">{user.peran}</td>
-                <td className="px-6 py-4">
-                  <div className="relative inline-block text-left cursor-pointer" ref={(el) => (dropdownRefs.current[user.id] = el)}>
-                    <button
-                      onClick={() => handleDropdownToggle(user.id)}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
-                    >
-                      Aksi
-                    </button>
-                    {openDropdownId === user.id && (
-                      <ul
-                        className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50"
-                        style={{ overflow: 'visible' }}
+            {currentUsers.length > 0 ? (
+              currentUsers.map((user, index) => (
+                <tr key={user.id} className="border-b hover:bg-gray-50">
+                  {/* Update No calculation to continue numbering across pages */}
+                  <td className="px-6 py-4">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td className="px-6 py-4">{user.nama}</td>
+                  <td className="px-6 py-4">{user.email}</td>
+                  <td className="px-6 py-4">{user.peran}</td>
+                  <td className="px-6 py-4">
+                    <div className="relative inline-block text-left cursor-pointer" ref={(el) => (dropdownRefs.current[user.id] = el)}>
+                      <button
+                        onClick={() => handleDropdownToggle(user.id)}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
                       >
-                        <li
-                          onClick={() => handleDetail(user.id)}
-                          className="block w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 gap-2"
+                        Aksi
+                      </button>
+                      {openDropdownId === user.id && (
+                        <ul
+                          className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50"
+                          style={{ overflow: 'visible' }}
                         >
-                          Detail
-                        </li>
-                        <li
-                          onClick={() => handleEdit(user.id)}
-                          className="block w-full px-4 py-2 text-sm text-yellow-500 hover:bg-gray-100 gap-2"
-                        >
-                          Edit
-                        </li>
-                        <li
-                          onClick={() => handleDeleteConfirmation(user.id)}
-                          className="block w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-50 gap-2"
-                        >
-                          Hapus
-                        </li>
-                      </ul>
-                    )}
-                  </div>
+                          <li
+                            onClick={() => handleDetail(user.id)}
+                            className="block w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 gap-2"
+                          >
+                            Detail
+                          </li>
+                          <li
+                            onClick={() => handleEdit(user.id)}
+                            className="block w-full px-4 py-2 text-sm text-yellow-500 hover:bg-gray-100 gap-2"
+                          >
+                            Edit
+                          </li>
+                          <li
+                            onClick={() => handleDeleteConfirmation(user.id)}
+                            className="block w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-50 gap-2"
+                          >
+                            Hapus
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  Tidak ada data pengguna.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* Render pagination only if more than 10 users */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-6">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 mx-1 rounded-lg ${
+                currentPage === index + 1 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-600'
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Modal Konfirmasi Hapus */}
       {isDeleteModalOpen && (

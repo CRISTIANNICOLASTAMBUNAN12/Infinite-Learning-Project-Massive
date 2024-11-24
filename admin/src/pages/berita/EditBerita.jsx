@@ -95,6 +95,20 @@ const EditBerita = () => {
               />
             </div>
           )}
+
+          {/* Button to Remove Image */}
+          {previewImage && (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="px-4 text-red-500 hover:text-red-700 font-semibold rounded-lg flex items-center gap-2"
+              >
+                <FaTimesCircle size={20} />
+                Hapus Perubahan
+              </button>
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -135,15 +149,6 @@ const EditBerita = () => {
                 onChange={handleFileChange}
                 accept="image/*"
               />
-              {previewImage && (
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="absolute top-0 right-0 m-4 text-red-500 hover:text-red-700 focus:outline-none"
-                >
-                  <FaTimesCircle size={20} />
-                </button>
-              )}
             </div>
           </div>
 
