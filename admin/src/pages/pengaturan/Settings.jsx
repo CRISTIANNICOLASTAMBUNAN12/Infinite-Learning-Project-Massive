@@ -107,7 +107,7 @@ const Settings = () => {
           </div>
           <div className="flex justify-between items-start">
             <p className="text-sm text-gray-500 w-1/3">No Hp</p>
-            <p className="text-sm text-gray-800 break-words w-2/3">{settingsData.no_hp || '-'}</p>
+            <p className="text-sm text-gray-800 font-medium break-words w-2/3">{settingsData.no_hp || '-'}</p>
           </div>
         </div>
       </div>

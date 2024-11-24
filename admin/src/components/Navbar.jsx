@@ -103,7 +103,7 @@ const Navbar = ({ toggleSidebar, handleLogout }) => {
             onClick={toggleDropdown}
           >
             <img
-              className="w-10 h-10 rounded-full border-2 border-gray-300"
+              className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
               src={`http://localhost:4000${profile?.gambar || assets.upload_area}`}
               onError={(e) => {
                 e.target.src = assets.upload_area;

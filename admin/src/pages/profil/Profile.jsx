@@ -95,7 +95,7 @@ const Profile = () => {
           </div>
           <div className="flex justify-between items-start">
             <p className="text-sm text-gray-500 w-1/3">Bio</p>
-            <p className="text-sm text-gray-800 break-words w-2/3">{profileData.bio || '-'}</p>
+            <p className="text-sm text-gray-800 font-medium break-words w-2/3">{profileData.bio || '-'}</p>
           </div>
         </div>
       </div>

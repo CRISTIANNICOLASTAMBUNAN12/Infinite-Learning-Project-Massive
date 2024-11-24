@@ -88,7 +88,7 @@ export const getPenggunaById = async (req, res) => {
 
 export const updatePengguna = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // ID pengguna dari URL
     const {
       nama,
       email,
@@ -102,33 +102,51 @@ export const updatePengguna = async (req, res) => {
       peran,
     } = req.body;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedKataSandi = await bcrypt.hash(kata_sandi, salt);
+    // Cari data pengguna lama berdasarkan ID
+    const penggunaLama = await penggunaModel.getPenggunaById(id); // Pastikan fungsi findById tersedia di model
+    if (!penggunaLama) {
+      return res.status(404).json({ success: false, message: 'Pengguna tidak ditemukan' });
+    }
 
+    // Hash kata sandi baru jika diisi
+    let hashedKataSandi = penggunaLama.kata_sandi; // Gunakan kata_sandi lama jika tidak diubah
+    if (kata_sandi) {
+      const salt = await bcrypt.genSalt(10);
+      hashedKataSandi = await bcrypt.hash(kata_sandi, salt);
+    }
+
+    // Siapkan data untuk update, gunakan data lama jika data baru tidak diberikan
     const penggunaData = {
-      nama,
-      email,
-      pengalaman,
-      tentang,
-      alamat,
-      jenis_kelamin: jenis_kelamin || null,
-      pekerjaan: pekerjaan || null,
-      no_hp: no_hp || null,
+      nama: nama || penggunaLama.nama,
+      email: email || penggunaLama.email,
+      pengalaman: pengalaman || penggunaLama.pengalaman,
+      tentang: tentang || penggunaLama.tentang,
+      alamat: alamat || penggunaLama.alamat,
+      jenis_kelamin: jenis_kelamin || penggunaLama.jenis_kelamin,
+      pekerjaan: pekerjaan || penggunaLama.pekerjaan,
+      no_hp: no_hp || penggunaLama.no_hp,
       kata_sandi: hashedKataSandi,
-      peran: peran || null,
+      peran: peran || penggunaLama.peran, // Gunakan peran lama jika tidak diubah
     };
 
-    await penggunaModel.updatePengguna(id, penggunaData);
-    res
-      .status(200)
-      .json({ success: true, message: "Pengguna berhasil diperbarui" });
+    // Perbarui pengguna di database
+    const updateResult = await penggunaModel.updatePengguna(id, penggunaData);
+
+    if (updateResult === 0) {
+      return res.status(404).json({ success: false, message: 'Pengguna tidak ditemukan' });
+    }
+
+    res.status(200).json({ success: true, message: 'Pengguna berhasil diperbarui' });
   } catch (error) {
-    console.error("Error updating pengguna:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Gagal memperbarui pengguna", error });
+    console.error('Error updating pengguna:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Gagal memperbarui pengguna',
+      error: error.message,
+    });
   }
 };
+
 
 export const deletePengguna = async (req, res) => {
   try {

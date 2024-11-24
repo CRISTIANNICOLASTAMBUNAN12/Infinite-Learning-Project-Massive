@@ -12,45 +12,37 @@ const EditSetting = () => {
         jenis_kelamin: '',
         pekerjaan: '',
         no_hp: '',
+        kata_sandi: '',
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [isFetching, setIsFetching] = useState(true); // for loading the data initially
+    const [isFetching, setIsFetching] = useState(true);
 
     const navigate = useNavigate();
 
-    // Fetch pengguna data saat pertama kali komponen dimuat
     useEffect(() => {
         const fetchPenggunaData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No token found');
-                }
+                if (!token) throw new Error('Token tidak ditemukan');
 
-                // Decode the JWT token to get the user ID
                 const decodedToken = jwtDecode(token);
-                const userId = decodedToken.id; // Ambil ID pengguna dari decoded token
+                const userId = decodedToken.id;
 
                 const response = await fetch(`/api/pengguna/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
                 if (!response.ok) {
-                    // Cek apakah response gagal dan tampilkan status dan body responsenya
-                    const errorData = await response.json();
-                    console.error('Error response:', errorData);  // Tampilkan error response di console
-                    throw new Error('Failed to fetch pengguna data');
+                    const result = await response.json();
+                    throw new Error(result.message || 'Gagal memuat data pengguna');
                 }
 
                 const data = await response.json();
-                console.log('Fetched data:', data);  // Log data yang diterima dari API
-
-                // Pastikan data yang diterima tidak null dan set ke state
                 setPenggunaData({
                     nama: data.data?.nama || '',
                     email: data.data?.email || '',
@@ -60,77 +52,63 @@ const EditSetting = () => {
                     jenis_kelamin: data.data?.jenis_kelamin || '',
                     pekerjaan: data.data?.pekerjaan || '',
                     no_hp: data.data?.no_hp || '',
+                    kata_sandi: '',
                 });
-            } catch (error) {
-                console.error('Error fetching data:', error);  // Log error secara rinci
-                setError('Error fetching profile data');
+            } catch (err) {
+                console.error(err);
+                setError(err.message || 'Gagal memuat data pengguna');
             } finally {
                 setIsFetching(false);
             }
         };
 
         fetchPenggunaData();
-    }, []);  // Empty dependency array untuk memanggil hanya sekali setelah komponen dimuat
+    }, []);
 
-    // Handle form input changes
+    // Menghandle perubahan input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setPenggunaData((prevState) => ({
-            ...prevState,
+        setPenggunaData((prev) => ({
+            ...prev,
             [name]: value,
         }));
     };
 
-    // Submit the form data
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setLoading(false);
-            return alert('Please login first');
-        }
-
-        // Decode the JWT token to get the user ID
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.id; // Ambil ID pengguna dari decoded token
-
-        const formData = new FormData();
-        formData.append('nama', penggunaData.nama);
-        formData.append('email', penggunaData.email);
-        formData.append('pengalaman', penggunaData.pengalaman);
-        formData.append('tentang', penggunaData.tentang);
-        formData.append('alamat', penggunaData.alamat);
-        formData.append('jenis_kelamin', penggunaData.jenis_kelamin);
-        formData.append('pekerjaan', penggunaData.pekerjaan);
-        formData.append('no_hp', penggunaData.no_hp);
 
         try {
-            const response = await fetch(`/api/pengguna/${userId}`, {  // Gunakan userId untuk PUT request
+            const token = localStorage.getItem('token');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.id;
+
+            const bodyData = { ...penggunaData };
+            if (!penggunaData.kata_sandi) {
+                delete bodyData.kata_sandi; // Jangan kirim kata_sandi jika kosong
+            }
+
+            const response = await fetch(`/api/pengguna/${userId}`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
-                body: formData, // Send the form data including the image
+                body: JSON.stringify(bodyData),
             });
 
-            setLoading(false); // Stop loading
-
-            if (response.ok) {
-                alert('Pengaturan pengguna updated successfully');
-                navigate('/profil'); // Redirect to the Pengaturan pengguna page after success
-            } else {
+            if (!response.ok) {
                 const result = await response.json();
-                setError(result.message || 'Failed to update Pengaturan pengguna');
-                alert(result.message || 'Failed to update Pengaturan pengguna');
+                throw new Error(result.message || 'Gagal memperbarui data pengguna');
             }
-        } catch (error) {
-            setLoading(false); // Stop loading
-            console.error('Error updating Pengaturan pengguna:', error);
-            setError('Error updating Pengaturan pengguna');
-            alert('Error updating Pengaturan pengguna');
+
+            alert('Akun berhasil diperbarui');
+            navigate('/pengaturan');
+        } catch (err) {
+            console.error(err);
+            setError(err.message || 'Gagal memperbarui data pengguna');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -153,11 +131,7 @@ const EditSetting = () => {
     return (
         <div className="p-6 flex justify-center">
             <div className="bg-white shadow-xl rounded-lg w-full max-w-2xl p-8 space-y-6">
-                <h1 className="text-2xl font-semibold text-gray-800 items-center flex flex-col">Pengaturan</h1>
-
-                {/* Display errors if any */}
-                {error && <div className="text-red-500 text-sm">{error}</div>}
-
+                <h1 className="text-2xl font-semibold text-gray-800 flex flex-col items-center">Pengaturan</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label className="block text-sm text-gray-500">Nama Lengkap</label>
@@ -169,7 +143,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Email</label>
                         <input
@@ -180,7 +153,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Pengalaman</label>
                         <input
@@ -191,7 +163,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Tentang</label>
                         <textarea
@@ -201,7 +172,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Alamat</label>
                         <input
@@ -212,7 +182,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Jenis Kelamin</label>
                         <select
@@ -225,7 +194,6 @@ const EditSetting = () => {
                             <option value="Perempuan">Perempuan</option>
                         </select>
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">Pekerjaan</label>
                         <input
@@ -236,7 +204,6 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm text-gray-500">No HP</label>
                         <input
@@ -247,8 +214,21 @@ const EditSetting = () => {
                             className="w-full p-2 border rounded-md"
                         />
                     </div>
-
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md" disabled={loading}>
+                    <div>
+                        <label className="block text-sm text-gray-500">Kata Sandi</label>
+                        <input
+                            type="password"
+                            name="kata_sandi"
+                            value={penggunaData.kata_sandi}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border rounded-md"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white py-2 rounded-md"
+                        disabled={loading}
+                    >
                         {loading ? 'Updating...' : 'Update Profile'}
                     </button>
                 </form>

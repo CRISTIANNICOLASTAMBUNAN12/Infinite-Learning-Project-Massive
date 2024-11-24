@@ -106,38 +106,36 @@ const Berita = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-softCream bg-white h-full w-full">
-      <h1 className="text-2xl font-medium text-gray-800 mb-2 text-center pb-10">Manajemen Berita</h1>
-
+    <div className="p-6 max-w-7xl mx-auto bg-white w-full h-full">
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Manajemen Berita</h1>
       <button
+        className="bg-green-600 text-white px-6 py-2 rounded-lg mb-4 hover:bg-green-700 transition-colors duration-300"
         onClick={handleTambah}
-        className="bg-green-600 text-white px-6 py-3 rounded-xl mb-6"
       >
         Tambah Berita
       </button>
-
-      <div className="space-y-6">
-        <table className="min-w-full bg-white rounded-lg shadow-md">
+      <div className="overflow-x-auto md:overflow-visible">
+        <table className="min-w-full bg-white rounded-lg shadow-lg">
           <thead className="bg-green-600 text-white">
             <tr>
-              <th className="px-6 py-3">Gambar</th>
-              <th className="px-6 py-3">Judul</th>
-              <th className="px-6 py-3">Tanggal</th>
-              <th className="px-6 py-3">Aksi</th>
+              <th className="px-6 py-3 text-left">Gambar</th>
+              <th className="px-6 py-3 text-left">Judul</th>
+              <th className="px-6 py-3 text-left">Tanggal</th>
+              <th className="px-6 py-3 text-left">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {beritaList.map((berita) => (
-              <tr key={berita.id} className="border-b">
-                <td className="px-6 py-3">
+              <tr key={berita.id} className="border-b hover:bg-gray-50">
+                <td className="px-6 py-4">
                   <img
                     src={`http://localhost:4000${berita.gambar}`}
                     alt={berita.judul}
                     className="w-20 h-20 object-cover rounded-md"
                   />
                 </td>
-                <td className="px-6 py-3">{berita.judul}</td>
-                <td className="px-6 py-3">
+                <td className="px-6 py-4">{berita.judul}</td>
+                <td className="px-6 py-4">
                   {(() => {
                     const date = new Date(berita.diterbitkan_pada);
                     const day = String(date.getDate()).padStart(2, '0');
@@ -146,8 +144,8 @@ const Berita = () => {
                     return `${day}/${month}/${year}`;
                   })()}
                 </td>
-                <td className="px-6 py-3 relative">
-                  <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[berita.id] = el)}>
+                <td className="px-6 py-4">
+                  <div className="relative inline-block text-left cursor-pointer" ref={(el) => (dropdownRefs.current[berita.id] = el)}>
                     <button
                       onClick={() => handleDropdownToggle(berita.id)}
                       className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
@@ -155,26 +153,29 @@ const Berita = () => {
                       Aksi
                     </button>
                     {openDropdownId === berita.id && (
-                      <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
-                        <button
+                      <ul
+                        className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50"
+                        style={{ overflow: 'visible' }}
+                      >
+                        <li
                           onClick={() => handleDetail(berita.id)}
-                          className="block w-full text-left px-6 py-3 text-gray-800 hover:bg-gray-100"
+                          className="block w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 gap-2"
                         >
                           Detail
-                        </button>
-                        <button
+                        </li>
+                        <li
                           onClick={() => handleEdit(berita.id)}
-                          className="block w-full text-left px-6 py-3 text-yellow-600 hover:bg-gray-100"
+                          className="block w-full px-4 py-2 text-sm text-yellow-500 hover:bg-gray-100 gap-2"
                         >
                           Edit
-                        </button>
-                        <button
+                        </li>
+                        <li
                           onClick={() => handleDeleteConfirmation(berita.id)}
-                          className="block w-full text-left px-6 py-3 text-red-600 hover:bg-red-100"
+                          className="block w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-50 gap-2"
                         >
                           Hapus
-                        </button>
-                      </div>
+                        </li>
+                      </ul>
                     )}
                   </div>
                 </td>
@@ -183,7 +184,6 @@ const Berita = () => {
           </tbody>
         </table>
       </div>
-      {/* Modal Konfirmasi Hapus */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center transition-all duration-300 transform hover:scale-105">
