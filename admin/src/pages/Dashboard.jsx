@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
   const [usersCount, setUsersCount] = useState(0);
   const [productsCount, setProductsCount] = useState(0);
   const [edukasiCount, setEdukasiCount] = useState(0);
@@ -49,7 +48,6 @@ const Dashboard = () => {
       }
     };
 
-
     fetchData();
 
     const fetchPengguna = async () => {
@@ -93,7 +91,7 @@ const Dashboard = () => {
     <div className="p-6 h-full w-full">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center">
             <FaUsers className="text-4xl text-green-600" />
           </div>
           <div className="px-4">
@@ -102,7 +100,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center">
             <FaBoxOpen className="text-4xl text-yellow-500" />
           </div>
           <div className="px-4">
@@ -111,7 +109,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center mx-6">
+          <div className="bg-WhiteSmoke rounded-full w-24 h-24 flex justify-center items-center">
             <FaBook className="text-4xl text-blue-600" />
           </div>
           <div className="px-4">
@@ -121,7 +119,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6 overflow-x-auto md:overflow-visible">
         <h2 className="text-title mb-3 capitalize font-medium text-lg">Pengguna Terbaru</h2>
         <table className="min-w-full text-left border-collapse border-spacing-0">
           <thead>

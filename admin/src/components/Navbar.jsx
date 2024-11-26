@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
 
-const Navbar = ({ toggleSidebar, handleLogout }) => {
+const Navbar = ({ toggleSidebar, handleLogout, refreshProfile }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const dropdownRef = useRef(null);
@@ -14,10 +14,7 @@ const Navbar = ({ toggleSidebar, handleLogout }) => {
     const fetchProfileData = async () => {
       try {
         const token = localStorage.getItem('token');
-
-        if (!token) {
-          throw new Error('No token found');
-        }
+        if (!token) throw new Error('No token found');
 
         const response = await fetch('/api/profil', {
           method: 'GET',
@@ -39,7 +36,7 @@ const Navbar = ({ toggleSidebar, handleLogout }) => {
     };
 
     fetchProfileData();
-  }, []);
+  }, [refreshProfile]);
 
   const handleLogoClick = () => {
     navigate('/admin-dashboard');

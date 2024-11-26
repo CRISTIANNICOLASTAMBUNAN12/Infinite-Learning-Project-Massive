@@ -11,6 +11,7 @@ const Profile = () => {
     const fetchProfileData = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log('Token:', token);
 
         if (!token) {
           throw new Error('No token found');
@@ -23,12 +24,11 @@ const Profile = () => {
             'Authorization': `Bearer ${token}`,
           },
         });
-        console.log("Profile Data:", profileData);
-
 
         if (response.ok) {
           const data = await response.json();
-          setProfileData(data.data);
+          console.log('Response JSON:', data);
+          setProfileData(data.data); // Update state
         } else {
           console.error('Failed to fetch profile data');
         }
@@ -39,6 +39,11 @@ const Profile = () => {
 
     fetchProfileData();
   }, []);
+
+  useEffect(() => {
+    // Log perubahan profileData
+    console.log("Profile Data (Updated):", profileData);
+  }, [profileData]); // Hanya dipanggil saat profileData berubah
 
   const handleEditClick = () => {
     navigate('/edit-profile');

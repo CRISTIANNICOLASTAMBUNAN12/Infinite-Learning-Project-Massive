@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
-import { FaTimesCircle } from 'react-icons/fa'; // Import icon for removing image
+import { useNavigate } from 'react-router-dom';
+import { FaTimesCircle } from 'react-icons/fa';
 import { assets } from '../../assets/assets';
 
-const EditProfile = () => {
+const EditProfile = ({ onProfileUpdated }) => {
     const [profileData, setProfileData] = useState({
         nama: '',
         lokasi: '',
         metode_pertanian: '',
         produk_ditawarkan: '',
         bio: '',
-        imageUrl: '', // Store the URL of the existing image
-        image: null,  // Store the new selected image
+        imageUrl: '',
+        image: null,
     });
-    const [previewImage, setPreviewImage] = useState(null); // For image preview before uploading
-    const [loading, setLoading] = useState(false); // For showing loading state while updating
-    const [error, setError] = useState(''); // For handling error messages
+    const [previewImage, setPreviewImage] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const navigate = useNavigate(); // Use navigate for redirecting
+    const navigate = useNavigate();
 
-    // Fetch existing profile data
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
@@ -40,7 +39,7 @@ const EditProfile = () => {
                     const data = await response.json();
                     setProfileData({
                         ...data.data,
-                        imageUrl: data.data.imageUrl || '', // Set the image URL if available
+                        imageUrl: data.data.imageUrl || '',
                     });
                 } else {
                     console.error('Failed to fetch profile data');
@@ -55,7 +54,6 @@ const EditProfile = () => {
         fetchProfileData();
     }, []);
 
-    // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProfileData((prevState) => ({
@@ -64,38 +62,35 @@ const EditProfile = () => {
         }));
     };
 
-    // Handle image file change
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setProfileData((prevState) => ({
                 ...prevState,
-                image: file, // Store the new image
+                image: file,
             }));
-            setPreviewImage(URL.createObjectURL(file)); // Set preview image
+            setPreviewImage(URL.createObjectURL(file));
         }
     };
 
-    // Remove the selected image
     const handleRemoveImage = () => {
         setProfileData((prevState) => ({
             ...prevState,
-            image: null, // Remove the selected image
+            image: null,
         }));
-        setPreviewImage(null); // Clear the preview image
-        document.getElementById('gambar').value = null; // Reset file input
+        setPreviewImage(null);
+        document.getElementById('gambar').value = null;
     };
 
-    // Submit the form data
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start loading
-        setError(''); // Clear any previous errors
+        setLoading(true);
+        setError('');
 
         const token = localStorage.getItem('token');
 
         if (!token) {
-            setLoading(false); // Stop loading
+            setLoading(false);
             return alert('Please login first');
         }
 
@@ -106,11 +101,10 @@ const EditProfile = () => {
         formData.append('produk_ditawarkan', profileData.produk_ditawarkan);
         formData.append('bio', profileData.bio);
 
-        // Append the new image if selected, otherwise use the existing image URL
         if (profileData.image) {
             formData.append('gambar', profileData.image);
         } else if (profileData.imageUrl) {
-            formData.append('gambar', profileData.imageUrl); // Use existing image if no new one
+            formData.append('gambar', profileData.imageUrl);
         }
 
         try {
@@ -119,21 +113,25 @@ const EditProfile = () => {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
-                body: formData, // Send the form data including the image
+                body: formData,
             });
 
-            setLoading(false); // Stop loading
+            setLoading(false);
 
             if (response.ok) {
                 alert('Profile updated successfully');
-                navigate('/profil'); // Redirect to the profile page after success
+                if (onProfileUpdated) {
+                    onProfileUpdated();
+                }
+
+                navigate('/profil');
             } else {
                 const result = await response.json();
                 setError(result.message || 'Failed to update profile');
                 alert(result.message || 'Failed to update profile');
             }
         } catch (error) {
-            setLoading(false); // Stop loading
+            setLoading(false);
             console.error('Error updating profile:', error);
             setError('Error updating profile');
             alert('Error updating profile');
@@ -144,11 +142,7 @@ const EditProfile = () => {
         <div className="p-6 flex justify-center">
             <div className="bg-white shadow-xl rounded-lg w-full max-w-2xl p-8 space-y-6">
                 <h1 className="text-2xl font-semibold text-gray-800 items-center flex flex-col">Edit Profile</h1>
-
-                {/* Display errors if any */}
                 {error && <div className="text-red-500 text-sm">{error}</div>}
-
-                {/* Image preview section */}
                 <div className="flex flex-col items-center">
                     {(previewImage || profileData.imageUrl || assets.upload_area) ? (
                         <div className="mb-10 relative">

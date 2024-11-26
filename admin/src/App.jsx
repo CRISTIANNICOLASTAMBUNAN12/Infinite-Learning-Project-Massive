@@ -8,7 +8,7 @@ import Berita from './pages/berita/Berita';
 import Edukasi from './pages/edukasi/Edukasi';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Login from './pages/Login'; 
+import Login from './pages/Login';
 import TambahUser from './pages/user/TambahUser';
 import DetailUser from './pages/user/DetailUser';
 import EditUser from './pages/user/EditUser';
@@ -18,7 +18,7 @@ import EditBerita from './pages/berita/EditBerita';
 import TambahEdukasi from './pages/edukasi/TambahEdukasi';
 import DetailEdukasi from './pages/edukasi/DetailEdukasi';
 import EditEdukasi from './pages/edukasi/EditEdukasi';
-import PrivateRoute from './components/PrivateRoute'; 
+import PrivateRoute from './components/PrivateRoute';
 import Profile from './pages/profil/Profile';
 import Settings from './pages/pengaturan/Settings';
 import EditProfile from './pages/profil/EditProfile';
@@ -29,6 +29,7 @@ function App() {
   const [role, setRole] = useState('');
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [refreshProfileKey, setRefreshProfileKey] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -57,11 +58,15 @@ function App() {
     setRole('');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    navigate('/login'); 
+    navigate('/login');
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleProfileUpdated = () => {
+    setRefreshProfileKey((prev) => prev + 1);
   };
 
   return (
@@ -73,6 +78,7 @@ function App() {
             setIsAuthenticated={setIsAuthenticated}
             toggleSidebar={toggleSidebar}
             handleLogout={handleLogout}
+            refreshProfile={refreshProfileKey}
           />
         )}
         <div className="flex flex-1 relative">
@@ -85,25 +91,126 @@ function App() {
           )}
           <div className="flex-1 p-4 overflow-y-auto bg-WhiteSmoke z-0">
             <Routes>
-              <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />} />
-              <Route path="/" element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/admin-dashboard"element={ <PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/users" element={<PrivateRoute element={<Users />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/users/tambah" element={<PrivateRoute element={<TambahUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/users/detail/:id" element={<PrivateRoute element={<DetailUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/users/edit/:id" element={<PrivateRoute element={<EditUser />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/berita" element={<PrivateRoute element={<Berita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/berita/tambah" element={<PrivateRoute element={<TambahBerita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/berita/detail/:id" element={<PrivateRoute element={<DetailBerita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/berita/edit/:id" element={<PrivateRoute element={<EditBerita />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edukasi" element={<PrivateRoute element={<Edukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edukasi/tambah" element={<PrivateRoute element={<TambahEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edukasi/detail/:id" element={<PrivateRoute element={<DetailEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edukasi/edit/:id" element={<PrivateRoute element={<EditEdukasi />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/profil" element={<PrivateRoute element={<Profile />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edit-profile" element={<PrivateRoute element={<EditProfile />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/pengaturan" element={<PrivateRoute element={<Settings />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
-              <Route path="/edit-pengaturan" element={<PrivateRoute element={<EditSetting />} isAuthenticated={isAuthenticated} role={role} requiredRole="admin" />} />
+              <Route
+                path="/login"
+                element={<Login
+                  setIsAuthenticated={setIsAuthenticated}
+                  setRole={setRole}
+                  onLogin={handleLogin} />} />
+              <Route
+                path="/"
+                element={<PrivateRoute
+                  element={<Dashboard />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/admin-dashboard"
+                element={<PrivateRoute
+                  element={<Dashboard />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/users"
+                element={<PrivateRoute
+                  element={<Users />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/users/tambah"
+                element={<PrivateRoute
+                  element={<TambahUser />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/users/detail/:id"
+                element={<PrivateRoute
+                  element={<DetailUser />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/users/edit/:id"
+                element={<PrivateRoute
+                  element={<EditUser />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/berita"
+                element={<PrivateRoute
+                  element={<Berita />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/berita/tambah"
+                element={<PrivateRoute
+                  element={<TambahBerita />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/berita/detail/:id"
+                element={<PrivateRoute
+                  element={<DetailBerita />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/berita/edit/:id"
+                element={<PrivateRoute
+                  element={<EditBerita />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/edukasi"
+                element={<PrivateRoute
+                  element={<Edukasi />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/edukasi/tambah"
+                element={<PrivateRoute
+                  element={<TambahEdukasi />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/edukasi/detail/:id"
+                element={<PrivateRoute
+                  element={<DetailEdukasi />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/edukasi/edit/:id"
+                element={<PrivateRoute
+                  element={<EditEdukasi />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/profil"
+                element={
+                  <PrivateRoute
+                    element={<Profile />}
+                    isAuthenticated={isAuthenticated}
+                    role={role}
+                    requiredRole="admin" />} />
+              <Route
+                path="/edit-profile"
+                element={
+                  <PrivateRoute
+                    element={<EditProfile onProfileUpdated={handleProfileUpdated} />}
+                    isAuthenticated={isAuthenticated}
+                    role={role}
+                    requiredRole="admin"
+                  />
+                }
+              />
+              <Route
+                path="/pengaturan"
+                element={<PrivateRoute
+                  element={<Settings />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route path="/edit-pengaturan"
+                element={<PrivateRoute
+                  element={<EditSetting />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
             </Routes>
           </div>
         </div>
