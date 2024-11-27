@@ -9,7 +9,7 @@ const Login = ({ setIsAuthenticated, setRole }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,14 +26,17 @@ const Login = ({ setIsAuthenticated, setRole }) => {
         setIsAuthenticated(true);
         setRole(data.pengguna.peran);
         localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.pengguna.peran);
 
         if (data.pengguna.peran === 'admin') {
           navigate('/admin-dashboard');
         } else if (data.pengguna.peran === 'petani') {
-          navigate('/user-dashboard');
+          navigate('/pasar');
         } else {
           setErrorMessage('Akses ditolak: Peran tidak dikenal');
+          navigate('/');
         }
+
       } else {
         setErrorMessage(data.message || 'Login gagal');
       }
