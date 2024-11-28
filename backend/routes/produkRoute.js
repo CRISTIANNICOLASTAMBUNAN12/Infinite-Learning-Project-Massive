@@ -10,5 +10,6 @@ router.get("/", verifyToken, produkController.getAllProduk);
 router.put("/:produk_id", verifyToken, checkRole(["admin", "penjual"]), upload.single("gambar"), produkController.updateProduk);
 router.delete("/:produk_id", verifyToken, checkRole(["admin", "penjual"]), produkController.deleteProduk);
 router.get('/jumlah/jumlah-terbaru', produkController.getJumlahProduk);
+router.get("/produkPetani", verifyToken, produkController.getProdukByUserId);
 
 export default router;

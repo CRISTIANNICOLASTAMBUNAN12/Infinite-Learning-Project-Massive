@@ -32,14 +32,17 @@ export const getAllProduk = async () => {
   }
 };
 
-export const getProdukById = async (id) => {
+export const getProdukByUserId = async (userId) => {
   try {
-    const [produk] = await db
-      .getDbConnection()
-      .query("SELECT * FROM Produk WHERE id = ?", [id]);
-    return produk.length > 0 ? produk[0] : null;
+    const connection = await db.getDbConnection(); // Mendapatkan koneksi dari pool
+    const [rows] = await connection.query(
+      "SELECT * FROM produk WHERE pengguna_id = ?",
+      [userId]
+    );
+    return rows;
   } catch (error) {
-    throw new Error("Gagal mengambil produk: " + error.message);
+    console.error("Error fetching products: ", error);
+    throw new Error("Error fetching products");
   }
 };
 

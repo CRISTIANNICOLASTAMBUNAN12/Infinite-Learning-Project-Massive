@@ -161,3 +161,18 @@ export const getJumlahProduk = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
+export const getProdukByUserId = async (req, res) => {
+  try {
+    const userId = req.user?.id;  // Mengambil userId dari req.user yang sudah diset oleh verifyToken
+    if (!userId) {
+      return res.status(400).json({ message: "User ID tidak ditemukan" });
+    }
+
+    const products = await produkModel.getProdukByUserId(userId);  // Memanggil model untuk mengambil produk berdasarkan userId
+    res.status(200).json(products);
+  } catch (err) {
+    console.error('Error fetching products: ', err);
+    res.status(500).json({ message: "Terjadi kesalahan saat mengambil produk" });
+  }
+};

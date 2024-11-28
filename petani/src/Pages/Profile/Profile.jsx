@@ -1,89 +1,172 @@
 import React, { useState, useEffect } from 'react';
-import './Profile.css';
-import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import { assets } from '../../assets/assets';
+import { FaPen } from 'react-icons/fa';
 
 function Profile() {
-  const crops = [
-    '/assets/banner.png',
-    '/assets/banner.png',
-    '/assets/banner.png',
-    '/assets/banner.png',
-    '/assets/banner.png',
-    '/assets/banner.png',
-  ];
+  const navigate = useNavigate();
+  const [profileData, setProfileData] = useState(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [isProduksLoading, setIsProduksLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [produk, setProduk] = useState([]);
+
+  // Fetch Profile Data
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      setIsProfileLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('Token not found');
+
+        const response = await fetch('/api/profil', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data');
+        }
+
+        const data = await response.json();
+        setProfileData(data.data || null);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching profile data:', err);
+      } finally {
+        setIsProfileLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  useEffect(() => {
+    const fetchProdukData = async () => {
+      setIsProduksLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('Token not found');
+
+        const response = await fetch('http://localhost:4000/api/produk/produkPetani', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Response error:", errorText);
+          throw new Error('Failed to fetch products data');
+        }
+
+        const data = await response.json();
+        setProduk(data); // Correctly set the produk data
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching products data:', err);
+      } finally {
+        setIsProduksLoading(false);
+      }
+    };
+    fetchProdukData();
+  }, []);
+
+  const handleEditClick = () => {
+    navigate('/edit-profile');
+  };
+
+  if (isProfileLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500">Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="App">
-
-      <div className="profile-page">
-        {/* Profile Section */}
-        <div className="profile-card">
-          <div className="profile-info">
-            <img
-              src="/assets/contt.png"
-              alt="Profile"
-              className="profile-image"
-            />
-            <div className="profile-details">
-              <div className="profile-header">
-                <h2 className="profile-name">Kim Taehyung</h2>
-                <button className="edit-button">Edit Profil</button>
-              </div><br></br><br></br>
-              <p className="location">Location: Korea Utara</p><br></br>
-              <p className="phone">Phone: +123456789</p><br></br>
-              <p className="description">Description: Tanaman Pangan - Jagung, Cabai, Sayur, Padi</p>
-            </div>
+    <div className="max-w-screen-xl mx-auto px-4 py-8">
+      {/* Profile Section */}
+      <div className="flex flex-col md:flex-row items-center bg-white p-6 rounded-lg shadow-xl mb-8">
+        <img
+          className="w-40 h-40 rounded-full border-4 border-green-400 mb-6 object-cover"
+          src={`http://localhost:4000${profileData?.gambar || assets.upload_area}`}
+          onError={(e) => { e.target.src = assets.upload_area; }}
+          alt="Profile"
+        />
+        <div className="flex-1 md:ml-6 text-center md:text-left">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">{profileData?.nama || '-'}</h2>
+            <button
+              onClick={handleEditClick}
+              className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition"
+            >
+              <FaPen className="w-5 h-5" />
+            </button>
           </div>
-        </div>
-
-        {/* Crop Gallery Section */}
-        <div className="crop-gallery">
-          <h3 className="gallery-title">HASIL PANEN</h3><br></br>
-          <div className="crop-grid">
-            {crops.map((crop, index) => (
-              <div key={index} className="crop-item">
-                <img src={crop} alt="Crop" className="crop-image" />
-              </div>
-            ))}
+          <div className="flex justify-between items-start pb-4">
+            <p className="text-sm text-gray-500 w-1/3">Lokasi</p>
+            <p className="text-sm text-gray-800 font-medium break-words w-2/3">{profileData?.lokasi || '-'}</p>
           </div>
-          <button className="add-button">+</button>
+          <div className="flex justify-between items-start pb-4">
+            <p className="text-sm text-gray-500 w-1/3">Metode Pertanian</p>
+            <p className="text-sm text-gray-800 font-medium break-words w-2/3">{profileData?.metode_pertanian || '-'}</p>
+          </div>
+          <div className="flex justify-between items-start pb-4">
+            <p className="text-sm text-gray-500 w-1/3">Produk Ditawarkan</p>
+            <p className="text-sm text-gray-800 font-medium break-words w-2/3">{profileData?.produk_ditawarkan || '-'}</p>
+          </div>
         </div>
       </div>
 
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-left">
-            <div className="logo-container">
-              <img src="/assets/logos.png" alt="Logo" className="footer-logo" />
-              <div className="about">
-                <p>Bersama kita wujudkan masa depan pertanian yang berkelanjutan <br />dengan inovasi dan teknologi terkini, mendukung petani dan <br />memperkuat sektor pertanian Indonesia.</p>
-              </div>
-            </div>
-          </div>
-          <div className="footer-right">
-            <div className="quick-links">
-              <h4>Akses Cepat</h4>
-              <ul>
-                <li>Beranda</li>
-                <li>Acara</li>
-                <li>Blog</li>
-                <li>Pasar</li>
-                <li>Komunitas</li>
-                <li>Forum</li>
-              </ul>
-            </div>
-            <div className="social-media">
-              <h4>Social Media</h4>
-              <ul>
-                <li>Discord</li>
-                <li>Instagram</li>
-                <li>Facebook</li>
-              </ul>
-            </div>
-          </div>
+      {/*  Section */}
+      <div className="bg-white p-6 rounded-lg shadow-xl">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-6 text-center">HASIL PANEN</h3>
+        <div className="text-center m-6">
+          <button className="w-12 h-12 bg-gray-200 text-gray-600 rounded-full text-3xl font-semibold hover:bg-gray-300 focus:outline-none transition">
+            +
+          </button>
         </div>
-        <p className="copyright">Copyright © 2024 All Rights Reserved.</p>
-      </footer>
+        {isProduksLoading ? (
+          <p className="text-center text-gray-500">Loading crops...</p>
+        ) : produk.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {produk.map((item, index) => (
+              <div key={index} className="rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`http://localhost:4000${item.gambar || '/default-image.jpg'}`}  // Ensure the image path is properly handled
+                  alt={item.nama || 'Produk'}
+                  className="w-full h-56 object-cover"
+                  onError={(e) => { e.target.src = assets.placeholder; }}  // Fallback to placeholder if image fails
+                />
+
+
+                <div className="p-4">
+                  <h4 className="text-lg font-semibold">{item.nama || 'Hasil Panen'}</h4>
+                  <p className="text-gray-600">{item.deskripsi || 'Deskripsi tidak tersedia.'}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">Tidak ada hasil panen yang tersedia.</p>
+        )}
+      </div>
     </div>
   );
 }

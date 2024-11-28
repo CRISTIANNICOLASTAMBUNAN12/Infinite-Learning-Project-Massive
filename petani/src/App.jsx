@@ -22,6 +22,7 @@ function App() {
   const [role, setRole] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const [refreshProfileKey, setRefreshProfileKey] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -29,7 +30,6 @@ function App() {
     if (token && storedRole) {
       setIsAuthenticated(true);
       setRole(storedRole);
-      // Navigate to the appropriate page after login
       navigate(role === 'petani' ? '/pasar' : '/');
     }
   }, []);
@@ -53,6 +53,10 @@ function App() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
+  };
+
+  const handleProfileUpdated = () => {
+    setRefreshProfileKey((prev) => prev + 1);
   };
 
   return (
@@ -96,9 +100,12 @@ function App() {
               <Route
                 path="/edit-profile"
                 element={
-                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
-                    <EditProfile />
-                  </PrivateRoute>
+                  <PrivateRoute
+                    element={<EditProfile onProfileUpdated={handleProfileUpdated} />}
+                    isAuthenticated={isAuthenticated}
+                    role={role}
+                    requiredRole="petani"
+                  />
                 }
               />
               <Route
