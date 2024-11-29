@@ -85,17 +85,18 @@ export const updateProduk = async (req, res) => {
       if (gambarPath) {
         const oldImagePath = path.join(__dirname, "..", gambarPath);
         if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+          fs.unlinkSync(oldImagePath); // Delete the old image file
         }
       }
-      gambarPath = `/uploads/${req.file.filename}`;
+      gambarPath = `/uploads/${req.file.filename}`; // New image path
     }
 
+    // Update the product in the database
     await produkModel.updateProduk(
       produk_id,
       nama,
       deskripsi,
-      kategori_id,
+      kategori_id, // Use kategori_id as expected by the backend
       harga,
       lokasi,
       stok,
@@ -164,15 +165,48 @@ export const getJumlahProduk = async (req, res) => {
 
 export const getProdukByUserId = async (req, res) => {
   try {
-    const userId = req.user?.id;  // Mengambil userId dari req.user yang sudah diset oleh verifyToken
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({ message: "User ID tidak ditemukan" });
     }
 
-    const products = await produkModel.getProdukByUserId(userId);  // Memanggil model untuk mengambil produk berdasarkan userId
+    const products = await produkModel.getProdukByUserId(userId); // Memanggil model untuk mengambil produk berdasarkan userId
     res.status(200).json(products);
   } catch (err) {
-    console.error('Error fetching products: ', err);
-    res.status(500).json({ message: "Terjadi kesalahan saat mengambil produk" });
+    console.error("Error fetching products: ", err);
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan saat mengambil produk" });
   }
 };
+
+export const getProdukById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const produk = await produkModel.getProdukById(id, {
+      include: [{
+        model: kategoriModel, // Ganti dengan model kategori yang sesuai
+        as: 'kategori', // Ini harus sesuai dengan asosiasi yang ada
+        attributes: ['id', 'nama'], // Mengambil ID dan nama kategori
+      }]
+    });
+
+    if (!produk) {
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    }
+
+    // Pastikan kategori ada dan jika tidak ada, kirim kategori default
+    if (produk.kategori) {
+      produk.kategori_id = produk.kategori.nama; // Menambahkan nama kategori
+    }
+
+    res.status(200).json(produk);
+  } catch (error) {
+    res.status(500).json({
+      message: "Gagal mendapatkan produk",
+      error: error.message,
+    });
+  }
+};
+

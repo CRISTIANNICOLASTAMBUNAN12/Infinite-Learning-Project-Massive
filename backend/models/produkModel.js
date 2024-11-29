@@ -95,3 +95,14 @@ export const getJumlahProdukFromDB = async () => {
     throw error;
   }
 };
+
+export const getProdukById = async (id) => {
+  try {
+    const [produk] = await db
+      .getDbConnection()
+      .query("SELECT * FROM Produk WHERE id = ?", [id]);
+    return produk.length > 0 ? produk[0] : null;
+  } catch (error) {
+    throw new Error("Gagal mengambil Produk: " + error.message);
+  }
+};

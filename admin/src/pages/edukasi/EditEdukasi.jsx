@@ -6,7 +6,12 @@ import { toast } from 'react-toastify';
 const EditEdukasi = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [edukasi, setEdukasi] = useState({ title: '', content: '', imageUrl: '', kategori_id: '' });
+  const [edukasi, setEdukasi] = useState({
+    title: '',
+    content: '',
+    imageUrl: '',
+    kategori_id: ''
+  });
   const [kategoriList, setKategoriList] = useState([]);
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);

@@ -16,6 +16,9 @@ import EditSetting from './Pages/pengaturan/EditSetting';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
+import TambahProduk from './Pages/Profile/TambahProduk';
+import DetailProduk from './Pages/Profile/DetailProduk';
+import EditProduk from './Pages/Profile/EditProduk';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -100,12 +103,33 @@ function App() {
               <Route
                 path="/edit-profile"
                 element={
-                  <PrivateRoute
-                    element={<EditProfile onProfileUpdated={handleProfileUpdated} />}
-                    isAuthenticated={isAuthenticated}
-                    role={role}
-                    requiredRole="petani"
-                  />
+                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
+                    <EditProfile onProfileUpdated={handleProfileUpdated} />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/tambah-produk"
+                element={
+                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
+                    <TambahProduk />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/detail-produk/:id"
+                element={
+                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
+                    <DetailProduk />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/edit-produk/:id"
+                element={
+                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
+                    <EditProduk />
+                  </PrivateRoute>
                 }
               />
               <Route
