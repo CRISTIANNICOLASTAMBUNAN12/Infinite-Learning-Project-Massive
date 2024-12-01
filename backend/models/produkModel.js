@@ -25,7 +25,16 @@ export const addProduk = async (
 
 export const getAllProduk = async () => {
   try {
-    const [produk] = await db.getDbConnection().query("SELECT * FROM Produk");
+    const [produk] = await db.getDbConnection().query(`
+      SELECT 
+        p.*, 
+        k.nama AS kategori_nama,
+        pr.nama AS pengguna_nama,
+        pr.gambar AS pengguna_gambar
+      FROM Produk p
+      LEFT JOIN Kategori k ON p.kategori_id = k.id
+      LEFT JOIN Profil pr ON p.pengguna_id = pr.pengguna_id
+    `);
     return produk;
   } catch (error) {
     throw new Error("Gagal mengambil semua produk: " + error.message);

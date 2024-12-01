@@ -53,11 +53,23 @@ export const addProduk = async (req, res) => {
 
 export const getAllProduk = async (req, res) => {
   try {
-    const produk = await produkModel.getAllProduk();
+    // Query untuk menyertakan kategori jika ada relasi
+    const produk = await produkModel.getAllProduk({
+      include: [
+        {
+          model: kategoriModel, // Model kategori
+          as: "kategori", // Alias sesuai relasi di model
+          attributes: ["id", "nama"], // Kolom yang ingin diambil
+        },
+      ],
+    });
+
     res.status(200).json(produk);
   } catch (error) {
+    console.error("Error fetching all products: ", error);
     res.status(500).json({
-      message: "Gagal mendapatkan produk",
+      success: false,
+      message: "Gagal mendapatkan semua produk",
       error: error.message,
     });
   }
@@ -185,11 +197,13 @@ export const getProdukById = async (req, res) => {
 
   try {
     const produk = await produkModel.getProdukById(id, {
-      include: [{
-        model: kategoriModel, // Ganti dengan model kategori yang sesuai
-        as: 'kategori', // Ini harus sesuai dengan asosiasi yang ada
-        attributes: ['id', 'nama'], // Mengambil ID dan nama kategori
-      }]
+      include: [
+        {
+          model: kategoriModel, // Ganti dengan model kategori yang sesuai
+          as: "kategori", // Ini harus sesuai dengan asosiasi yang ada
+          attributes: ["id", "nama"], // Mengambil ID dan nama kategori
+        },
+      ],
     });
 
     if (!produk) {
@@ -209,4 +223,3 @@ export const getProdukById = async (req, res) => {
     });
   }
 };
-

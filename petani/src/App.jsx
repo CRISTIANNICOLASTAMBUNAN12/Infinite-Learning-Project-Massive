@@ -19,6 +19,8 @@ import Sidebar from './components/Sidebar';
 import TambahProduk from './Pages/Profile/TambahProduk';
 import DetailProduk from './Pages/Profile/DetailProduk';
 import EditProduk from './Pages/Profile/EditProduk';
+import DetailBlog from './Pages/Blog/DetailBlog';
+import DetailBerita from './Pages/Berita/DetailBerita';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -84,6 +86,7 @@ function App() {
                 element={<Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />}
               />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<DetailBlog />} />
               <Route path="/pasar"
                 element={
                   <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
@@ -92,6 +95,7 @@ function App() {
                 }
               />
               <Route path="/berita" element={<Berita />} />
+              <Route path="/berita/:id" element={<DetailBerita />} />
               <Route
                 path="/profil"
                 element={

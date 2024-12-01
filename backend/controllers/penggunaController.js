@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import * as penggunaModel from "../models/penggunaModel.js";
 import jwt from "jsonwebtoken";
 import { getJumlahPenggunaFromDB } from "../models/penggunaModel.js";
+import db from "../config/db.js";
 
 export const addPengguna = async (req, res) => {
   try {
@@ -238,5 +239,24 @@ export const getLatestPengguna = async (req, res) => {
       message: "Gagal mendapatkan data pengguna",
       error,
     });
+  }
+};
+
+export const getUserSuggestions = async (req, res) => {
+  try {
+    const [users] = await db.getDbConnection().query(`
+      SELECT 
+        p.nama AS profil_nama, 
+        p.gambar AS profil_gambar, 
+        u.nama AS pengguna_nama
+      FROM Profil p
+      INNER JOIN Pengguna u ON p.pengguna_id = u.id
+      LIMIT 10
+    `);
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching user suggestions:", error);
+    res.status(500).json({ error: "Gagal mengambil saran pengguna" });
   }
 };

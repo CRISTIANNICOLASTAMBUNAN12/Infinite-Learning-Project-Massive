@@ -113,7 +113,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
                     className="text-sm font-medium hover:text-green-900 transition bold"
                     onClick={() => handleNavigation('/berita')}
                 >
-                    Berita & Acara
+                    Berita
                 </button>
             </div>
 

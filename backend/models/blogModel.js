@@ -16,9 +16,12 @@ export const addBlog = async (pengguna_id, judul, konten, kategori, gambar) => {
 
 export const getAllBlogs = async () => {
   try {
-    const [blogs] = await db
-      .getDbConnection()
-      .query("SELECT * FROM Blog ORDER BY dibuat_pada DESC");
+    const [blogs] = await db.getDbConnection().query(`
+        SELECT Blog.*, Pengguna.nama AS nama 
+        FROM Blog 
+        JOIN Pengguna ON Blog.pengguna_id = Pengguna.id 
+        ORDER BY Blog.dibuat_pada DESC
+      `);
     return blogs;
   } catch (error) {
     throw new Error("Gagal mendapatkan blog: " + error.message);
@@ -27,14 +30,25 @@ export const getAllBlogs = async () => {
 
 export const getBlogById = async (id) => {
   try {
-    const [blog] = await db
-      .getDbConnection()
-      .query("SELECT * FROM Blog WHERE id = ?", [id]);
-    return blog[0];
+    const [blog] = await db.getDbConnection().query(`
+      SELECT 
+        Blog.*, 
+        Pengguna.nama AS nama
+      FROM Blog 
+      JOIN Pengguna ON Blog.pengguna_id = Pengguna.id 
+      WHERE Blog.id = ?
+    `, [id]);
+
+    if (blog.length === 0) {
+      throw new Error("Blog tidak ditemukan");
+    }
+
+    return blog[0]; // Mengembalikan data blog dengan nama pengguna
   } catch (error) {
     throw new Error("Gagal mendapatkan blog: " + error.message);
   }
 };
+
 
 export const deleteBlog = async (id) => {
   try {
