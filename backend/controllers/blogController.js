@@ -48,16 +48,25 @@ export const addBlog = async (req, res) => {
 };
 
 export const getAllBlogs = async (req, res) => {
+  const { search } = req.query; // Get the search term from the query strin
+
   try {
-    const blogs = await blogModel.getAllBlogs();
+    let query = "SELECT * FROM Blog";
+    let queryParams = [];
+
+    if (search) {
+      query += ' WHERE judul LIKE ? OR konten LIKE ? OR kategori LIKE ?';
+      queryParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    }
+
+    const blogs = await blogModel.getAllBlogs(query, queryParams);
     res.status(200).json(blogs);
   } catch (error) {
-    res.status(500).json({
-      message: "Gagal mendapatkan blog",
-      error: error.message,
-    });
+    console.error('Error fetching blogs:', error); // Log detailed errors
+    res.status(500).json({ message: 'Terjadi kesalahan saat mengambil data blog', error: error.message });
   }
 };
+
 
 export const getBlogById = async (req, res) => {
   const { id } = req.params;

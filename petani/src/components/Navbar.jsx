@@ -115,6 +115,12 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
                 >
                     Berita
                 </button>
+                <button
+                    className="text-sm font-medium hover:text-green-900 transition bold"
+                    onClick={() => handleNavigation('/edukasi')}
+                >
+                    Edukasi
+                </button>
             </div>
 
             <div className="flex items-center gap-4">

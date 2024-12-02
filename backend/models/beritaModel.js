@@ -15,12 +15,12 @@ export const addBerita = async (judul, konten, gambar) => {
   }
 };
 
-export const getAllBerita = async () => {
+export const getAllBerita = async (query, queryParams) => {
   try {
-    const [berita] = await db.getDbConnection().query("SELECT * FROM Berita");
-    return berita;
+    const [rows] = await db.getDbConnection().query(query, queryParams);
+    return rows;
   } catch (error) {
-    throw new Error("Gagal mengambil semua berita: " + error.message);
+    throw new Error("Error fetching berita: " + error.message);
   }
 };
 

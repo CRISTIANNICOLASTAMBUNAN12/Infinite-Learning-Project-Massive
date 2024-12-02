@@ -38,16 +38,31 @@ export const addEdukasi = async (req, res) => {
 };
 
 export const getEdukasi = async (req, res) => {
+  const { search, kategori } = req.query;
+  let query = 'SELECT * FROM Edukasi';
+  let queryParams = [];
+
+  if (search) {
+    query += ' WHERE judul LIKE ? OR konten LIKE ?';
+    queryParams.push(`%${search}%`, `%${search}%`);
+  }
+
+  if (kategori) {
+    query += queryParams.length ? ' AND kategori_id = ?' : ' WHERE kategori_id = ?';
+    queryParams.push(kategori);
+  }
+
   try {
-    const edukasi = await edukasiModel.getEdukasi();
-    res.status(200).json(edukasi);
+    const [rows] = await db.getDbConnection().query(query, queryParams);
+    res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({
-      message: "Terjadi kesalahan saat mengambil data edukasi",
+      message: 'Terjadi kesalahan saat mengambil data edukasi',
       error: error.message,
     });
   }
 };
+
 
 export const getEdukasiById = async (req, res) => {
   const { id } = req.params;

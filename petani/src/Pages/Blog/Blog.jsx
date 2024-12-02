@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-function Blog() {
+const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const itemsPerPage = 6;
   const navigate = useNavigate();
 
-  // Fetch blogs from backend
+  // Fetching all blogs
   useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true);
       try {
-        const response = await fetch('http://localhost:4000/api/blog');  // Update the API endpoint as needed
+        const response = await fetch('http://localhost:4000/api/blog');
+        if (!response.ok) {
+          throw new Error('Failed to fetch blogs');
+        }
         const data = await response.json();
-        setPosts(data);
-        setLoading(false);
+        setPosts(data); // Save all posts in state
+        setFilteredPosts(data); // Initialize filtered posts
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.error('Error fetching blogs:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -26,15 +32,23 @@ function Blog() {
     fetchBlogs();
   }, []);
 
-  // Calculate total pages
-  const totalPages = Math.ceil(posts.length / itemsPerPage);
+  // Handle search filter locally
+  useEffect(() => {
+    if (searchTerm === '') {
+      setFilteredPosts(posts); // If search term is empty, show all posts
+    } else {
+      const filtered = posts.filter((post) =>
+        post.judul.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPosts(filtered); // Update filtered posts
+    }
+  }, [searchTerm, posts]); // Re-run when searchTerm or posts change
 
-  // Get current page items
+  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPosts = posts.slice(indexOfFirstItem, indexOfLastItem);
+  const currentPosts = filteredPosts.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Change page
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -45,13 +59,15 @@ function Blog() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <section className="text-center mb-8">
-        <h1 className="text-3xl font-semibold text-gray-800">Blog Lengkap</h1>
-        <p className="text-gray-600 mt-4">
-          Jelajahi artikel-artikel terbaru mengenai teknik bertani, tips berkebun, dan informasi penting tentang <br />
-          pertanian lokal. Temukan wawasan dan inspirasi untuk mendukung pertanian yang berkelanjutan.
-        </p>
-      </section>
+      <div className="flex justify-between items-center mb-5">
+        <input
+          type="text"
+          placeholder="Cari Blog..."
+          className="p-2 border rounded-lg"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
+        />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 cursor-pointer">
         {currentPosts.map((post, index) => (
@@ -61,20 +77,24 @@ function Blog() {
             onClick={() => navigate(`/blog/${post.id}`)}
           >
             <img
-              src={post?.gambar ? `http://localhost:4000${post.gambar}` : assets.admin_logo}
-              alt={post.nama || 'Produk tidak tersedia'}
+              src={post?.gambar ? `http://localhost:4000${post.gambar}` : '/default-placeholder.png'}
+              alt={post.judul || 'Produk tidak tersedia'}
+              className="w-full h-48 object-cover"
               onError={(e) => {
-                e.target.src = assets?.placeholder || '/default-placeholder.png';
+                e.target.src = '/default-placeholder.png';  // Handle image loading errors
               }}
-              className="w-full h-48 object-cover" />
+            />
             <div className="p-4">
-              <span className="text-sm text-gray-500">{post.kategori}</span>
               <h3 className="text-lg font-semibold text-gray-800">{post.judul}</h3>
+              <p className="text-sm text-gray-800">
+                {post.konten && post.konten.split(' ').length > 10
+                  ? `${post.konten.split(' ').slice(0, 10).join(' ')}...`
+                  : post.konten}
+              </p>
             </div>
             <div className="flex justify-between items-center p-4 bg-gray-100">
               <div className="flex items-center">
-                <i className="fas fa-user-circle text-gray-700 mr-2"></i>
-                <p className="text-sm text-gray-600">{post.nama || 'Pengguna Tidak Dikenal'}</p>
+                <span className="text-sm text-gray-500">{post.kategori}</span>
               </div>
               <p className="text-sm text-gray-500">
                 {new Date(post.dibuat_pada).toLocaleDateString('id-ID', {
@@ -103,6 +123,6 @@ function Blog() {
       </div>
     </div>
   );
-}
+};
 
 export default Blog;

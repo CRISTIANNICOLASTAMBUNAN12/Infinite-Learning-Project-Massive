@@ -2,41 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Berita() {
-  const [activeCategory, setActiveCategory] = useState(null); // null untuk semua berita
-  const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const handleCategoryClick = (category) => {
-    // Jika kategori yang sama diklik, set ke null untuk menampilkan semua berita
-    setActiveCategory((prevCategory) => (prevCategory === category ? null : category));
-  };
-
-  // Fetch kategori dari backend
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/api/kategori');
-        if (!response.ok) {
-          throw new Error('Gagal mengambil kategori dari server');
-        }
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  // Fetch berita sesuai kategori
+  // Fetch berita dengan fitur pencarian
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const url = activeCategory
-          ? `http://localhost:4000/api/berita?kategori=${activeCategory}`
-          : 'http://localhost:4000/api/berita';
+        let url = 'http://localhost:4000/api/berita';
+
+        // Jika ada pencarian, tambahkan query string untuk pencarian
+        if (searchTerm) {
+          url += `?search=${searchTerm}`;
+        }
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -50,26 +29,19 @@ function Berita() {
     };
 
     fetchEvents();
-  }, [activeCategory]);
+  }, [searchTerm]); // Akan melakukan request ulang ketika searchTerm berubah
 
   return (
     <div className="flex flex-col items-center w-full py-10">
-      <div className="flex w-full max-w-7xl gap-5 px-5">
-        {/* Sidebar */}
-        <aside className="w-48 p-5 bg-gray-100 rounded-md shadow">
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">Kategori</h2>
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              className={`block w-full px-4 py-2 mb-2 text-white rounded ${
-                activeCategory === category.nama ? 'bg-[#8D5524]' : 'bg-gray-500'
-              } hover:bg-[#8D5524]`}
-              onClick={() => handleCategoryClick(category.nama)}
-            >
-              {category.nama}
-            </button>
-          ))}
-        </aside>
+      <div className="w-full max-w-7xl px-5">
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Cari berita..."
+          className="p-2 border rounded-lg mb-5"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
+        />
 
         {/* Cards */}
         <div className="grid flex-1 grid-cols-4 gap-5 cursor-pointer">

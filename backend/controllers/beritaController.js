@@ -40,8 +40,18 @@ export const addBerita = async (req, res) => {
 };
 
 export const getAllBerita = async (req, res) => {
+  const { search } = req.query; // Ambil query parameter 'search'
+
   try {
-    const berita = await beritaModel.getAllBerita();
+    let query = "SELECT * FROM Berita";
+    let queryParams = [];
+
+    if (search) {
+      query += " WHERE judul LIKE ? OR konten LIKE ?";
+      queryParams.push(`%${search}%`, `%${search}%`);
+    }
+
+    const berita = await beritaModel.getAllBerita(query, queryParams); // Sesuaikan query model
     res.status(200).json(berita);
   } catch (error) {
     res.status(500).json({

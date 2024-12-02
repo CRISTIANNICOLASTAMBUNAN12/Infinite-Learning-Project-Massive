@@ -6,6 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import PrivateRoute from './components/PrivateRoute';
 import Beranda from './Pages/Beranda/Beranda';
 import Login from './Pages/Authentikasi/Login/Login';
+import Register from './Pages/Authentikasi/Register/Register';
 import Berita from './Pages/Berita/Berita';
 import Pasar from './Pages/Pasar/Pasar';
 import Blog from './Pages/Blog/Blog';
@@ -21,6 +22,8 @@ import DetailProduk from './Pages/Profile/DetailProduk';
 import EditProduk from './Pages/Profile/EditProduk';
 import DetailBlog from './Pages/Blog/DetailBlog';
 import DetailBerita from './Pages/Berita/DetailBerita';
+import Edukasi from './Pages/Edukasi/Edukasi';
+import DetailEdukasi from './Pages/Edukasi/DetailEdukasi';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -85,6 +88,7 @@ function App() {
                 path="/login"
                 element={<Login setIsAuthenticated={setIsAuthenticated} setRole={setRole} onLogin={handleLogin} />}
               />
+              <Route path="/register" element={<Register />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<DetailBlog />} />
               <Route path="/pasar"
@@ -96,6 +100,8 @@ function App() {
               />
               <Route path="/berita" element={<Berita />} />
               <Route path="/berita/:id" element={<DetailBerita />} />
+              <Route path="/edukasi" element={<Edukasi />} />
+              <Route path="/edukasi/:id" element={<DetailEdukasi />} />
               <Route
                 path="/profil"
                 element={

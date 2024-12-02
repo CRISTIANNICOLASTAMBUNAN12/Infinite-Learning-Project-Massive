@@ -122,11 +122,6 @@ function Pasar() {
       </main>
 
       <div className="w-96 flex flex-col">
-        <div className="flex items-center mb-5">
-          <img src="/assets/banner.png" alt="User Profile" className="w-10 h-10 rounded-full mr-3" />
-          <span className="text-xl font-bold text-gray-800">Kim_Taehyung</span>
-        </div>
-
         <aside className="bg-white p-5">
           <div className="user-saran">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Saran</h2>
