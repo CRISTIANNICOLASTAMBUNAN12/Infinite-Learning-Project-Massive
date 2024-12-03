@@ -24,6 +24,7 @@ import DetailBlog from './Pages/Blog/DetailBlog';
 import DetailBerita from './Pages/Berita/DetailBerita';
 import Edukasi from './Pages/Edukasi/Edukasi';
 import DetailEdukasi from './Pages/Edukasi/DetailEdukasi';
+import Chat from './Pages/Chat/Chat';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -103,6 +104,14 @@ function App() {
               <Route path="/edukasi" element={<Edukasi />} />
               <Route path="/edukasi/:id" element={<DetailEdukasi />} />
               <Route
+                path="/chat"
+                element={
+                  <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
+                    <Chat />
+                  </PrivateRoute>
+                }
+              />
+              <Route
                 path="/profil"
                 element={
                   <PrivateRoute isAuthenticated={isAuthenticated} role={role} requiredRole="petani">
@@ -118,6 +127,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route path="/profil/:id" element={<Profile />} /> {/* Rute profil */}
               <Route
                 path="/tambah-produk"
                 element={

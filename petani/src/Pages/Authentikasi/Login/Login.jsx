@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+  import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = ({ setIsAuthenticated, setRole }) => {
@@ -27,6 +27,7 @@ const Login = ({ setIsAuthenticated, setRole }) => {
         setRole(data.pengguna.peran);
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.pengguna.peran);
+        localStorage.setItem('userId', data.pengguna.id);
 
         if (data.pengguna.peran === 'admin') {
           navigate('/admin-dashboard');

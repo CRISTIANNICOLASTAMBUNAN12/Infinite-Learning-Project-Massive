@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function Edukasi() {
   const [edukasiList, setEdukasiList] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Fetch kategori untuk filter
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/kategori');
+        const response = await fetch("http://localhost:4000/api/kategori");
         if (!response.ok) {
-          throw new Error('Gagal mengambil kategori');
+          throw new Error("Gagal mengambil kategori");
         }
         const data = await response.json();
         setCategories(data);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
       }
     };
     fetchCategories();
@@ -29,28 +30,35 @@ function Edukasi() {
   useEffect(() => {
     const fetchEdukasi = async () => {
       try {
-        let url = 'http://localhost:4000/api/edukasi?';
-        
+        let url = "http://localhost:4000/api/edukasi?";
         if (selectedCategory) {
           url += `kategori=${selectedCategory}&`;
         }
         if (searchTerm) {
           url += `search=${searchTerm}&`;
         }
-        
+
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Gagal mengambil data edukasi');
+          throw new Error("Gagal mengambil data edukasi");
         }
         const data = await response.json();
         setEdukasiList(data);
       } catch (error) {
-        console.error('Error fetching edukasi:', error);
+        console.error("Error fetching edukasi:", error);
       }
     };
 
     fetchEdukasi();
   }, [searchTerm, selectedCategory]);
+
+  // Set kategori dari parameter URL saat pertama kali dimuat
+  useEffect(() => {
+    const kategoriParam = searchParams.get("kategori");
+    if (kategoriParam) {
+      setSelectedCategory(kategoriParam);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col items-center w-full py-10">
@@ -65,7 +73,7 @@ function Edukasi() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          
+
           {/* Filter by Category */}
           <select
             value={selectedCategory}
@@ -90,24 +98,24 @@ function Edukasi() {
               onClick={() => navigate(`/edukasi/${edukasi.id}`)}
             >
               <img
-                src={edukasi.gambar ? `http://localhost:4000${edukasi.gambar}` : 'http://via.placeholder.com/150'}
-                alt={edukasi.judul || 'Edukasi Image'}
+                src={edukasi.gambar ? `http://localhost:4000${edukasi.gambar}` : "http://via.placeholder.com/150"}
+                alt={edukasi.judul || "Edukasi Image"}
                 className="w-full h-36 object-cover rounded-t-lg"
               />
               <div className="p-3">
                 <div className="flex justify-between text-sm text-white mb-2">
                   <p className="text-sm text-gray-500">
-                    {new Date(edukasi.diterbitkan_pada).toLocaleDateString('id-ID', {
-                      day: '2-digit',
-                      month: 'long',
-                      year: 'numeric',
+                    {new Date(edukasi.diterbitkan_pada).toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
                     })}
                   </p>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-white truncate">{edukasi.judul}</h3>
                 <p className="text-sm text-white">
-                  {edukasi.konten.split(' ').length > 20
-                    ? `${edukasi.konten.split(' ').slice(0, 20).join(' ')}...`
+                  {edukasi.konten.split(" ").length > 20
+                    ? `${edukasi.konten.split(" ").slice(0, 20).join(" ")}...`
                     : edukasi.konten}
                 </p>
               </div>

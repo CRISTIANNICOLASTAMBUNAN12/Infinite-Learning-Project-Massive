@@ -1,8 +1,11 @@
 import * as chatModel from "../models/chatModel.js";
 
 export const sendPesan = async (req, res) => {
-  const { penerima_id, pesan } = req.body;
-  const pengirim_id = req.user.id;
+  const { penerima_id, pesan } = req.body; // Ensure these are correctly extracted from the body
+  const pengirim_id = req.user.id; // Assuming the sender is retrieved from the user in the token
+
+  // Log request body to ensure correct data is being received
+  console.log(req.body); // Debug log
 
   try {
     const idPesan = await chatModel.addChat(pengirim_id, penerima_id, pesan);
@@ -28,6 +31,7 @@ export const getPesan = async (req, res) => {
       pengirim_id,
       penerima_id
     );
+    console.log("Messages fetched:", pesan); // Add this log
     if (pesan.length === 0) {
       return res.status(404).json({ message: "Tidak ada pesan" });
     }
@@ -67,6 +71,21 @@ export const deletePesan = async (req, res) => {
     console.error("Error deleting message:", error);
     res.status(500).json({
       message: "Gagal menghapus pesan",
+      error: error.message,
+    });
+  }
+};
+
+export const getInteractedUsers = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const users = await chatModel.getInteractedUsers(userId);
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching interacted users:", error);
+    res.status(500).json({
+      message: "Gagal mengambil daftar pengguna",
       error: error.message,
     });
   }
