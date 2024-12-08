@@ -32,32 +32,32 @@ function Berita() {
   }, [searchTerm]); // Akan melakukan request ulang ketika searchTerm berubah
 
   return (
-    <div className="flex flex-col items-center w-full py-10">
+    <div className="flex flex-col items-center w-full h-full py-10 bg-gray-100">
       <div className="w-full max-w-7xl px-5">
         {/* Search */}
         <input
           type="text"
           placeholder="Cari berita..."
-          className="p-2 border rounded-lg mb-5"
+          className="p-3 mb-5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm
         />
 
         {/* Cards */}
-        <div className="grid flex-1 grid-cols-4 gap-5 cursor-pointer">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 cursor-pointer">
           {events.map((event) => (
             <div
               key={event.id}
-              className="bg-[#7BA651] rounded-lg shadow-md hover:transform hover:-translate-y-1 transition-transform duration-300"
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:transform hover:-translate-y-1 transition-transform duration-300"
               onClick={() => navigate(`/berita/${event.id}`)}
             >
               <img
                 src={event.gambar ? `http://localhost:4000${event.gambar}` : 'http://via.placeholder.com/150'}
                 alt={event.judul || 'Event Image'}
-                className="w-full h-36 object-cover rounded-t-lg"
+                className="w-full h-36 object-cover"
               />
-              <div className="p-3">
-                <div className="flex justify-between text-sm text-white mb-2">
+              <div className="p-5">
+                <div className="flex justify-between items-center mb-2">
                   <p className="text-sm text-gray-500">
                     {new Date(event.diterbitkan_pada).toLocaleDateString('id-ID', {
                       day: '2-digit',
@@ -66,8 +66,8 @@ function Berita() {
                     })}
                   </p>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-white truncate">{event.judul}</h3>
-                <p className="text-sm text-white">
+                <h3 className="mb-2 text-xl font-semibold text-gray-800 truncate">{event.judul}</h3>
+                <p className="text-sm text-gray-600">
                   {event.konten.split(' ').length > 20
                     ? `${event.konten.split(' ').slice(0, 20).join(' ')}...`
                     : event.konten}

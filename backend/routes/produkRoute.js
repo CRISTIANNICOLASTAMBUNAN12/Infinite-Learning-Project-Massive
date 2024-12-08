@@ -12,5 +12,7 @@ router.delete("/:produk_id", verifyToken, checkRole(["admin", "petani"]), produk
 router.get('/jumlah/jumlah-terbaru', produkController.getJumlahProduk);
 router.get("/produkPetani", verifyToken, produkController.getProdukByUserId);
 router.get("/produkPetani/:id", verifyToken, produkController.getProdukById);
+router.get("/produkPetani/all/:id", verifyToken, produkController.getAllProdukById);
+
 
 export default router;

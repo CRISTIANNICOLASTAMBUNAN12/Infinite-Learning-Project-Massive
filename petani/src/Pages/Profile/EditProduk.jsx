@@ -155,20 +155,20 @@ const EditProduk = () => {
     if (loading) return <p className="text-center">Memuat...</p>;
 
     return (
-        <div className="p-6 bg-white h-full w-full">
-            <div className="p-10">
+        <div className="p-6 bg-white h-full w-full max-w-4xl mx-auto">
+            <div className="p-8 bg-white rounded-lg shadow-md">
                 <div className="text-center pb-4">
-                    <h1 className="text-2xl font-medium text-gray-800">Edit Produk</h1>
+                    <h1 className="text-2xl font-semibold text-gray-800">Edit Produk</h1>
                 </div>
 
                 {/* Image Preview */}
-                <div className="items-center pb-10">
+                <div className="items-center pb-6">
                     {(previewImage || produk.imageUrl) && (
-                        <div className="mb-10 relative">
+                        <div className="mb-6 relative">
                             <img
                                 src={previewImage || produk.imageUrl}
                                 alt="Preview Gambar Produk"
-                                className="object-cover h-auto max-h-96 max-w-96 rounded-md shadow-md mx-auto"
+                                className="object-cover h-auto max-h-80 max-w-full rounded-md shadow-md mx-auto"
                             />
                         </div>
                     )}
@@ -259,17 +259,16 @@ const EditProduk = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="kategori" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="kategori_id" className="block text-gray-700 font-medium mb-2">
                             Kategori Produk
                         </label>
                         <select
-                            name="kategori"
+                            id="kategori_id"
                             value={produk.kategori_id}
                             onChange={(e) => setProduk({ ...produk, kategori_id: e.target.value })}
                             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
                             required
                         >
-                            <option value="">Pilih Kategori</option>
                             {kategoriList.map((kategori) => (
                                 <option key={kategori.id} value={kategori.id}>
                                     {kategori.nama}
@@ -283,8 +282,8 @@ const EditProduk = () => {
                             Gambar Produk
                         </label>
                         <input
-                            id="gambar"
                             type="file"
+                            id="gambar"
                             accept="image/*"
                             onChange={handleFileChange}
                             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
@@ -294,10 +293,10 @@ const EditProduk = () => {
                     <div className="flex justify-center">
                         <button
                             type="submit"
+                            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                             disabled={loading}
-                            className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg w-full hover:bg-green-700"
                         >
-                            {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
+                            {loading ? 'Memperbarui...' : 'Perbarui Produk'}
                         </button>
                     </div>
                 </form>

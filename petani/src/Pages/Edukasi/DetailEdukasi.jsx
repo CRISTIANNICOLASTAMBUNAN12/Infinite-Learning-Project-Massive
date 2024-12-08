@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 function DetailEdukasi() {
-  const { id } = useParams(); // Mengambil id dari URL
+  const { id } = useParams();
   const [edukasi, setEdukasi] = useState(null);
 
-  // Fetch detail edukasi berdasarkan ID
   useEffect(() => {
     const fetchEdukasiDetail = async () => {
       try {
@@ -23,27 +22,27 @@ function DetailEdukasi() {
     fetchEdukasiDetail();
   }, [id]);
 
-  if (!edukasi) return <div>Loading...</div>;
+  if (!edukasi) return <div className="text-center py-10 text-lg">Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center w-full py-10">
-      <div className="w-full max-w-7xl px-5">
-        <div className="bg-[#7BA651] rounded-lg shadow-md">
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-4xl mx-auto px-5">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <img
             src={edukasi.gambar ? `http://localhost:4000${edukasi.gambar}` : 'http://via.placeholder.com/150'}
             alt={edukasi.judul || 'Edukasi Image'}
-            className="w-full h-72 object-cover rounded-t-lg"
+            className="w-full h-64 object-cover"
           />
-          <div className="p-5">
-            <h2 className="text-3xl font-semibold text-white mb-4">{edukasi.judul}</h2>
-            <p className="text-white text-sm mb-4">
+          <div className="p-6 space-y-4">
+            <h2 className="text-3xl font-semibold text-gray-900">{edukasi.judul}</h2>
+            <p className="text-sm text-gray-500">
               {new Date(edukasi.diterbitkan_pada).toLocaleDateString('id-ID', {
                 day: '2-digit',
                 month: 'long',
                 year: 'numeric',
               })}
             </p>
-            <p className="text-white">{edukasi.konten}</p>
+            <p className="text-gray-700 leading-relaxed">{edukasi.konten}</p>
           </div>
         </div>
       </div>

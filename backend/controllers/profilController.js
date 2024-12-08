@@ -170,3 +170,20 @@ export const deleteProfil = async (req, res) => {
   }
 };
 
+export const getProfilById = async (req, res) => {
+  try {
+    const penggunaId = req.params.userId;
+
+    // Use the correct method from profilModel
+    const profil = await profilModel.getProfilByPenggunaId(penggunaId);
+
+    if (!profil) {
+      return res.status(404).json({ message: "Profil not found" });
+    }
+
+    res.json(profil);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

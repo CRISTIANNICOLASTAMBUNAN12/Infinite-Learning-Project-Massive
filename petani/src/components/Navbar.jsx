@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { FaUser, FaCog, FaSignOutAlt, FaComments } from "react-icons/fa";
 
@@ -9,6 +9,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation(); // Track the current route
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -42,19 +43,10 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
     }
   }, [isAuthenticated]);
 
-  const handleLogoutClick = () => {
-    handleLogout();
-    setIsDropdownOpen(false);
-  };
-
-  const handleNavigation = (path) => {
-    navigate(path);
-    setIsDropdownOpen(false);
-  };
-
-  const toggleDropdown = () => {
+  // Function to toggle dropdown visibility
+  const toggleDropdown = useCallback(() => {
     setIsDropdownOpen((prev) => !prev);
-  };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -74,49 +66,91 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
     };
   }, []);
 
-  useEffect(() => {
+  const handleNavigation = (path) => {
+    navigate(path);
     setIsDropdownOpen(false);
-  }, [isAuthenticated]);
+  };
+
+  const handleLogoutClick = () => {
+    handleLogout();
+    setIsDropdownOpen(false);
+  };
+
+  // Helper function to check if a route is active
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="h-16 bg-white text-black flex justify-between items-center px-4 border-b sm:px-10">
+    <div className="h-16 bg-white text-black flex justify-between items-center px-4 border-b sm:px-10 fixed top-0 left-0 w-full z-50">
       <div className="flex items-center gap-4">
-        <img
-          className="w-36 sm:w-40 cursor-pointer"
-          src={assets.admin_logo}
-          alt="Logo"
-          onClick={() => navigate("/")}
-        />
+        {!isAuthenticated && (
+          <img
+            className="w-36 sm:w-40 cursor-pointer"
+            src={assets.admin_logo}
+            alt="Logo"
+            onClick={() => navigate("/")}
+          />
+        )}
+        {isAuthenticated && (
+          <img
+            className="w-36 sm:w-40 cursor-pointer"
+            src={assets.admin_logo}
+            alt="Logo"
+            onClick={() => navigate("/pasar")}
+          />
+        )}
       </div>
 
       <div className="hidden md:flex gap-8">
         {!isAuthenticated && (
-          <button className="text-sm font-medium" onClick={() => navigate("/")}>
+          <button
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
+              isActive("/")
+                ? "bg-green-100 text-green-900"
+                : "hover:bg-green-100"
+            }`}
+            onClick={() => navigate("/")}
+          >
             Beranda
           </button>
         )}
         {isAuthenticated && (
           <button
-            className="text-sm font-medium hover:text-green-900 transition"
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
+              isActive("/pasar")
+                ? "bg-green-100 text-green-900"
+                : "hover:bg-green-100"
+            }`}
             onClick={() => handleNavigation("/pasar")}
           >
             Pasar
           </button>
         )}
         <button
-          className="text-sm font-medium hover:text-green-900 transition"
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
+            isActive("/blog")
+              ? "bg-green-100 text-green-900"
+              : "hover:bg-green-100"
+          }`}
           onClick={() => handleNavigation("/blog")}
         >
           Blog
         </button>
         <button
-          className="text-sm font-medium hover:text-green-900 transition bold"
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
+            isActive("/berita")
+              ? "bg-green-100 text-green-900"
+              : "hover:bg-green-100"
+          }`}
           onClick={() => handleNavigation("/berita")}
         >
           Berita
         </button>
         <button
-          className="text-sm font-medium hover:text-green-900 transition bold"
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
+            isActive("/edukasi")
+              ? "bg-green-100 text-green-900"
+              : "hover:bg-green-100"
+          }`}
           onClick={() => handleNavigation("/edukasi")}
         >
           Edukasi
@@ -127,7 +161,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
         <div className="gap-10">
           {isAuthenticated && (
             <button
-              className="flex items-center justify-center p-3 hover:bg-green-100 rounded-full transition duration-300 "
+              className="flex items-center justify-center p-3 hover:bg-green-100 rounded-full transition duration-300"
               onClick={() => handleNavigation("/chat")}
             >
               <FaComments className="text-green-900 text-xl" />

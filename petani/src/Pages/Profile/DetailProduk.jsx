@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const DetailProduk = () => {
-  const { id } = useParams(); // Get product ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [produk, setProduk] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,14 +33,12 @@ const DetailProduk = () => {
 
         const data = await response.json();
 
-        // Fetch category if kategori_id is available
         if (data.kategori_id && !data.kategori_id.nama) {
           const kategoriResponse = await fetch(`http://localhost:4000/api/kategori/${data.kategori_id}`);
           const kategoriData = await kategoriResponse.json();
-          data.kategori_id = kategoriData.nama; // Add category name
+          data.kategori_id = kategoriData.nama;
         }
 
-        // Ensure image URL is correct
         if (data.gambar && !data.gambar.startsWith('http')) {
           data.gambar = `http://localhost:4000${data.gambar}`;
         }
@@ -57,7 +55,6 @@ const DetailProduk = () => {
     fetchProdukById();
   }, [id]);
 
-  // Handle product deletion
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
       try {
@@ -77,8 +74,8 @@ const DetailProduk = () => {
         const result = await response.json();
 
         if (response.ok) {
-          toast.success(result.message); // Show success message
-          navigate('/profil'); // Navigate back to product list or another page
+          toast.success(result.message);
+          navigate('/profil');
         } else {
           toast.error(result.message || 'Gagal menghapus produk');
         }
@@ -90,63 +87,53 @@ const DetailProduk = () => {
   };
 
   const handleBack = () => {
-    navigate('/profil'); // Navigate back to profile page
+    navigate('/profil');
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-gray-50 min-h-screen py-10 px-5">
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         {loading ? (
-          <div className="flex justify-center items-center p-10">
+          <div className="flex justify-center items-center py-10">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800"></div>
             <p className="ml-4 text-gray-600">Memuat detail produk...</p>
           </div>
         ) : produk ? (
           <div className="p-6">
-            <div className="relative mb-6 flex justify-center items-center">
+            <div className="flex justify-center mb-6">
               <img
                 src={produk.gambar}
                 alt={produk.nama}
-                className="h-auto max-h-96 max-w-96 object-cover rounded-md shadow-sm"
+                className="max-w-full h-auto rounded-lg shadow-md"
               />
             </div>
 
-            <hr className="p-4" />
-
             <h1 className="text-2xl font-semibold text-gray-800 mb-4">{produk.nama}</h1>
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">{produk.deskripsi}</p>
+            <p className="text-lg text-gray-700 leading-relaxed mb-6">{produk.deskripsi}</p>
 
-            <div className="mb-4">
-              <p className="text-sm text-gray-500 mb-2">
-                <strong>Harga:</strong> Rp {produk.harga}
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <strong>Stok:</strong> {produk.stok}
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <strong>Kategori:</strong> {produk.kategori_id}
-              </p>
-              <p className="text-sm text-gray-500">
-                <strong>Lokasi:</strong> {produk.lokasi}
-              </p>
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500"><strong>Harga:</strong> Rp {produk.harga}</p>
+              <p className="text-sm text-gray-500"><strong>Stok:</strong> {produk.stok}</p>
+              <p className="text-sm text-gray-500"><strong>Kategori:</strong> {produk.kategori_id}</p>
+              <p className="text-sm text-gray-500"><strong>Lokasi:</strong> {produk.lokasi}</p>
             </div>
 
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-between gap-4 mt-8">
               <button
                 onClick={handleBack}
-                className="py-2 px-6 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition"
+                className="py-2 px-4 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition"
               >
                 Kembali
               </button>
               <button
                 onClick={handleDelete}
-                className="py-2 px-6 bg-red-500 text-white font-medium rounded-md hover:bg-red-600 transition"
+                className="py-2 px-4 bg-red-500 text-white font-medium rounded-md hover:bg-red-600 transition"
               >
                 Hapus Produk
               </button>
               <button
-                onClick={() => navigate(`/edit-produk/${id}`)} // Navigate to the product edit page
-                className="py-2 px-6 bg-yellow-500 text-white font-medium rounded-md hover:bg-yellow-600 transition"
+                onClick={() => navigate(`/edit-produk/${id}`)}
+                className="py-2 px-4 bg-yellow-500 text-white font-medium rounded-md hover:bg-yellow-600 transition"
               >
                 Edit Produk
               </button>

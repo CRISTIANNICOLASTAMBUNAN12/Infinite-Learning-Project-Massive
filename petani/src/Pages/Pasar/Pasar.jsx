@@ -7,7 +7,7 @@ function Pasar() {
   const [posts, setPosts] = useState([]);
   const [sarans, setSarans] = useState([]); // For storing saran data
   const [profil, setProfil] = useState(null); // For storing user profile data
-
+  const [expandedPosts, setExpandedPosts] = useState({});
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -95,7 +95,14 @@ function Pasar() {
 
   // Navigate to profile page
   const handleProfileClick = (userId) => {
-    navigate(`/profil/${userId}`);
+    navigate(`/detail-pasar/${userId}`); // Arahkan ke DetailPasar dengan userId
+  };
+
+  const handleToggleDescription = (postId) => {
+    setExpandedPosts((prevState) => ({
+      ...prevState,
+      [postId]: !prevState[postId], // Toggle the expanded state for the specific post
+    }));
   };
 
   return (
@@ -123,24 +130,46 @@ function Pasar() {
                   }
                   alt={post.pengguna_nama || "Anonymous"}
                   className="w-10 h-10 rounded-full mr-3 cursor-pointer"
-                  onClick={() => handleProfileClick(post.pengguna_id)} // Handle click to go to the profile page
+                  onClick={() => handleProfileClick(post.pengguna_id)}
                 />
                 <span
                   className="font-bold text-lx cursor-pointer"
-                  onClick={() => handleProfileClick(post.pengguna_id)} // Handle click to go to the profile page
+                  onClick={() => handleProfileClick(post.pengguna_id)}
                 >
                   {post.pengguna_nama || "Pengguna"}
                 </span>
               </div>
-              <div className="text-gray-600">
-                <p>Harga: {post.harga || "Tidak tersedia"}</p>
-                <p>Lokasi: {post.lokasi || "Tidak diketahui"}</p>
-                <p>Stok: {post.stok || "Habis"}</p>
-                <p>Kategori: {post.kategori_nama || "Tidak ada"}</p>
+              <div className="">
+                <div className="text-gray-600">
+                  <p>Harga: {post.harga || "Tidak tersedia"}</p>
+                  {expandedPosts[post.id] ? (
+                    <>
+                      <p>Lokasi: {post.lokasi || "Tidak diketahui"}</p>
+                      <p>Stok: {post.stok || "Habis"}</p>
+                      <p>Kategori: {post.kategori_nama || "Tidak ada"}</p>
+                      <p>{post.deskripsi || "Deskripsi tidak tersedia"}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>Lokasi: {post.lokasi || "Tidak diketahui"}</p>
+                      <p>
+                        {(post.deskripsi || "Deskripsi tidak tersedia").slice(
+                          0,
+                          0
+                        ) + "..."}
+                      </p>
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={() => handleToggleDescription(post.id)} // Toggle description for this specific post
+                  className="text-blue-500 mt-2"
+                >
+                  {expandedPosts[post.id]
+                    ? "Baca Lebih Sedikit"
+                    : "Baca Selengkapnya"}
+                </button>
               </div>
-              <p className="mb-3 text-base">
-                {post.deskripsi || "Deskripsi tidak tersedia"}
-              </p>
               {Array.isArray(post.gambar) ? (
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   {post.gambar.map((image, idx) => (
@@ -174,7 +203,9 @@ function Pasar() {
         )}
       </main>
 
-      <div className="w-96 flex flex-col">
+      <div className="w-96 flex flex-col lg:block hidden">
+        {" "}
+        {/* Hide on smaller screens */}
         <aside className="bg-white p-5">
           <div className="user-saran">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Saran</h2>

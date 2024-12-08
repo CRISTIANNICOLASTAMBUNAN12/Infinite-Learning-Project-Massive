@@ -223,3 +223,35 @@ export const getProdukById = async (req, res) => {
     });
   }
 };
+
+export const getAllProdukById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const produk = await produkModel.getAllProdukByUserId(id);
+
+    if (!produk || produk.length === 0) {
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    }
+
+    const result = produk.map((item) => ({
+      id: item.id,
+      nama: item.nama,
+      deskripsi: item.deskripsi,
+      kategori: item.kategori_nama || "Kategori tidak tersedia",
+      harga: item.harga,
+      lokasi: item.lokasi,
+      stok: item.stok,
+      gambar: item.gambar,
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching products: ", error.message);
+    res.status(500).json({
+      message: "Gagal mendapatkan produk",
+      error: error.message,
+    });
+  }
+};
+

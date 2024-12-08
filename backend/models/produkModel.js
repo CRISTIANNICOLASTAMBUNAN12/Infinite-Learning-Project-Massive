@@ -43,7 +43,7 @@ export const getAllProduk = async () => {
 
 export const getProdukByUserId = async (userId) => {
   try {
-    const connection = await db.getDbConnection(); // Mendapatkan koneksi dari pool
+    const connection = await db.getDbConnection();
     const [rows] = await connection.query(
       "SELECT * FROM produk WHERE pengguna_id = ?",
       [userId]
@@ -113,5 +113,26 @@ export const getProdukById = async (id) => {
     return produk.length > 0 ? produk[0] : null;
   } catch (error) {
     throw new Error("Gagal mengambil Produk: " + error.message);
+  }
+};
+
+export const getAllProdukByUserId = async (userId) => {
+  try {
+    const connection = await db.getDbConnection();
+    const [rows] = await connection.query(
+      `
+      SELECT 
+        p.*, 
+        k.nama AS kategori_nama 
+      FROM produk p
+      LEFT JOIN kategori k ON p.kategori_id = k.id
+      WHERE p.pengguna_id = ?
+      `,
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.error("Error fetching products: ", error);
+    throw new Error("Error fetching products");
   }
 };

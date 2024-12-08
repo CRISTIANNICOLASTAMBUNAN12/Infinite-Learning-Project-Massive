@@ -9,5 +9,6 @@ router.get('/', verifyToken, profilController.getProfil);
 router.post('/', verifyToken, upload.single('gambar'), profilController.addProfil); 
 router.put('/', verifyToken, upload.single('gambar'), profilController.upsertProfil); 
 router.delete("/", verifyToken, profilController.deleteProfil);
+router.get('/pasar/:userId', verifyToken, profilController.getProfilById); 
 
 export default router;
