@@ -103,11 +103,10 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
       <div className="hidden md:flex gap-8">
         {!isAuthenticated && (
           <button
-            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
-              isActive("/")
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/")
                 ? "bg-green-100 text-green-900"
                 : "hover:bg-green-100"
-            }`}
+              }`}
             onClick={() => navigate("/")}
           >
             Beranda
@@ -115,42 +114,38 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
         )}
         {isAuthenticated && (
           <button
-            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
-              isActive("/pasar")
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/pasar")
                 ? "bg-green-100 text-green-900"
                 : "hover:bg-green-100"
-            }`}
+              }`}
             onClick={() => handleNavigation("/pasar")}
           >
             Pasar
           </button>
         )}
         <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
-            isActive("/blog")
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/blog")
               ? "bg-green-100 text-green-900"
               : "hover:bg-green-100"
-          }`}
+            }`}
           onClick={() => handleNavigation("/blog")}
         >
           Blog
         </button>
         <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
-            isActive("/berita")
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/berita")
               ? "bg-green-100 text-green-900"
               : "hover:bg-green-100"
-          }`}
+            }`}
           onClick={() => handleNavigation("/berita")}
         >
           Berita
         </button>
         <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${
-            isActive("/edukasi")
+          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/edukasi")
               ? "bg-green-100 text-green-900"
               : "hover:bg-green-100"
-          }`}
+            }`}
           onClick={() => handleNavigation("/edukasi")}
         >
           Edukasi
@@ -179,9 +174,8 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
                 >
                   <img
                     className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
-                    src={`http://localhost:4000${
-                      profile?.gambar || assets.upload_area
-                    }`}
+                    src={`http://localhost:4000${profile?.gambar || assets.upload_area
+                      }`}
                     onError={(e) => {
                       e.target.src = assets.upload_area;
                     }}
@@ -211,7 +205,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
           )
         ) : (
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 bg-login text-white rounded-lg hover:bg-blue-600"
             onClick={() => navigate("/login")}
           >
             Masuk

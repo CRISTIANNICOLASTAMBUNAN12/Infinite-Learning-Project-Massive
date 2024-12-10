@@ -58,14 +58,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedRole = localStorage.getItem("role");
-    if (token && storedRole) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Validasi token ke backend jika diperlukan
       setIsAuthenticated(true);
-      setRole(storedRole);
-      navigate(role === "petani" ? "/pasar" : "/");
+      setRole(localStorage.getItem('role'));
     }
   }, []);
+
 
   const handleLogin = (role) => {
     setIsAuthenticated(true);

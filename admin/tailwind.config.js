@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#008000", // Warna biru utama
+        primary: "#008000", // Warna utama
         plantGreen: "#4CAF50", // Hijau cerah
         lightGreen: "#81C784", // Hijau muda
         soilBrown: "#8D6E63", // Coklat tanah

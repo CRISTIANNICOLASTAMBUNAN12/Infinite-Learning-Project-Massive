@@ -43,14 +43,8 @@ const Chat = () => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth <= 768);
     };
-
-    // Jalankan saat pertama kali komponen dimuat
     handleResize();
-
-    // Dengarkan perubahan ukuran layar
     window.addEventListener("resize", handleResize);
-
-    // Bersihkan event listener
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 

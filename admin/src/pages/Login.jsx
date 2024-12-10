@@ -9,7 +9,7 @@ const Login = ({ setIsAuthenticated, setRole }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,27 +18,17 @@ const Login = ({ setIsAuthenticated, setRole }) => {
           email,
           kata_sandi: password,
         }),
-      });
-
-      const data = await response.json();
-
+      }); const data = await response.json();
       if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.pengguna.peran);
         setIsAuthenticated(true);
         setRole(data.pengguna.peran);
-        localStorage.setItem('token', data.token);
-
-        if (data.pengguna.peran === 'admin') {
-          navigate('/admin-dashboard');
-        } else if (data.pengguna.peran === 'petani') {
-          navigate('/user-dashboard');
-        } else {
-          setErrorMessage('Akses ditolak: Peran tidak dikenal');
-        }
+        navigate(data.pengguna.peran === 'admin' ? '/admin-dashboard' : '/pasar');
       } else {
         setErrorMessage(data.message || 'Login gagal');
       }
     } catch (error) {
-      console.error('Login error:', error);
       setErrorMessage('Terjadi kesalahan saat login');
     }
   };

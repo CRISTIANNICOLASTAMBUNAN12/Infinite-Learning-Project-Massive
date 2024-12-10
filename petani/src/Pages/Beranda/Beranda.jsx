@@ -1,5 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import facebookLogo from "../../assets/facebook.png";
+import googleLogo from "../../assets/google.png";
+import kemenkesLogo from "../../assets/kemen-kes-ri.png";
+import kementerianPertanianLogo from "../../assets/Kementerian-Pertanian.png";
+import tutLogo from "../../assets/TUT-WURI-HANDAYANI.png";
+import google from "../../assets/google.png";
+
+/**
+ * Beranda Page
+ *
+ * This page renders the main landing page of the application.
+ *
+ * @returns {JSX.Element} The rendered page.
+ */
 
 function Beranda() {
   const [categories, setCategories] = useState([]);
@@ -7,68 +21,75 @@ function Beranda() {
   useEffect(() => {
     fetch("/api/kategori")
       .then((response) => response.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        // console.log("Category data:", data); // Add this line
+        setCategories(data);
+      })
       .catch((error) => console.error("Error fetching categories:", error));
   }, []);
 
   const navigate = useNavigate();
-  const handleLogin = () => navigate(`/login`);
   const handleRegister = () => navigate(`/register`);
 
   return (
     <div>
       <div className="font-sans">
         {/* Banner */}
-        <section
-          className="relative text-center text-white bg-cover bg-center h-screen"
-          style={{ backgroundImage: "url('/assets/banner.png')" }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 text-center z-10">
-            <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-              Solusi Digital untuk Masa Depan Pertanian
-            </h1>
-            <p className="mt-4 text-lg text-gray-200 max-w-md mx-auto">
-              Platform yang mendukung kemajuan teknologi dan keberlanjutan bagi
-              para petani.
-            </p>
-            <button
-              className="mt-6 bg-green-500 hover:bg-green-600 text-white py-3 px-10 rounded-full text-xl font-bold"
-              onClick={handleRegister}
-            >
-              Mulai Sekarang
-            </button>
+        <section className="bg-primary my-5 mx-5">
+          <div className="flex flex-col md:flex-row flex-wrap rounded-lg px-6 md:px-10 lg:px-20 max-w-screen-lg mx-auto">
+            {/* ================= Left Side ================= */}
+            <div className="md:w-1/2 flex flex-col items-start justify-center gap-4 py-10 m-auto md:py-[8vw] md:mb-[-30px]">
+              <p className="text-3xl md:text-4xl lg:text-5xl text-white font-semibold leading-tight md:leading-tight lg:leading-tight">
+                Book Appointment <br /> With Trusted Doctors
+              </p>
+
+              <div className="flex flex-col md:flex-row items-center gap-3 text-white text-sm font-light">
+                <img className="w-28" alt="Doctor Icon" />
+                <p>
+                  Simply browse through our extensive list of trusted doctors, <br className="hidden sm:block" />
+                  schedule your appointment hassle-free
+                </p>
+              </div>
+
+              <button
+                onClick={handleRegister}
+                className="flex items-center gap-2 bg-white px-8 py-3 rounded-full text-gray-600 text-sm m-auto md:m-0 hover:scale-105 transition-all duration-300"
+              >
+                Book Appointment
+              </button>
+            </div>
+
+            {/* ================= Right Side (Image) ================= */}
+            <div className="md:w-1/2 relative">
+              <img className="w-full md:absolute bottom-0 h-auto rounded-lg" src={google} alt="Doctor's Image" />
+            </div>
           </div>
         </section>
 
         {/* Edukasi Section */}
-        <section className="py-20 px-8 bg-gray-50">
+        <section className="flex flex-col items-center gap-6 py-16 text-gray-800">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-green-700">
+            <h1 className="text-3xl font-medium">
               Edukasi Pertanian
-            </h2>
+            </h1>
             <p className="mt-4 text-lg text-gray-800">
               Temukan wawasan menarik untuk mendukung kesuksesan Anda.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="flex sm:justify-center gap-6 pt-5 w-full overflow-x-auto sm:overflow-x-hidden">
             {categories.length > 0 ? (
               categories.map((category) => (
                 <div
                   key={category.id}
-                  className="cursor-pointer p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition-all"
+                  className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
                   onClick={() => navigate(`/edukasi?kategori=${category.id}`)}
                 >
-                  <div className="flex justify-center mb-4">
-                    <img
-                      src={`/assets/${category.image}`}
-                      alt={category.nama}
-                      className="w-24 h-24 object-cover rounded-full border-4 border-green-700"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-green-700 text-center">
-                    {category.nama}
-                  </h3>
+                  <img
+                    src={`http://localhost:4000/uploads/${category.gambar}`}
+                    alt={`Kategori: ${category.nama}`}
+                    className="w-20 h-20 sm:w-20 rounded-full object-cover mx-4"
+                  />
+                  <p className="text-center mt-2">{category.nama}</p>
                 </div>
               ))
             ) : (
@@ -82,9 +103,9 @@ function Beranda() {
         {/* Keunggulan Platform */}
         <section className="py-20 px-8 bg-gradient-to-r from-green-50 to-green-100">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-green-700">
+            <h1 className="text-3xl font-medium text-green-700">
               Keunggulan Platform
-            </h2>
+            </h1>
             <p className="mt-4 text-lg text-gray-800 max-w-2xl mx-auto">
               Mengapa memilih kami? Kami menghadirkan solusi terbaik untuk
               pertanian Anda dengan teknologi inovatif.
@@ -123,32 +144,26 @@ function Beranda() {
         </section>
 
         {/* Kolaborasi dan Mitra */}
-        <section className="py-20 px-8 bg-gray-50">
+        <section className="flex flex-col items-center gap-4 py-16 text-gray-800">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-green-700">
+            <h1 className="text-3xl font-medium">
               Kolaborasi dan Mitra Kami
-            </h2>
+            </h1>
             <p className="mt-4 text-lg text-gray-800">
               Kami bekerja sama dengan berbagai pihak untuk menghadirkan solusi
               terbaik bagi petani.
             </p>
           </div>
-          <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 justify-center items-center">
-            {[
-              "/assets/partner1.png",
-              "/assets/partner2.png",
-              "/assets/partner3.png",
-              "/assets/partner4.png",
-              "/assets/partner5.png",
-            ].map((logo, index) => (
+          <div className="flex sm:justify-center gap-4 pt-5 w-full overflow-x-auto sm:overflow-x-hidden">
+            {[facebookLogo, googleLogo, kemenkesLogo, kementerianPertanianLogo, tutLogo].map((logo, index) => (
               <div
                 key={index}
-                className="flex justify-center items-center bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all"
+                className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
               >
                 <img
                   src={logo}
                   alt={`Mitra ${index + 1}`}
-                  className="max-w-full h-16 object-contain"
+                  className="w-14 h-14 sm:w-14 rounded-full object-cover mx-4"
                 />
               </div>
             ))}
@@ -158,9 +173,9 @@ function Beranda() {
         {/* Tentang Kami */}
         <section className="py-20 px-8 bg-gradient-to-r from-green-50 to-green-100">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-semibold text-green-700">
+            <h1 className="text-3xl font-medium text-green-700">
               Tentang Kami
-            </h2>
+            </h1>
             <p className="mt-6 text-lg text-gray-800">
               Kami adalah platform inovatif yang menghubungkan petani dengan
               teknologi, pasar, dan komunitas. Misi kami adalah membantu petani

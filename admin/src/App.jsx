@@ -34,11 +34,11 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setIsAuthenticated(true);
-      const storedRole = localStorage.getItem('role');
-      setRole(storedRole);
+        // Validasi token ke backend jika diperlukan
+        setIsAuthenticated(true);
+        setRole(localStorage.getItem('role'));
     }
-  }, []);
+}, []);
 
   const handleLogin = (role) => {
     setIsAuthenticated(true);
@@ -67,7 +67,7 @@ function App() {
 
   const handleProfileUpdated = () => {
     setRefreshProfileKey((prev) => prev + 1);
-  };
+  };  
 
   return (
     <>
