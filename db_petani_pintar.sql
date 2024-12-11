@@ -61,8 +61,8 @@ CREATE TABLE Thread (
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
 );
 
-/* Tabel Komentar */
-CREATE TABLE Komentar (
+/* Tabel Thread Komentar */
+CREATE TABLE Thread_Komentar (
     id INT PRIMARY KEY AUTO_INCREMENT,
     thread_id INT,
     pengguna_id INT,
@@ -133,10 +133,22 @@ CREATE TABLE Produk (
     harga DECIMAL(10, 2),
     lokasi VARCHAR(255),
     stok INT,
-	gambar VARCHAR(255),
+    gambar VARCHAR(255),
+    suka INT DEFAULT 0,
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE,
     FOREIGN KEY (kategori_id) REFERENCES Kategori(id) ON DELETE CASCADE
+);
+
+/* Produk Komentar */
+CREATE TABLE Produk_Komentar (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    produk_id INT,
+    pengguna_id INT,
+    konten TEXT,
+    dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (produk_id) REFERENCES Produk(id) ON DELETE CASCADE,
+    FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE
 );
 
 /* Tabel Edukasi */
@@ -212,7 +224,7 @@ VALUES
 (3, 3, 'Harga Pupuk Melonjak', 'Kenapa harga pupuk melonjak akhir-akhir ini?');
 
 /* Data Dummy Komentar */
-INSERT INTO Komentar (thread_id, pengguna_id, konten)
+INSERT INTO Thread_Komentar (thread_id, pengguna_id, konten)
 VALUES 
 (1, 2, 'Saya biasa menggunakan pupuk kompos untuk hasil yang lebih baik'),
 (2, 1, 'Pastikan pH air tetap stabil agar tanaman tumbuh optimal'),

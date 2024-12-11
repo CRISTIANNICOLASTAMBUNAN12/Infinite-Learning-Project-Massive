@@ -101,55 +101,74 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
       </div>
 
       <div className="hidden md:flex gap-8">
+        {/* BERANDA Button (Only visible when not authenticated) */}
         {!isAuthenticated && (
-          <button
-            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/")
-                ? "bg-green-100 text-green-900"
-                : "hover:bg-green-100"
-              }`}
-            onClick={() => navigate("/")}
-          >
-            Beranda
-          </button>
+          <div className="flex flex-col items-center">
+            <button
+              className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/") ? "text-green-900" : "hover:bg-green-100"}`}
+              onClick={() => navigate("/")}
+            >
+              BERANDA
+            </button>
+            {isActive("/") && (
+              <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
+            )}
+          </div>
         )}
+
+        {/* PASAR Button (Only visible when authenticated) */}
         {isAuthenticated && (
-          <button
-            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/pasar")
-                ? "bg-green-100 text-green-900"
-                : "hover:bg-green-100"
-              }`}
-            onClick={() => handleNavigation("/pasar")}
-          >
-            Pasar
-          </button>
+          <div className="flex flex-col items-center">
+            <button
+              className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/pasar") ? "text-green-900" : "hover:bg-green-100"}`}
+              onClick={() => handleNavigation("/pasar")}
+            >
+              PASAR
+            </button>
+            {isActive("/pasar") && (
+              <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
+            )}
+          </div>
         )}
-        <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/blog")
-              ? "bg-green-100 text-green-900"
-              : "hover:bg-green-100"
-            }`}
-          onClick={() => handleNavigation("/blog")}
-        >
-          Blog
-        </button>
-        <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/berita")
-              ? "bg-green-100 text-green-900"
-              : "hover:bg-green-100"
-            }`}
-          onClick={() => handleNavigation("/berita")}
-        >
-          Berita
-        </button>
-        <button
-          className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/edukasi")
-              ? "bg-green-100 text-green-900"
-              : "hover:bg-green-100"
-            }`}
-          onClick={() => handleNavigation("/edukasi")}
-        >
-          Edukasi
-        </button>
+
+        {/* BLOG Button */}
+        <div className="flex flex-col items-center">
+          <button
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/blog") ? "text-green-900" : "hover:bg-green-100"}`}
+            onClick={() => handleNavigation("/blog")}
+          >
+            BLOG
+          </button>
+          {isActive("/blog") && (
+            <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
+          )}
+        </div>
+
+        {/* BERITA Button */}
+        <div className="flex flex-col items-center">
+          <button
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/berita") ? "text-green-900" : "hover:bg-green-100"}`}
+            onClick={() => handleNavigation("/berita")}
+          >
+            BERITA
+          </button>
+          {isActive("/berita") && (
+            <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
+          )}
+        </div>
+
+        {/* EDUKASI Button */}
+        <div className="flex flex-col items-center">
+          <button
+            className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/edukasi") ? "text-green-900" : "hover:bg-green-100"}`}
+            onClick={() => handleNavigation("/edukasi")}
+          >
+            EDUKASI
+          </button>
+          {isActive("/edukasi") && (
+            <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
@@ -205,7 +224,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
           )
         ) : (
           <button
-            className="px-4 py-2 bg-login text-white rounded-lg hover:bg-blue-600"
+            className="px-4 py-2 bg-login text-white hover:bg-green-600 rounded-full font-light"
             onClick={() => navigate("/login")}
           >
             Masuk

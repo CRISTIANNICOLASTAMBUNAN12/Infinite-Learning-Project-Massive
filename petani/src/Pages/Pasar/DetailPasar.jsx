@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaComment } from "react-icons/fa";
 
@@ -8,19 +8,19 @@ function DetailPasar() {
   const [produk, setProduk] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate to handle redirection
-  console.log("userId di URL:", userId);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const storedUserId = localStorage.getItem("userid");
+  //   console.log("localStorage userId:", storedUserId, "type:", typeof storedUserId);
+  //   console.log("URL userId:", userId, "type:", typeof userId);
+  // }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Token tidak ditemukan.");
-
-        // Ambil ID pengguna yang login dari token atau localStorage
-        const loggedUserId = localStorage.getItem("userId");
-        setCurrentUserId(loggedUserId);
 
         const profileResponse = await fetch(
           `http://localhost:4000/api/profil/pasar/${userId}`,
@@ -53,10 +53,10 @@ function DetailPasar() {
     fetchData();
   }, [userId]);
 
-  // Function to handle sending a message and redirecting to the chat
   const handleChatClick = async () => {
     try {
       const token = localStorage.getItem("token");
+      const currentUserId = localStorage.getItem("userid");
       if (!token) throw new Error("Token tidak ditemukan.");
 
       const response = await fetch("http://localhost:4000/api/chat/kirim", {
@@ -76,7 +76,6 @@ function DetailPasar() {
         throw new Error("Gagal mengirim pesan.");
       }
 
-      // Redirect to the /chat page and open the conversation with the other user
       navigate(`/chat/${userId}`);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -112,14 +111,14 @@ function DetailPasar() {
                 {profil.metode_pertanian || "Metode Pertanian tidak tersedia"}
               </p>
 
-              {/* Tampilkan Tombol Chat Hanya Jika ID Berbeda */}
-              {currentUserId !== userId && (
+              {/* Improved chat button logic with numerical comparison */}
+              {Number(localStorage.getItem("userid")) !== Number(userId) && (
                 <button
                   onClick={handleChatClick}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white text-sm font-semibold rounded-lg shadow hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-300"
                 >
-                  <FaComment className="h-5 w-5" /> {/* React Icon chat */}
-                  Chat
+                  <FaComment className="h-5 w-5" />
+                  Kirim Pesan
                 </button>
               )}
             </div>

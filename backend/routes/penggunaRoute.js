@@ -11,6 +11,6 @@ router.put('/:id', verifyToken, checkRole(['admin', 'petani']), penggunaControll
 router.delete('/:id', verifyToken, checkRole(['admin']), penggunaController.deletePengguna);
 router.get('/jumlah/jumlah-terbaru', penggunaController.getJumlahPengguna);
 router.get("/daftar/tiga/terbaru", penggunaController.getLatestPengguna);
-router.get('/petani/saran/pasar/saran', penggunaController.getUserSuggestions);
+router.get('/petani/saran', penggunaController.getUserSuggestions);
 
 export default router;

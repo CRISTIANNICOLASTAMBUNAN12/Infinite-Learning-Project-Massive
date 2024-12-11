@@ -24,6 +24,7 @@ const Login = ({ setIsAuthenticated, setRole }) => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.pengguna.peran);
+        localStorage.setItem('userid', data.pengguna.id); // Menyimpan userid
         setIsAuthenticated(true);
         setRole(data.pengguna.peran);
         navigate(data.pengguna.peran === 'admin' ? '/admin-dashboard' : '/pasar');

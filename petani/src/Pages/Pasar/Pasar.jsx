@@ -39,7 +39,7 @@ function Pasar() {
         if (!token) throw new Error("Token not found");
 
         const response = await fetch(
-          "http://localhost:4000/api/pengguna/petani/saran/pasar/saran",
+          "http://localhost:4000/api/pengguna/petani/saran",
           {
             method: "GET",
             headers: {
@@ -193,8 +193,8 @@ function Pasar() {
                 />
               ) : null}
               <div className="flex justify-between items-center text-gray-600 mt-3">
-                <span>👍 {post.likes || 0}</span>
-                <span>💬 {post.comments || 0}</span>
+                <span>👍 {post.suka || 0}</span>
+                <span>💬 {post.produk_komentar || 0}</span>
               </div>
             </div>
           ))

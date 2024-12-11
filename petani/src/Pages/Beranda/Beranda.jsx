@@ -5,7 +5,8 @@ import googleLogo from "../../assets/google.png";
 import kemenkesLogo from "../../assets/kemen-kes-ri.png";
 import kementerianPertanianLogo from "../../assets/Kementerian-Pertanian.png";
 import tutLogo from "../../assets/TUT-WURI-HANDAYANI.png";
-import google from "../../assets/google.png";
+import petani from "../../assets/petani.png";
+import ikonPetani from "../../assets/ikonPetani.jpg";
 
 /**
  * Beranda Page
@@ -35,39 +36,44 @@ function Beranda() {
     <div>
       <div className="font-sans">
         {/* Banner */}
-        <section className="bg-primary my-5 mx-5">
-          <div className="flex flex-col md:flex-row flex-wrap rounded-lg px-6 md:px-10 lg:px-20 max-w-screen-lg mx-auto">
+        <section className="bg-primary pt-5 rounded-lg px-6 max-w-screen-xl my-4 md:my-12 mx-4 md:mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-12 px-6 md:px-12 lg:px-20">
             {/* ================= Left Side ================= */}
-            <div className="md:w-1/2 flex flex-col items-start justify-center gap-4 py-10 m-auto md:py-[8vw] md:mb-[-30px]">
-              <p className="text-3xl md:text-4xl lg:text-5xl text-white font-semibold leading-tight md:leading-tight lg:leading-tight">
-                Book Appointment <br /> With Trusted Doctors
+            <div className="md:w-1/2 flex flex-col items-start gap-6">
+              <p className="text-3xl md:text-4xl lg:text-5xl text-white font-semibold leading-tight">
+                Terhubung dengan Petani Ahli <br /> Tingkatkan Pertanian Anda
               </p>
 
-              <div className="flex flex-col md:flex-row items-center gap-3 text-white text-sm font-light">
-                <img className="w-28" alt="Doctor Icon" />
+              <div className="flex flex-col md:flex-row items-center gap-4 text-white text-sm font-light">
+                <img className="w-14 h-14 rounded-full object-cover" src={ikonPetani} alt="Ikon Petani" />
                 <p>
-                  Simply browse through our extensive list of trusted doctors, <br className="hidden sm:block" />
-                  schedule your appointment hassle-free
+                  Jelajahi jaringan petani berpengalaman, <br className="hidden sm:block" />
+                  dapatkan saran ahli, dan temukan sumber daya untuk meningkatkan pengalaman bertani Anda.
                 </p>
               </div>
 
               <button
                 onClick={handleRegister}
-                className="flex items-center gap-2 bg-white px-8 py-3 rounded-full text-gray-600 text-sm m-auto md:m-0 hover:scale-105 transition-all duration-300"
+                className="flex items-center gap-2 bg-white px-6 py-3 rounded-full text-gray-600 text-sm hover:scale-105 transition-all duration-300"
               >
-                Book Appointment
+                Mulai Pertanian Anda
               </button>
             </div>
 
             {/* ================= Right Side (Image) ================= */}
-            <div className="md:w-1/2 relative">
-              <img className="w-full md:absolute bottom-0 h-auto rounded-lg" src={google} alt="Doctor's Image" />
+            <div className="md:w-1/2 flex justify-center items-center">
+              <img
+                className="w-full max-w-md h-auto rounded-lg"
+                src={petani}
+                alt="Petani Sedang Bekerja"
+              />
             </div>
           </div>
         </section>
 
+
         {/* Edukasi Section */}
-        <section className="flex flex-col items-center gap-6 py-16 text-gray-800">
+        <section className="flex flex-col items-center gap-6 my-16 md:pb-8 text-gray-800">
           <div className="text-center">
             <h1 className="text-3xl font-medium">
               Edukasi Pertanian

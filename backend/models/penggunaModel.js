@@ -160,3 +160,27 @@ export const getThreeLatestPengguna = async () => {
     throw error;
   }
 };
+
+export const fetchUserSuggestions = async (role, excludeUserId) => {
+  const query = `
+    SELECT 
+      p.nama AS profil_nama, 
+      p.gambar AS profil_gambar, 
+      u.nama AS pengguna_nama,
+      u.id AS pengguna_id
+    FROM Profil p
+    INNER JOIN Pengguna u ON p.pengguna_id = u.id
+    WHERE u.peran = ?  -- Filter berdasarkan peran
+      AND u.id != ?  -- Exclude the logged-in user
+    LIMIT 10
+  `;
+  try {
+    const [users] = await db.getDbConnection().query(query, [role, excludeUserId]);  // Passing role and excludeUserId dynamically
+    return users;
+  } catch (error) {
+    console.error("Error in UserModel:", error);
+    throw error;
+  }
+};
+
+

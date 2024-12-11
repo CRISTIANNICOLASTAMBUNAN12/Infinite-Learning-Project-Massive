@@ -244,19 +244,13 @@ export const getLatestPengguna = async (req, res) => {
 
 export const getUserSuggestions = async (req, res) => {
   try {
-    const [users] = await db.getDbConnection().query(`
-      SELECT 
-        p.nama AS profil_nama, 
-        p.gambar AS profil_gambar, 
-        u.nama AS pengguna_nama
-      FROM Profil p
-      INNER JOIN Pengguna u ON p.pengguna_id = u.id
-      LIMIT 10
-    `);
-
-    res.status(200).json(users);
+    const role = 'petani';  // You can replace this with dynamic values from req.user.role
+    const excludeUserId = req.user.id;  // Get the logged-in user's ID
+    const users = await penggunaModel.fetchUserSuggestions(role, excludeUserId);  // Fetch users with the 'petani' role, excluding the logged-in user
+    res.json(users);  // Send the results as a JSON response
   } catch (error) {
     console.error("Error fetching user suggestions:", error);
-    res.status(500).json({ error: "Gagal mengambil saran pengguna" });
+    res.status(500).json({ error: 'Failed to fetch user suggestions' });
   }
 };
+
