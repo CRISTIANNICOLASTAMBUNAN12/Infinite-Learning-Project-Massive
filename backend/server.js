@@ -21,6 +21,8 @@ import produkRoute from "./routes/produkRoute.js";
 import pasarRoute from "./routes/pasarRoute.js";
 import edukasiRoute from "./routes/edukasiRoute.js";
 import aktivitasRoutes from "./routes/aktivitasRoutes.js";
+import produkKomentar from "./routes/produkKomentarRoutes.js";
+import sukaRoutes from './routes/sukaRoutes.js';
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -68,9 +70,11 @@ try {
   app.use("/api/acara", acaraRoute);
   app.use("/api/kategori", kategoriRoute);
   app.use("/api/produk", produkRoute);
+  app.use("/api/produk-komentar", produkKomentar);
   app.use("/api/pasar", pasarRoute);
   app.use("/api/edukasi", edukasiRoute);
   app.use("/api/aktivitas", aktivitasRoutes);
+  app.use('/api/suka', sukaRoutes);
 
   app.use("/uploads", (req, res, next) => {
     console.log(`Menerima permintaan untuk file: ${req.path}`);

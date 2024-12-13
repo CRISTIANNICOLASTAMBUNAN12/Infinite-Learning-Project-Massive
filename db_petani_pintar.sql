@@ -134,10 +134,19 @@ CREATE TABLE Produk (
     lokasi VARCHAR(255),
     stok INT,
     gambar VARCHAR(255),
-    suka INT DEFAULT 0,
     dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE,
     FOREIGN KEY (kategori_id) REFERENCES Kategori(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Suka (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    pengguna_id INT,
+    produk_id INT,
+    dibuat_pada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (pengguna_id) REFERENCES Pengguna(id) ON DELETE CASCADE,
+    FOREIGN KEY (produk_id) REFERENCES Produk(id) ON DELETE CASCADE,
+    UNIQUE (pengguna_id, produk_id)
 );
 
 /* Produk Komentar */
@@ -563,6 +572,14 @@ INSERT INTO Produk (pengguna_id, nama, deskripsi, kategori_id, harga, lokasi, st
 (13, 'Alat Penanam Bibit Padi', 
  'Alat ini membantu menanam bibit padi secara lebih cepat dan akurat.', 
  3, 400000, 'Kecamatan Bahagia', 40);
+
+ INSERT INTO Produk_Komentar (produk_id, pengguna_id, konten) VALUES
+(1, 2, 'Produk ini sangat bagus, kualitasnya luar biasa!'),
+(1, 3, 'Harga yang ditawarkan sangat terjangkau dengan kualitas seperti ini.'),
+(2, 4, 'Saya sangat puas dengan produk ini, pengiriman cepat dan aman.'),
+(3, 5, 'Desain produk ini menarik, namun perlu sedikit peningkatan pada bahan.'),
+(4, 6, 'Produk tidak sesuai dengan deskripsi, kecewa dengan pembelian ini.');
+
 
 /* Data Dummy Edukasi */
 INSERT INTO Edukasi (judul, konten, kategori_id, gambar) VALUES

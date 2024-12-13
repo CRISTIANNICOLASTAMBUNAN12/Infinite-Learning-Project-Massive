@@ -131,7 +131,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
           </div>
         )}
 
-        {/* BLOG Button */}
+        {/* BLOG Button
         <div className="flex flex-col items-center">
           <button
             className={`text-sm font-medium py-2 px-4 rounded-lg transition-all duration-300 ${isActive("/blog") ? "text-green-900" : "hover:bg-green-100"}`}
@@ -142,7 +142,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
           {isActive("/blog") && (
             <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto" />
           )}
-        </div>
+        </div> */}
 
         {/* BERITA Button */}
         <div className="flex flex-col items-center">
