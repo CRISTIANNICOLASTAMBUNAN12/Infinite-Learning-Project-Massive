@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { 
+  FaSpinner, 
+  FaChevronLeft, 
+  FaEdit, 
+  FaClock, 
+  FaCalendarAlt 
+} from 'react-icons/fa';
 
 const DetailBerita = () => {
   const { id } = useParams();
@@ -11,7 +18,7 @@ const DetailBerita = () => {
   useEffect(() => {
     const fetchBerita = async () => {
       try {
-        const token = localStorage.getItem('token'); // Ambil token dari localStorage
+        const token = localStorage.getItem('token');
         if (!token) {
           toast.error('Token tidak ditemukan');
           return;
@@ -52,54 +59,95 @@ const DetailBerita = () => {
     navigate('/berita');
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <FaSpinner className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Memuat berita...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!berita) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+          <p className="text-lg text-gray-600 text-center">Berita tidak ditemukan</p>
+          <button
+            onClick={handleBack}
+            className="mt-4 flex items-center mx-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          >
+            <FaChevronLeft className="w-4 h-4 mr-2" />
+            Kembali
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        {loading ? (
-          <div className="flex justify-center items-center p-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800"></div>
-            <p className="ml-4 text-gray-600">Memuat berita...</p>
-          </div>
-        ) : berita ? (
-          <div className="p-6">
-            <div className="relative mb-6 flex justify-center items-center">
-              <img
-                src={berita.gambar}
-                alt={berita.judul}
-                className="h-auto max-h-96 max-w-96 object-cover rounded-md shadow-sm"
-              />
-            </div>
-
-            <hr className='p-4'/>
-
-            <h1 className="text-2xl font-semibold text-gray-800 mb-4">{berita.judul}</h1>
-            <p className="text-sm text-gray-500 mb-4">
-              {new Date(berita.diterbitkan_pada).toLocaleDateString('id-ID', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-              })}
-            </p>
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">{berita.konten}</p>
-
-            <div className="flex justify-between gap-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Header Section */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-start mb-4">
               <button
                 onClick={handleBack}
-                className="py-2 px-6 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition"
+                className="inline-flex items-center px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 transition"
               >
+                <FaChevronLeft className="w-4 h-4 mr-1" />
                 Kembali
               </button>
               <button
                 onClick={() => navigate(`/berita/edit/${id}`)}
-                className="py-2 px-6 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition"
+                className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
               >
+                <FaEdit className="w-4 h-4 mr-2" />
                 Edit Berita
               </button>
             </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+              {berita.judul}
+            </h1>
+            <div className="flex items-center text-sm text-gray-500">
+              <FaCalendarAlt className="w-4 h-4 mr-1" />
+              <span className="mr-4">
+                {new Date(berita.diterbitkan_pada).toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </span>
+              <FaClock className="w-4 h-4 mr-1" />
+              <span>
+                {new Date(berita.diterbitkan_pada).toLocaleTimeString('id-ID')}
+              </span>
+            </div>
           </div>
-        ) : (
-          <p className="text-center text-gray-600">Berita tidak ditemukan</p>
-        )}
+
+          {/* Content Section */}
+          <div className="p-6">
+            {berita.gambar && (
+              <div className="mb-6">
+                <img
+                  src={berita.gambar}
+                  alt={berita.judul}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              </div>
+            )}
+            <div className="prose prose-lg max-w-none">
+              {berita.konten.split('\n').map((paragraph, index) => (
+                <p key={index} className="mb-4 text-gray-700 leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

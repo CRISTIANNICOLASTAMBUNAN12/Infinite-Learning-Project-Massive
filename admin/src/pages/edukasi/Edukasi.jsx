@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { MdError } from "react-icons/md";
+import { MdError, MdAdd, MdMoreVert, MdVisibility, MdEdit, MdDelete, MdSearch } from 'react-icons/md';
 
 const Edukasi = () => {
   const [edukasiList, setEdukasiList] = useState([]);
@@ -10,10 +10,10 @@ const Edukasi = () => {
   const [edukasiIdToDelete, setEdukasiIdToDelete] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRefs = useRef({});
   const navigate = useNavigate();
 
-  // Ambil data edukasi
   const fetchEdukasi = async () => {
     try {
       const response = await fetch("http://localhost:4000/api/edukasi");
@@ -21,10 +21,10 @@ const Edukasi = () => {
       if (response.ok) {
         setEdukasiList(data);
       } else {
-        toast.error(`Gagal memuat data edukasi: ${data.message}`);
+        toast.error(`Failed to load edukasi data: ${data.message}`);
       }
     } catch (error) {
-      toast.error("Terjadi kesalahan saat memuat data edukasi");
+      console.error('Error loading edukasi data:', error);
     }
   };
 
@@ -32,44 +32,58 @@ const Edukasi = () => {
     fetchEdukasi();
   }, []);
 
-  // Tutup dropdown saat klik di luar
+  const handleClickOutside = (event) => {
+    const isClickInside = Object.values(dropdownRefs.current).some((ref) =>
+      ref && ref.contains(event.target)
+    );
+    if (!isClickInside) {
+      setOpenDropdownId(null);
+    }
+  };
+
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        openDropdownId &&
-        !dropdownRefs.current[openDropdownId]?.contains(event.target)
-      ) {
-        setOpenDropdownId(null);
-      }
-    };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [openDropdownId]);
 
   const totalPages = Math.ceil(edukasiList.length / itemsPerPage);
-  const currentItems = edukasiList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const filteredEdukasiList = edukasiList.filter((edukasi) =>
+    edukasi.judul.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    edukasi.diterbitkan_pada.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const currentItems = filteredEdukasiList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Fungsi CRUD
   const handleTambah = () => navigate("/edukasi/tambah");
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/edukasi/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(`Gagal menghapus edukasi: ${errorData.message}`);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error('Token tidak ditemukan');
         return;
       }
-      toast.success("Edukasi berhasil dihapus");
-      setEdukasiList(edukasiList.filter((edukasi) => edukasi.id !== id));
+
+      const response = await fetch(`http://localhost:4000/api/edukasi/${edukasiIdToDelete}`, {
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        toast.success("Edukasi deleted successfully");
+        setEdukasiList(edukasiList.filter((edukasi) => edukasi.id !== edukasiIdToDelete));
+      } else {
+        const errorData = await response.json();
+        toast.error(`Failed to delete edukasi: ${errorData.message}`);
+      }
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus edukasi");
+      toast.error("Error deleting edukasi");
+      console.error('Error:', error);
     }
     setIsDeleteModalOpen(false);
   };
@@ -79,7 +93,6 @@ const Edukasi = () => {
   };
 
   const handleDetail = (id) => navigate(`/edukasi/detail/${id}`);
-
   const handleEdit = (id) => navigate(`/edukasi/edit/${id}`);
 
   const handleDeleteConfirmation = (id) => {
@@ -92,127 +105,135 @@ const Edukasi = () => {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto bg-white w-full h-full">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-        Manajemen Edukasi
-      </h1>
-      <button
-        className="bg-green-600 text-white px-6 py-2 rounded-lg mb-4 hover:bg-green-700 transition-colors duration-300"
-        onClick={handleTambah}
-      >
-        Tambah Edukasi
-      </button>
+    <div className="p-6 max-w-7xl mx-auto w-full min-h-screen bg-gray-50">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Manajemen Edukasi</h1>
+          <button
+            className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-sm"
+            onClick={handleTambah}
+          >
+            <MdAdd className="text-xl" />
+            <span>Tambah Edukasi</span>
+          </button>
+        </div>
 
-      <div className="overflow-x-auto md:overflow-visible">
-        <table className="min-w-full bg-white rounded-lg shadow-lg">
-          <thead className="bg-green-600 text-white">
-            <tr>
-              <th className="px-6 py-3 text-left">No</th>
-              <th className="px-6 py-3 text-left">Judul</th>
-              <th className="px-6 py-3 text-left">Tanggal Terbit</th>
-              <th className="px-6 py-3 text-left">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.length > 0 ? (
-              currentItems.map((edukasi, index) => (
-                <tr key={edukasi.id} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td className="px-6 py-4">{edukasi.judul}</td>
-                  <td className="px-6 py-4">
-                    {new Date(edukasi.diterbitkan_pada).toLocaleDateString('id-ID', {
-                      day: '2-digit',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div
-                      className="relative inline-block text-left cursor-pointer"
-                      ref={(el) => (dropdownRefs.current[edukasi.id] = el)}
-                    >
-                      <button
-                        onClick={() => handleDropdownToggle(edukasi.id)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
-                      >
-                        Aksi
-                      </button>
-                      {openDropdownId === edukasi.id && (
-                        <ul className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
-                          <li
-                            onClick={() => handleDetail(edukasi.id)}
-                            className="block w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
-                          >
-                            Detail
-                          </li>
-                          <li
-                            onClick={() => handleEdit(edukasi.id)}
-                            className="block w-full px-4 py-2 text-sm text-yellow-500 hover:bg-gray-100"
-                          >
-                            Edit
-                          </li>
-                          <li
-                            onClick={() => handleDeleteConfirmation(edukasi.id)}
-                            className="block w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
-                          >
-                            Hapus
-                          </li>
-                        </ul>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
+        <div className="mb-6">
+          <div className="relative">
+            <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+            <input
+              type="text"
+              placeholder="Cari edukasi..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 w-full md:w-80 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
-                  Tidak ada data edukasi.
-                </td>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Terbit</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentItems.length > 0 ? (
+                currentItems.map((edukasi, index) => (
+                  <tr key={edukasi.id} className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{edukasi.judul}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {new Date(edukasi.diterbitkan_pada).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="relative" ref={(el) => (dropdownRefs.current[edukasi.id] = el)}>
+                        <button onClick={() => handleDropdownToggle(edukasi.id)} className="text-gray-400 hover:text-gray-600">
+                          <MdMoreVert className="text-xl" />
+                        </button>
+                        {openDropdownId === edukasi.id && (
+                          <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div className="py-1">
+                              <button onClick={() => handleDetail(edukasi.id)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                                <MdVisibility className="mr-3 text-gray-400" /> Detail
+                              </button>
+                              <button onClick={() => handleEdit(edukasi.id)} className="flex items-center px-4 py-2 text-sm text-yellow-400 hover:bg-gray-100 w-full">
+                                <MdEdit className="mr-3 text-yellow-400" /> Edit
+                              </button>
+                              <button onClick={() => handleDeleteConfirmation(edukasi.id)} className="flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-100 w-full">
+                                <MdDelete className="mr-3 text-red-400" /> Hapus
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500">Tidak ada edukasi ditemukan</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-4 flex justify-between items-center">
+          <div>
+            <span className="text-sm text-gray-500">Halaman {currentPage} dari {totalPages}</span>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Render pagination only if more than 10 users */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-6">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-4 py-2 mx-1 rounded-lg ${
-                currentPage === index + 1 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-600'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
-
       {isDeleteModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-80 text-center transition-all duration-300 transform hover:scale-105">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-96 transform transition-all duration-300">
             <div className="flex items-center justify-center mb-4">
-              <MdError className="text-red-500 mr-3 text-2xl" />
-              <h3 className="text-xl font-semibold text-gray-700">Perhatian</h3>
+              <div className="bg-red-100 p-3 rounded-full">
+                <MdError className="text-red-600 text-xl" />
+              </div>
             </div>
-            <p className="mb-4 text-gray-600">
-              Apakah Anda yakin ingin menghapus edukasi ini?
+            <h3 className="text-xl font-semibold text-gray-900 text-center mb-2">Konfirmasi Hapus</h3>
+            <p className="text-gray-500 text-center mb-6">
+              Apakah Anda yakin ingin menghapus pengguna ini? Tindakan ini tidak dapat dibatalkan.
             </p>
             <div className="flex justify-center gap-4">
               <button
-                onClick={() => handleDelete(edukasiIdToDelete)}
-                className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                onClick={handleCancelDelete}
+                className="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium"
               >
-                Ya, Hapus
+                Batal
               </button>
               <button
-                onClick={handleCancelDelete}
-                className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                onClick={handleDelete}
+                className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
               >
-                Tidak
+                Hapus
               </button>
             </div>
           </div>

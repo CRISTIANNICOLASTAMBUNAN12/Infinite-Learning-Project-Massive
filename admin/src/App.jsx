@@ -8,7 +8,8 @@ import Berita from './pages/berita/Berita';
 import Edukasi from './pages/edukasi/Edukasi';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Login from './pages/Login';
+import Login from './pages/Authentikasi/Login/Login';
+import Register from './pages/Authentikasi/Register/Register';
 import TambahUser from './pages/user/TambahUser';
 import DetailUser from './pages/user/DetailUser';
 import EditUser from './pages/user/EditUser';
@@ -23,6 +24,8 @@ import Profile from './pages/profil/Profile';
 import Settings from './pages/pengaturan/Settings';
 import EditProfile from './pages/profil/EditProfile';
 import EditSetting from './pages/pengaturan/EditSetting';
+import Produk from './pages/produk/Produk';
+import DetailProduk from './pages/produk/DetailProduk';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,18 +36,29 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-        // Validasi token ke backend jika diperlukan
-        setIsAuthenticated(true);
-        setRole(localStorage.getItem('role'));
+    const tokenExpiry = localStorage.getItem('tokenExpiry');
+
+    // Check if the token exists and has not expired
+    if (token && tokenExpiry && new Date().getTime() < tokenExpiry) {
+      setIsAuthenticated(true);
+      setRole(localStorage.getItem('role'));
+    } else {
+      // If token is expired or not valid, redirect to login
+      setIsAuthenticated(false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('tokenExpiry');
     }
-}, []);
+  }, []);
 
   const handleLogin = (role) => {
     setIsAuthenticated(true);
     setRole(role);
-    localStorage.setItem('token', 'your-token-here');
+    const token = 'your-token-here';
+    const tokenExpiry = new Date().getTime() + (60 * 60 * 1000); // Token expires in 1 hour
+    localStorage.setItem('token', token);
     localStorage.setItem('role', role);
+    localStorage.setItem('tokenExpiry', tokenExpiry.toString());
 
     if (role === 'admin') {
       navigate('/admin-dashboard');
@@ -58,6 +72,7 @@ function App() {
     setRole('');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('tokenExpiry');
     navigate('/login');
   };
 
@@ -67,7 +82,7 @@ function App() {
 
   const handleProfileUpdated = () => {
     setRefreshProfileKey((prev) => prev + 1);
-  };  
+  };
 
   return (
     <>
@@ -85,11 +100,12 @@ function App() {
           {isAuthenticated && role === 'admin' && (
             <Sidebar
               isOpen={isSidebarOpen}
+              setIsAuthenticated={setIsAuthenticated}
               toggleSidebar={toggleSidebar}
               handleLogout={handleLogout}
             />
           )}
-          <div className="flex-1 p-4 overflow-y-auto bg-WhiteSmoke z-0">
+          <div className="flex-1 z-0">
             <Routes>
               <Route
                 path="/login"
@@ -97,6 +113,7 @@ function App() {
                   setIsAuthenticated={setIsAuthenticated}
                   setRole={setRole}
                   onLogin={handleLogin} />} />
+              <Route path="/register" element={<Register/>} />
               <Route
                 path="/"
                 element={<PrivateRoute
@@ -179,6 +196,18 @@ function App() {
                 path="/edukasi/edit/:id"
                 element={<PrivateRoute
                   element={<EditEdukasi />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/produk"
+                element={<PrivateRoute
+                  element={<Produk />}
+                  isAuthenticated={isAuthenticated}
+                  role={role} requiredRole="admin" />} />
+              <Route
+                path="/produk/detail/:id"
+                element={<PrivateRoute
+                  element={<DetailProduk />}
                   isAuthenticated={isAuthenticated}
                   role={role} requiredRole="admin" />} />
               <Route

@@ -105,3 +105,14 @@ export const deleteProfil = async (pengguna_id) => {
   }
 };
 
+export const createProfil = async ({ pengguna_id }) => {
+  try {
+    // Get the database connection pool
+    const pool = db.getDbConnection(); // Use your custom function to get the pool
+    const query = "INSERT INTO Profil (pengguna_id) VALUES (?)";
+    await pool.query(query, [pengguna_id]);
+  } catch (error) {
+    console.error("Error in createProfil:", error.message);
+    throw error; // Re-throw the error for controller to handle
+  }
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaHome, FaUser } from 'react-icons/fa';
-import { MdArticle, MdMenuBook } from 'react-icons/md';
+import { MdArticle, MdMenuBook, MdShoppingCart } from 'react-icons/md';
 
 const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
   const location = useLocation();
@@ -51,7 +51,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
             }`}
           >
             <FaUser className="mr-3" />
-            Users
+            Pengguna
           </Link>
         </li>
         <li className="px-4 pt-2">
@@ -76,6 +76,18 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
           >
             <MdMenuBook className="mr-3" />
             Edukasi
+          </Link>
+        </li>
+        <li className="px-4 pt-2">
+          <Link
+            to="/produk"
+            onClick={handleLinkClick} // Menutup sidebar ketika link diklik
+            className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${
+              isActive('/produk') ? 'bg-green-600 text-white' : 'hover:bg-green-100'
+            }`}
+          >
+            <MdShoppingCart className="mr-3" />
+            Produk
           </Link>
         </li>
       </ul>

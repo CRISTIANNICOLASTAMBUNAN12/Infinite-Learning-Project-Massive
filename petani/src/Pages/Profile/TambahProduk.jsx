@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaTimesCircle } from "react-icons/fa";
+import { FaTimesCircle, FaCloudUploadAlt, FaArrowLeft, FaSave } from "react-icons/fa";
 
 const TambahProduk = () => {
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const TambahProduk = () => {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // Fetch kategori list dari backend
   const fetchKategori = async () => {
     try {
       const response = await fetch("http://localhost:4000/api/kategori");
@@ -66,6 +65,20 @@ const TambahProduk = () => {
     document.getElementById("gambarInput").value = null;
   };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setFormData({ ...formData, gambar: file });
+      handleImageChange({ target: { files: [file] } });
+      setIsImageSelected(true);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -98,166 +111,182 @@ const TambahProduk = () => {
     }
   };
 
-  const handleBack = () => {
-    navigate("/profil");
-  };
-
   return (
-    <div className="container max-w-4xl mx-auto px-4 py-6 bg-white rounded-lg shadow-lg">
-      <div className="text-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Tambah Hasil Panen
-        </h1>
-      </div>
-
-      <div className="pb-10">
-        {previewImage && (
-          <div className="flex justify-center mb-4">
-            <img
-              src={previewImage}
-              alt="Preview Gambar"
-              className="object-cover h-auto max-h-96 max-w-full rounded-md shadow-md"
-            />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50 py-8">
+      <div className="container max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate("/profil")}
+                className="text-white hover:text-green-100 transition-colors"
+              >
+                <FaArrowLeft size={24} />
+              </button>
+              <h1 className="text-2xl font-bold text-white">
+                Tambah Hasil Panen
+              </h1>
+            </div>
           </div>
-        )}
 
-        {previewImage && (
-          <div className="flex justify-center mt-4">
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className="px-4 text-red-500 hover:text-red-700 font-semibold rounded-lg flex items-center gap-2"
+          {/* Image Preview Section */}
+          <div className="p-6 bg-gray-50 border-b">
+            <div
+              className="flex flex-col items-center justify-center gap-4"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
             >
-              <FaTimesCircle size={20} />
-              Hapus Perubahan
-            </button>
+              {previewImage ? (
+                <>
+                  <div className="relative">
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="max-h-80 rounded-lg shadow-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                    >
+                      <FaTimesCircle size={16} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="w-full max-w-md h-48 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-6 cursor-pointer hover:border-green-500 transition-colors"
+                  onClick={() => document.getElementById("gambarInput").click()}
+                >
+                  <FaCloudUploadAlt className="text-4xl text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-500">
+                    Klik untuk memilih atau seret gambar ke sini
+                  </p>
+                </div>
+              )}
+              <input
+                type="file"
+                id="gambarInput"
+                name="gambar"
+                accept="image/*"
+                onChange={handleChange}
+                className="hidden"
+              />
+            </div>
           </div>
-        )}
+
+          {/* Form Section */}
+          <div className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Nama Produk
+                  </label>
+                  <input
+                    type="text"
+                    name="nama"
+                    value={formData.nama}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    placeholder="Masukkan nama produk"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Kategori
+                  </label>
+                  <select
+                    name="kategori_id"
+                    value={formData.kategori_id}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    required
+                  >
+                    <option value="">Pilih Kategori</option>
+                    {kategoriList.map((kategori) => (
+                      <option key={kategori.id} value={kategori.id}>
+                        {kategori.nama}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Harga (Rp)
+                  </label>
+                  <input
+                    type="number"
+                    name="harga"
+                    value={formData.harga}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    placeholder="0"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Stok
+                  </label>
+                  <input
+                    type="number"
+                    name="stok"
+                    value={formData.stok}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    placeholder="0"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Lokasi
+                </label>
+                <input
+                  type="text"
+                  name="lokasi"
+                  value={formData.lokasi}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  placeholder="Masukkan lokasi"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  Deskripsi
+                </label>
+                <textarea
+                  name="deskripsi"
+                  value={formData.deskripsi}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  rows="4"
+                  placeholder="Deskripsi produk"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2 px-4 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-all"
+              >
+                {loading ? "Menambahkan..." : "Tambah Produk"}
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Nama Produk
-          </label>
-          <input
-            type="text"
-            name="nama"
-            value={formData.nama}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Deskripsi
-          </label>
-          <textarea
-            name="deskripsi"
-            value={formData.deskripsi}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            rows="4"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Kategori
-          </label>
-          <select
-            name="kategori_id"
-            value={formData.kategori_id}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            required
-          >
-            <option value="">Pilih Kategori</option>
-            {kategoriList.map((kategori) => (
-              <option key={kategori.id} value={kategori.id}>
-                {kategori.nama}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Harga (Rp)
-          </label>
-          <input
-            type="number"
-            name="harga"
-            value={formData.harga}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Lokasi
-          </label>
-          <input
-            type="text"
-            name="lokasi"
-            value={formData.lokasi}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Stok
-          </label>
-          <input
-            type="number"
-            name="stok"
-            value={formData.stok}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Gambar Produk
-          </label>
-          <div className="relative">
-            <input
-              type="file"
-              name="gambar"
-              id="gambarInput"
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-4 justify-between">
-          <button
-            onClick={handleBack}
-            type="button"
-            className="w-1/2 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 focus:outline-none"
-          >
-            Batal
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-1/2 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none"
-          >
-            {loading ? "Menyimpan..." : "Simpan Produk"}
-          </button>
-        </div>
-      </form>
     </div>
   );
 };

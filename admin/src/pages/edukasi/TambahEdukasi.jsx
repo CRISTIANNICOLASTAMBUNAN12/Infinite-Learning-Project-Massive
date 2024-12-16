@@ -16,7 +16,6 @@ const TambahEdukasi = () => {
     const [previewImage, setPreviewImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Fetch kategori list from backend
     const fetchKategori = async () => {
         try {
             const response = await fetch('http://localhost:4000/api/kategori');
@@ -103,53 +102,56 @@ const TambahEdukasi = () => {
     };
 
     return (
-        <div className="p-6 bg-white w-full h-full">
-            <div className="text-center pb-4">
-                <h1 className="text-2xl font-medium text-gray-800 p-10">Tambah Artikel Edukasi</h1>
+        <div className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+            <div className="text-center pb-6">
+                <h1 className="text-3xl font-semibold text-gray-800">Tambah Artikel Edukasi</h1>
+                <p className="text-gray-500 mt-2">Isi formulir di bawah untuk menambahkan artikel edukasi baru.</p>
             </div>
 
             {previewImage && (
-                <div className="items-center pb-10">
+                <div className="flex justify-center pb-6">
                     <img
                         src={previewImage}
                         alt="Preview Gambar"
-                        className="object-cover h-auto max-h-96 max-w-96 rounded-md shadow-md mx-auto"
+                        className="object-cover h-64 w-auto rounded-lg shadow-md"
                     />
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label className="block text-lg text-gray-700">Judul Artikel</label>
+                    <label className="block text-lg font-medium text-gray-700">Judul Artikel</label>
                     <input
                         type="text"
                         name="judul"
                         value={formData.judul}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
+                        placeholder="Masukkan judul artikel"
                         required
                     />
                 </div>
 
                 <div>
-                    <label className="block text-lg text-gray-700">Konten</label>
+                    <label className="block text-lg font-medium text-gray-700">Konten</label>
                     <textarea
                         name="konten"
                         value={formData.konten}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        rows="5"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
+                        rows="6"
+                        placeholder="Masukkan konten artikel"
                         required
                     />
                 </div>
 
                 <div>
-                    <label className="block text-lg text-gray-700">Kategori</label>
+                    <label className="block text-lg font-medium text-gray-700">Kategori</label>
                     <select
                         name="kategori_id"
                         value={formData.kategori_id}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
                         required
                     >
                         <option value="">Pilih Kategori</option>
@@ -162,20 +164,20 @@ const TambahEdukasi = () => {
                 </div>
 
                 <div>
-                    <label className="block text-lg text-gray-700">Gambar Artikel</label>
+                    <label className="block text-lg font-medium text-gray-700">Gambar Artikel</label>
                     <div className="relative">
                         <input
                             type="file"
                             name="gambar"
                             id="gambarInput"
                             onChange={handleChange}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
                         />
                         {isImageSelected && (
                             <button
                                 type="button"
                                 onClick={handleRemoveImage}
-                                className="absolute top-0 right-0 m-4 text-red-500 hover:text-red-700"
+                                className="absolute top-3 right-4 text-red-500 hover:text-red-700"
                             >
                                 <FaTimesCircle />
                             </button>
@@ -183,11 +185,11 @@ const TambahEdukasi = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-between gap-10 pt-10">
+                <div className="flex justify-between items-center space-x-4">
                     <button
                         onClick={handleBack}
                         type="button"
-                        className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg"
+                        className="flex items-center justify-center w-1/2 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition ease-in-out"
                     >
                         <FaArrowLeft className="mr-2" />
                         Batal
@@ -195,7 +197,7 @@ const TambahEdukasi = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg"
+                        className="flex items-center justify-center w-1/2 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition ease-in-out"
                     >
                         {loading ? 'Menyimpan...' : 'Simpan Edukasi'}
                     </button>

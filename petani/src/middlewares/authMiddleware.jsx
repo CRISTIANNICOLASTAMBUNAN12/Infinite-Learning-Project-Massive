@@ -1,4 +1,3 @@
-// middlewares.jsx
 import { toast } from 'react-toastify';
 
 export const fetchWithAuth = async (url, options = {}) => {
@@ -14,11 +13,13 @@ export const fetchWithAuth = async (url, options = {}) => {
     
     // Jika respons tidak ok (status bukan 200-299)
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({ message: 'Terjadi kesalahan pada server' }));
+      
       if (response.status === 401) {
         // Token tidak valid atau kadaluarsa
         localStorage.removeItem('token');
         localStorage.removeItem('role');
+        localStorage.removeItem("userid");
         toast.error('Sesi habis, silakan login kembali.');
         window.location.href = '/';
       } else {

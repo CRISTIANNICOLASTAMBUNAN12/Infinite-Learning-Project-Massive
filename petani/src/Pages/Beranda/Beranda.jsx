@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import facebookLogo from "../../assets/facebook.png";
-import googleLogo from "../../assets/google.png";
-import kemenkesLogo from "../../assets/kemen-kes-ri.png";
-import kementerianPertanianLogo from "../../assets/Kementerian-Pertanian.png";
-import tutLogo from "../../assets/TUT-WURI-HANDAYANI.png";
-import petani from "../../assets/petani.png";
-import ikonPetani from "../../assets/ikonPetani.jpg";
+import { assets } from "../../assets/assets";
 
 /**
  * Beranda Page
@@ -44,8 +38,7 @@ function Beranda() {
                 Terhubung dengan Petani Ahli <br /> Tingkatkan Pertanian Anda
               </p>
 
-              <div className="flex flex-col md:flex-row items-center gap-4 text-white text-sm font-light">
-                <img className="w-14 h-14 rounded-full object-cover" src={ikonPetani} alt="Ikon Petani" />
+              <div className="flex flex-col md:flex-row items-center gap-4 text-white text-ms font-light">
                 <p>
                   Jelajahi jaringan petani berpengalaman, <br className="hidden sm:block" />
                   dapatkan saran ahli, dan temukan sumber daya untuk meningkatkan pengalaman bertani Anda.
@@ -64,7 +57,7 @@ function Beranda() {
             <div className="md:w-1/2 flex justify-center items-center">
               <img
                 className="w-full max-w-md h-auto rounded-lg"
-                src={petani}
+                src={assets.petani}
                 alt="Petani Sedang Bekerja"
               />
             </div>
@@ -95,7 +88,7 @@ function Beranda() {
                     alt={`Kategori: ${category.nama}`}
                     className="w-20 h-20 sm:w-20 rounded-full object-cover mx-4"
                   />
-                  <p className="text-center mt-2">{category.nama}</p>
+                  <p className="text-center mt-2 leading-relaxed text-sm">{category.nama}</p>
                 </div>
               ))
             ) : (
@@ -107,45 +100,53 @@ function Beranda() {
         </section>
 
         {/* Keunggulan Platform */}
-        <section className="py-20 px-8 bg-gradient-to-r from-green-50 to-green-100">
-          <div className="text-center">
-            <h1 className="text-3xl font-medium text-green-700">
-              Keunggulan Platform
-            </h1>
-            <p className="mt-4 text-lg text-gray-800 max-w-2xl mx-auto">
-              Mengapa memilih kami? Kami menghadirkan solusi terbaik untuk
-              pertanian Anda dengan teknologi inovatif.
-            </p>
-          </div>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
-            {[
-              {
-                icon: "🌱",
-                title: "Dukungan Petani",
-                desc: "Membantu petani memanfaatkan teknologi untuk hasil yang lebih maksimal.",
-              },
-              {
-                icon: "📈",
-                title: "Meningkatkan Produktivitas",
-                desc: "Menghubungkan petani dengan pasar baru untuk pertumbuhan yang berkelanjutan.",
-              },
-              {
-                icon: "🤝",
-                title: "Komunitas yang Terhubung",
-                desc: "Menciptakan ruang kolaborasi untuk berbagi wawasan dan pengalaman.",
-              },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-lg rounded-lg p-8 hover:shadow-xl transition-all"
-              >
-                <div className="text-5xl mb-4">{stat.icon}</div>
-                <h3 className="text-xl font-semibold text-green-700">
-                  {stat.title}
-                </h3>
-                <p className="mt-4 text-gray-700">{stat.desc}</p>
-              </div>
-            ))}
+        <section className="py-24 relative overflow-hidden bg-gradient-to-b from-green-50 via-white to-green-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold text-green-800 mb-4">
+                Keunggulan Platform
+              </h2>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Mengapa memilih kami? Kami menghadirkan solusi terbaik untuk
+                pertanian Anda dengan teknologi inovatif yang teruji.
+              </p>
+            </div>
+
+            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+              {[
+                {
+                  icon: "🌱",
+                  title: "Dukungan Petani",
+                  desc: "Membantu petani memanfaatkan teknologi modern untuk mengoptimalkan hasil panen dan efisiensi operasional.",
+                },
+                {
+                  icon: "📈",
+                  title: "Meningkatkan Produktivitas",
+                  desc: "Menghubungkan petani dengan pasar baru dan peluang bisnis untuk pertumbuhan yang berkelanjutan.",
+                },
+                {
+                  icon: "🤝",
+                  title: "Komunitas yang Terhubung",
+                  desc: "Menciptakan ruang kolaborasi interaktif untuk berbagi wawasan, pengalaman, dan praktik terbaik.",
+                },
+              ].map((feature, index) => (
+                <div
+                  key={index}
+                  className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-green-800 mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -161,7 +162,7 @@ function Beranda() {
             </p>
           </div>
           <div className="flex sm:justify-center gap-4 pt-5 w-full overflow-x-auto sm:overflow-x-hidden">
-            {[facebookLogo, googleLogo, kemenkesLogo, kementerianPertanianLogo, tutLogo].map((logo, index) => (
+            {[assets.facebookLogo, assets.googleLogo, assets.kemenkesLogo, assets.kementerianPertanianLogo, assets.tutLogo].map((logo, index) => (
               <div
                 key={index}
                 className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
@@ -177,46 +178,62 @@ function Beranda() {
         </section>
 
         {/* Tentang Kami */}
-        <section className="py-20 px-8 bg-gradient-to-r from-green-50 to-green-100">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl font-medium text-green-700">
-              Tentang Kami
-            </h1>
-            <p className="mt-6 text-lg text-gray-800">
-              Kami adalah platform inovatif yang menghubungkan petani dengan
-              teknologi, pasar, dan komunitas. Misi kami adalah membantu petani
-              meningkatkan produktivitas, mendukung keberlanjutan, dan
-              menciptakan ekosistem pertanian yang lebih kuat melalui kolaborasi
-              dan solusi modern.
-            </p>
-          </div>
-          <div className="mt-12 flex flex-wrap justify-center gap-8">
-            {[
-              {
-                title: "Misi Kami",
-                desc: "Memberdayakan petani dengan akses ke teknologi canggih, pasar yang luas, dan komunitas yang mendukung.",
-              },
-              {
-                title: "Visi Kami",
-                desc: "Menciptakan ekosistem pertanian digital yang inklusif, inovatif, dan berkelanjutan.",
-              },
-              {
-                title: "Nilai-Nilai Kami",
-                desc: "Kami berkomitmen pada keberlanjutan, inovasi, kolaborasi, dan pemberdayaan petani.",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-xl p-8 rounded-xl w-full sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all"
-              >
-                <h3 className="text-2xl font-semibold text-green-700">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-gray-600">{item.desc}</p>
+        <section className="py-24 bg-gradient-to-b from-green-50 via-white to-green-50">
+          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col lg:flex-row items-center gap-16">
+            {/* Bagian Teks */}
+            <div className="lg:w-1/2">
+              <h2 className="text-5xl font-extrabold text-green-800 mb-6">
+                Tentang Kami
+              </h2>
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                Kami adalah platform digital yang dirancang untuk membantu petani Indonesia
+                mengakses teknologi, pasar, dan komunitas. Dengan semangat keberlanjutan,
+                kami berkomitmen untuk menciptakan ekosistem pertanian yang lebih modern dan inklusif.
+              </p>
+              <ul className="space-y-6">
+                {[
+                  {
+                    title: "Misi Kami",
+                    desc: "Memberdayakan petani melalui teknologi canggih dan koneksi pasar global.",
+                  },
+                  {
+                    title: "Visi Kami",
+                    desc: "Membangun ekosistem pertanian digital yang inklusif dan berkelanjutan.",
+                  },
+                  {
+                    title: "Nilai-Nilai Kami",
+                    desc: "Mengutamakan inovasi, keberlanjutan, dan kolaborasi yang berarti.",
+                  },
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-green-100 text-green-800 rounded-full mr-4 text-lg font-semibold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-semibold text-green-800 mb-1">
+                        {item.title}
+                      </h4>
+                      <p className="text-gray-600">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Bagian Visual */}
+            <div className="lg:w-1/2 relative">
+              <div className="rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                <img
+                  src={assets.IlmuPertanian}
+                  alt="Tentang Kami"
+                  className="w-full h-auto"
+                />
               </div>
-            ))}
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-full opacity-20 blur-2xl" />
+            </div>
           </div>
         </section>
+
       </div>
     </div>
   );

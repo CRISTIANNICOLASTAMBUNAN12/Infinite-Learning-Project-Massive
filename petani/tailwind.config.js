@@ -9,6 +9,7 @@ export default {
       colors:{
         'primary': '#4CAF50',
         'login': '#008000',
+        'box': '#1e293b'
       },
       gridTemplateColumns:{
         'auto': 'repeat(auto-fill, minmax(200px, 1fr))'

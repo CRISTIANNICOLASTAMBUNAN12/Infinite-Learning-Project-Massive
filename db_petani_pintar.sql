@@ -205,17 +205,17 @@ VALUES
 INSERT INTO Profil (pengguna_id, nama, lokasi, metode_pertanian, produk_ditawarkan, bio, gambar)
 VALUES 
 (1, 'John Doe', 'Bandung', 'Hidroponik', 'Sayuran Organik', 'Petani dengan pengalaman lebih dari 5 tahun', '/uploads/1732021427380.png'),
-(2, 'Putri Sangkot Meliati', 'Jakarta', 'Tradisional', 'Padi dan Jagung', 'Mengelola komunitas petani di daerah Jakarta', '/uploads/1732021427380.png'),
-(3, 'Siti Aminah Widodo', 'Surabaya', 'Organik', 'Sayuran Hijau', 'Berfokus pada pertanian sayuran organik', '/uploads/1732021427380.png'),
-(4, 'Budi Santoso', 'Yogyakarta', 'Hidroponik', 'Jagung Manis', 'Petani dengan keahlian dalam teknologi hidroponik', '/uploads/1732021427380.png'),
-(5, 'Ani Lestari', 'Semarang', 'Organik', 'Buah-buahan Tropis', 'Memproduksi buah-buahan tropis berkualitas tinggi', '/uploads/1732021427380.png'),
-(6, 'Rudi Hartono', 'Medan', 'Tradisional', 'Biji Kopi', 'Berpengalaman dalam pengolahan kopi sejak 10 tahun', '/uploads/1732021427380.png'),
-(7, 'Dewi Kusuma', 'Makassar', 'Organik', 'Daun Teh Hijau', 'Mengelola kebun teh hijau organik', '/uploads/1732021427380.png'),
-(8, 'Tono Sugiarto', 'Malang', 'Konvensional', 'Kelapa Sawit', 'Ahli dalam manajemen kebun kelapa sawit', '/uploads/1732021427380.png'),
-(9, 'Lina Anggraini', 'Bali', 'Hidroponik', 'Anggur Merah', 'Petani anggur dengan metode modern hidroponik', '/uploads/1732021427380.png'),
-(10, 'Hendra Wijaya', 'Padang', 'Tradisional', 'Beras Putih', 'Memproduksi beras putih berkualitas untuk ekspor', '/uploads/1732021427380.png'),
-(11, 'Rina Sari', 'Pontianak', 'Organik', 'Kakao', 'Berfokus pada produksi kakao organik', '/uploads/1732021427380.png'),
-(12, 'Andi Pratama', 'Palu', 'Konvensional', 'Karet Alam', 'Petani dengan fokus pada produksi karet alami', '/uploads/1732021427380.png'),
+(2, 'Putri Sangkot Meliati', 'Jakarta', 'Tradisional', 'Padi dan Jagung', 'Mengelola komunitas petani di daerah Jakarta', '/uploads/1733982719766.jpg'),
+(3, 'Siti Aminah Widodo', 'Surabaya', 'Organik', 'Sayuran Hijau', 'Berfokus pada pertanian sayuran organik', '/uploads/1734096321530.jpg'),
+(4, 'Budi Santoso', 'Yogyakarta', 'Hidroponik', 'Jagung Manis', 'Petani dengan keahlian dalam teknologi hidroponik', '/uploads/1734096351710.jpg'),
+(5, 'Ani Lestari', 'Semarang', 'Organik', 'Buah-buahan Tropis', 'Memproduksi buah-buahan tropis berkualitas tinggi', '/uploads/1734096371754.png'),
+(6, 'Rudi Hartono', 'Medan', 'Tradisional', 'Biji Kopi', 'Berpengalaman dalam pengolahan kopi sejak 10 tahun', '/uploads/1734096387466.jpg'),
+(7, 'Dewi Kusuma', 'Makassar', 'Organik', 'Daun Teh Hijau', 'Mengelola kebun teh hijau organik', '/uploads/1734096406047.jpg'),
+(8, 'Tono Sugiarto', 'Malang', 'Konvensional', 'Kelapa Sawit', 'Ahli dalam manajemen kebun kelapa sawit', '/uploads/1734096425931.jpg'),
+(9, 'Lina Anggraini', 'Bali', 'Hidroponik', 'Anggur Merah', 'Petani anggur dengan metode modern hidroponik', '/uploads/1734096449564.png'),
+(10, 'Hendra Wijaya', 'Padang', 'Tradisional', 'Beras Putih', 'Memproduksi beras putih berkualitas untuk ekspor', '/uploads/1734096470637.jpg'),
+(11, 'Rina Sari', 'Pontianak', 'Organik', 'Kakao', 'Berfokus pada produksi kakao organik', '/uploads/1734096564230.jpg'),
+(12, 'Andi Pratama', 'Palu', 'Konvensional', 'Karet Alam', 'Petani dengan fokus pada produksi karet alami', '/uploads/1734096513489.jpg'),
 (13, 'Maya Permata', 'Banjarmasin', 'Tradisional', 'Padi Merah', 'Mengedepankan metode tradisional dalam menanam padi merah', '/uploads/1732021427380.png');
 
 /* Data Dummy Forum */
@@ -242,10 +242,7 @@ VALUES
 /* Data Dummy Chat */
 INSERT INTO Chat (pengirim_id, penerima_id, pesan)
 VALUES 
-(1, 2, 'Halo, bagaimana kabarnya?'),
 (2, 3, 'Apakah kamu sudah mencoba metode hidroponik yang baru?'),
-(3, 1, 'Terima kasih atas tipsnya, sangat membantu!'),
-(1, 3, 'Selamat pagi, bagaimana perkembangan tanamannya?'),
 (2, 4, 'Saya ingin tahu lebih banyak tentang alat irigasi tetes, bisa bantu?'),
 (3, 5, 'Terima kasih sudah memberikan informasi tentang pupuk hayati.'),
 (4, 6, 'Apakah Anda punya rekomendasi mesin pengering daun teh?'),
@@ -254,17 +251,14 @@ VALUES
 (7, 9, 'Apakah ada produk lain selain pupuk organik cair yang cocok untuk sayuran?'),
 (8, 10, 'Halo, saya ingin berdiskusi tentang penggunaan pestisida nabati.'),
 (9, 2, 'Kapan biasanya waktu terbaik untuk mulai menanam padi varietas unggul?'),
-(10, 1, 'Terima kasih sudah menghubungi, saya akan mencoba alat penyemprot otomatis.'),
 (3, 4, 'Apakah Anda sudah mencoba pupuk kompos granul yang baru?'),
 (5, 6, 'Saya membutuhkan alat untuk mengukur pH tanah. Ada rekomendasi?'),
 (7, 8, 'Terima kasih atas informasinya tentang alat penanam bibit padi.'),
 (9, 10, 'Bagaimana cara mengatasi penyakit pada tanaman jagung?'),
-(2, 1, 'Saya ingin bertanya tentang metode organik untuk meningkatkan hasil panen.'),
 (4, 3, 'Apakah bibit cabai hibrida bisa digunakan untuk daerah dataran tinggi?'),
 (6, 5, 'Berapa lama waktu pengiriman untuk produk mesin pemipil jagung?'),
 (8, 7, 'Saya ingin berbagi pengalaman menggunakan pupuk NPK, hasilnya sangat memuaskan.'),
-(10, 9, 'Apakah ada alat yang dapat membantu meningkatkan efisiensi pengairan kebun?'),
-(1, 2, 'Selamat sore, semoga harimu menyenangkan!');
+(10, 9, 'Apakah ada alat yang dapat membantu meningkatkan efisiensi pengairan kebun?');
 
 /* Data Dummy Blog */
 INSERT INTO Blog (pengguna_id, judul, konten, kategori, gambar)

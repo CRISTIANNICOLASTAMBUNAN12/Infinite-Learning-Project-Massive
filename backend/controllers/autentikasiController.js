@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import * as penggunaModel from "../models/penggunaModel.js";
 import * as autentikasiModel from "../models/autentikasiModel.js";
 import db from '../config/db.js'; // Sesuaikan dengan path yang benar
-import { getAktivitasTerbaruFromDB } from '../models/aktivitasModel.js'; 
+import { getAktivitasTerbaruFromDB } from '../models/aktivitasModel.js';
+import * as profilModel from "../models/profilModel.js"; // For inserting into Profil
 
 export const loginPengguna = async (req, res) => {
   const { email, kata_sandi } = req.body;
@@ -54,68 +55,51 @@ export const loginPengguna = async (req, res) => {
 };
 
 export const registrasiPengguna = async (req, res) => {
-  const {
-    nama,
-    email,
-    kata_sandi,
-    peran,
-    pengalaman,
-    tentang,
-    alamat,
-    jenis_kelamin,
-    pekerjaan,
-    no_hp,
-  } = req.body;
+  const { nama, email, kata_sandi, peran } = req.body;
+
+  // Validate input fields
+  if (!nama || !email || !kata_sandi || !peran) {
+    return res.status(400).json({ message: "Semua field harus diisi" });
+  }
 
   try {
+    // Check if user already exists
     const existingUser = await penggunaModel.getPenggunaByEmail(email);
     if (existingUser) {
-      return res.status(400).json({ message: "Email sudah terdaftar" });
+      return res.status(409).json({ message: "Email sudah terdaftar" });
     }
 
-    const salt = await bcrypt.genSalt(10);
+    // Encrypt password
+    const salt = await bcrypt.genSalt(12); // Using 12 rounds for security
     const hashedPassword = await bcrypt.hash(kata_sandi, salt);
 
+    // Store new user in database
     const newUser = await penggunaModel.addPengguna({
       nama,
       email,
-      pengalaman,
-      tentang,
-      alamat,
-      jenis_kelamin,
-      pekerjaan,
-      no_hp,
       kata_sandi: hashedPassword,
       peran,
     });
 
-    // Log aktivitas pengguna baru dengan memanfaatkan fungsi aktivitasModel
-    await db.getDbConnection().execute(
-      "INSERT INTO aktivitas (jenis_aktivitas, deskripsi) VALUES (?, ?)",
-      [
-        "Pengguna Baru",
-        `Pengguna baru dengan nama ${nama} telah mendaftar.`
-      ]
-    );
+    // Automatically add pengguna_id to Profil table
+    const penggunaId = newUser.insertId; // Retrieve the ID of the new user
+    await profilModel.createProfil({ pengguna_id: penggunaId });
 
-    // Mengambil aktivitas terbaru setelah berhasil registrasi
-    const aktivitasTerbaru = await getAktivitasTerbaruFromDB();
-    
     res.status(201).json({
       message: "Registrasi berhasil",
       pengguna: {
-        id: newUser.insertId,
+        id: penggunaId,
         nama,
         email,
         peran,
       },
-      aktivitasTerbaru, // Menyertakan aktivitas terbaru dalam respon
     });
   } catch (err) {
     console.error("Registrasi error:", err);
     res.status(500).json({ message: "Terjadi kesalahan saat registrasi" });
   }
 };
+
 
 export const updatePengguna = async (req, res) => {
   const id = req.params.id;

@@ -7,14 +7,14 @@ const TambahUser = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    experience: '', // Menambahkan kolom pengalaman
-    about: '', // Menambahkan kolom tentang
-    address: '', // Menambahkan kolom alamat
-    gender: '', // Menambahkan kolom jenis kelamin
-    job: '', // Menambahkan kolom pekerjaan
-    phone: '', // Menambahkan kolom nomor HP
-    password: '', // Menambahkan password untuk registrasi
-    role: 'petani', // Menggunakan 'petani' sesuai pilihan Anda
+    experience: '',
+    about: '',
+    address: '',
+    gender: '',
+    job: '',
+    phone: '',
+    password: '',
+    role: 'petani',
   });
 
   const navigate = useNavigate();
@@ -35,13 +35,13 @@ const TambahUser = () => {
         body: JSON.stringify({
           nama: formData.name,
           email: formData.email,
-          pengalaman: formData.experience, // Menyertakan pengalaman
-          tentang: formData.about, // Menyertakan tentang
-          alamat: formData.address, // Menyertakan alamat
-          jenis_kelamin: formData.gender, // Menyertakan jenis kelamin
-          pekerjaan: formData.job, // Menyertakan pekerjaan
-          no_hp: formData.phone, // Menyertakan no_hp
-          kata_sandi: formData.password,  // Menyertakan password
+          pengalaman: formData.experience,
+          tentang: formData.about,
+          alamat: formData.address,
+          jenis_kelamin: formData.gender,
+          pekerjaan: formData.job,
+          no_hp: formData.phone,
+          kata_sandi: formData.password,
           peran: formData.role,
         }),
       });
@@ -50,13 +50,13 @@ const TambahUser = () => {
 
       if (response.ok) {
         toast.success('Pengguna berhasil ditambahkan');
-        navigate('/users'); // Redirect ke halaman daftar pengguna
+        navigate('/users');
       } else {
         toast.error(data.message || 'Gagal menambahkan pengguna');
       }
     } catch (error) {
       toast.error('Terjadi kesalahan saat menambahkan pengguna');
-      console.error('Error adding user:', error);  // Menampilkan kesalahan di konsol
+      console.error('Error adding user:', error);
     }
   };
 
@@ -65,12 +65,12 @@ const TambahUser = () => {
   };
 
   return (
-    <div className="p-6 bg-white h-full w-full">
-      <div className='text-center pb-4'>
-        <h1 className="text-2xl font-medium text-gray-800 p-10">Tambah Pengguna</h1>
+    <div className="p-8 bg-gray-50 h-full w-full">
+      <div className='text-center pb-6'>
+        <h1 className="text-3xl font-bold text-gray-800">Tambah Pengguna</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow-md rounded-lg p-8">
         <div>
           <label className="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
           <input
@@ -80,7 +80,7 @@ const TambahUser = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -93,7 +93,7 @@ const TambahUser = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -105,7 +105,7 @@ const TambahUser = () => {
             value={formData.experience}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -117,7 +117,7 @@ const TambahUser = () => {
             value={formData.about}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -129,7 +129,7 @@ const TambahUser = () => {
             value={formData.address}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -140,7 +140,7 @@ const TambahUser = () => {
             value={formData.gender}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700"
           >
             <option value="male">Laki-laki</option>
             <option value="female">Perempuan</option>
@@ -157,7 +157,7 @@ const TambahUser = () => {
             value={formData.job}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -170,7 +170,7 @@ const TambahUser = () => {
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -183,7 +183,7 @@ const TambahUser = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow placeholder-gray-400"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
           />
         </div>
 
@@ -194,23 +194,23 @@ const TambahUser = () => {
             value={formData.role}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow text-gray-700"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700"
           >
             <option value="petani">Petani</option>
             {/* Tambahkan opsi lain jika diperlukan */}
           </select>
         </div>
 
-        <div className="flex justify-between gap-10 pt-10">
+        <div className="flex justify-between gap-8 pt-8">
           <button
             onClick={handleBack}
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-200 transform hover:scale-105"
           >
-            Kembali
+            <FaArrowLeft className="inline mr-2" /> Kembali
           </button>
           <button
             type="submit"
-            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
+            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 transform hover:scale-105"
           >
             Tambah Pengguna
           </button>

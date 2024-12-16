@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaTimesCircle } from 'react-icons/fa';
+import { FaTimesCircle, FaImage, FaArrowLeft, FaSave } from 'react-icons/fa';
 
 const EditBerita = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [berita, setBerita] = useState({ title: '', content: '', gambar: '' });
-  const [file, setFile] = useState(null); // Menyimpan file yang diunggah
-  const [previewImage, setPreviewImage] = useState(null); // Untuk preview gambar baru
+  const [file, setFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Mengambil data berita berdasarkan ID untuk diedit
   useEffect(() => {
     const fetchBerita = async () => {
       try {
@@ -48,7 +48,7 @@ const EditBerita = () => {
       });
 
       if (response.ok) {
-        navigate('/berita'); // Kembali ke halaman daftar berita
+        navigate('/berita');
       } else {
         console.error('Gagal menyimpan perubahan berita');
       }
@@ -63,111 +63,163 @@ const EditBerita = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+    handleFileSelection(selectedFile);
+  };
 
-    // Untuk preview gambar baru
+  const handleFileSelection = (selectedFile) => {
     if (selectedFile) {
+      setFile(selectedFile);
       const fileURL = URL.createObjectURL(selectedFile);
       setPreviewImage(fileURL);
     }
   };
 
   const handleRemoveImage = () => {
-    setFile(null); // Reset file baru
-    setPreviewImage(null); // Reset preview gambar baru
-    document.getElementById('gambar').value = null; // Reset input file
+    setFile(null);
+    setPreviewImage(null);
+    document.getElementById('gambar').value = null;
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile?.type.startsWith('image/')) {
+      handleFileSelection(droppedFile);
+    }
   };
 
   return (
-    <div className="p-6 bg-white h-full w-full">
-      <div className="p-10">
-        <div className="text-center pb-4">
-          <h1 className="text-2xl font-medium text-gray-800">Edit Berita</h1>
-        </div>
-
-        <div className="items-center pb-10">
-          {(previewImage || berita.gambar) && (
-            <div className="mb-10 relative">
-              <img
-                src={previewImage || berita.gambar}
-                alt="Preview Gambar Berita"
-                className="object-cover h-auto max-h-96 max-w-96 rounded-md shadow-md mx-auto"
-              />
-            </div>
-          )}
-
-          {/* Button to Remove Image */}
-          {previewImage && (
-            <div className="flex justify-center">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="p-6 sm:p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h1 className="text-3xl font-bold text-gray-900">Edit Berita</h1>
               <button
-                type="button"
-                onClick={handleRemoveImage}
-                className="px-4 text-red-500 hover:text-red-700 font-semibold rounded-lg flex items-center gap-2"
+                onClick={handleBack}
+                className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <FaTimesCircle size={20} />
-                Hapus Perubahan
+                <FaArrowLeft className="mr-2" />
+                Kembali
               </button>
             </div>
-          )}
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
-              Judul Berita
-            </label>
-            <input
-              type="text"
-              id="title"
-              value={berita.title}
-              onChange={(e) => setBerita({ ...berita, title: e.target.value })}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="content" className="block text-gray-700 font-medium mb-2">
-              Konten
-            </label>
-            <textarea
-              id="content"
-              value={berita.content}
-              onChange={(e) => setBerita({ ...berita, content: e.target.value })}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="gambar" className="block text-gray-700 font-medium mb-2">
-              Gambar Berita
-            </label>
-            <div className="relative">
-              <input
-                type="file"
-                id="gambar"
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
-                onChange={handleFileChange}
-                accept="image/*"
-              />
+            {/* Image Preview Section */}
+            <div className="mb-8">
+              {(previewImage || berita.gambar) && (
+                <div className="relative group">
+                  <img
+                    src={previewImage || berita.gambar}
+                    alt="Preview"
+                    className="w-full h-64 object-cover rounded-lg shadow-md"
+                  />
+                  {previewImage && (
+                    <button
+                      onClick={handleRemoveImage}
+                      className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                    >
+                      <FaTimesCircle size={20} />
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
-          </div>
 
-          <div className="flex justify-between gap-10 pt-10">
-            <button
-              onClick={handleBack}
-              className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
-            >
-              Kembali
-            </button>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                  Judul Berita
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  value={berita.title}
+                  onChange={(e) => setBerita({ ...berita, title: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
+                  placeholder="Masukkan judul berita"
+                />
+              </div>
 
-            <button
-              type="submit"
-              className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
-            >
-              Simpan Perubahan
-            </button>
+              <div>
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+                  Konten
+                </label>
+                <textarea
+                  id="content"
+                  value={berita.content}
+                  onChange={(e) => setBerita({ ...berita, content: e.target.value })}
+                  rows={6}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm"
+                  placeholder="Tulis konten berita di sini"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Gambar Berita
+                </label>
+                <div
+                  className={`relative border-2 border-dashed rounded-lg p-6 text-center ${
+                    isDragging ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-green-500'
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    type="file"
+                    id="gambar"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
+                  <label
+                    htmlFor="gambar"
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    <FaImage className="w-12 h-12 text-gray-400 mb-3" />
+                    <span className="text-sm text-gray-600">
+                      Drag & drop gambar di sini atau{' '}
+                      <span className="text-green-600 hover:text-green-700">pilih file</span>
+                    </span>
+                    <span className="text-xs text-gray-500 mt-1">
+                      PNG, JPG, GIF hingga 10MB
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-6">
+                <button
+                  onClick={handleBack}
+                  type="button"
+                  className="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <FaArrowLeft />
+                  Kembali
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <FaSave />
+                  Simpan Perubahan
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

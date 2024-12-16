@@ -11,7 +11,7 @@ const DetailEdukasi = () => {
   useEffect(() => {
     const fetchEdukasiById = async () => {
       try {
-        const token = localStorage.getItem('token'); // Ambil token dari localStorage
+        const token = localStorage.getItem('token');
         if (!token) {
           toast.error('Token tidak ditemukan');
           return;
@@ -20,7 +20,7 @@ const DetailEdukasi = () => {
         const response = await fetch(`http://localhost:4000/api/edukasi/${id}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -33,8 +33,8 @@ const DetailEdukasi = () => {
 
         const data = await response.json();
 
-        // Tambahkan base URL jika gambar tidak memiliki URL absolut
-        if (data.gambar && !data.gambar.startsWith('http')) {
+        // Add a base URL if the image does not have an absolute URL
+        if (data.gambar && !/^https?:\/\//.test(data.gambar)) {
           data.gambar = `http://localhost:4000${data.gambar}`;
         }
 
@@ -50,9 +50,8 @@ const DetailEdukasi = () => {
     fetchEdukasiById();
   }, [id]);
 
-  const handleBack = () => {
-    navigate('/edukasi');
-  };
+  const handleBack = () => navigate('/edukasi');
+  const handleEdit = () => navigate(`/edukasi/edit/${id}`);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -72,7 +71,7 @@ const DetailEdukasi = () => {
               />
             </div>
 
-            <hr className='p-4'/>
+            <hr className="my-4" />
 
             <h1 className="text-2xl font-semibold text-gray-800 mb-4">{edukasi.judul}</h1>
             <p className="text-sm text-gray-500 mb-4">
@@ -92,7 +91,7 @@ const DetailEdukasi = () => {
                 Kembali
               </button>
               <button
-                onClick={() => navigate(`/edukasi/edit/${id}`)}
+                onClick={handleEdit}
                 className="py-2 px-6 bg-yellow-500 text-white font-medium rounded-md hover:bg-yellow-600 transition"
               >
                 Edit Edukasi
@@ -100,7 +99,9 @@ const DetailEdukasi = () => {
             </div>
           </div>
         ) : (
-          <p className="text-center text-gray-600">Edukasi tidak ditemukan</p>
+          <div className="p-6 text-center">
+            <p className="text-gray-600">Edukasi tidak ditemukan</p>
+          </div>
         )}
       </div>
     </div>

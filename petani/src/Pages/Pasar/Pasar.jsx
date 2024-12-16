@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPen, FaPlus, FaThumbsUp, FaComment } from "react-icons/fa";
+import { FaPen, FaPlus, FaThumbsUp, FaComment, FaMapMarkerAlt, FaBox, FaTag } from "react-icons/fa";
 import KomentarModal from "../../Modal/KomentarModal";
 
 function Pasar() {
@@ -260,118 +260,201 @@ function Pasar() {
   );
 
   return (
-    <div className="flex max-w-screen-xl mx-auto">
-      <main className="flex-1 pr-5">
-        <div className="text-center m-6">
-          <button
-            onClick={() => navigate("/tambah-produk")}
-            className="w-12 h-12 bg-green-500 text-white rounded-full text-2xl hover:bg-green-600 focus:outline-none transition relative"
-          >
-            <FaPlus className="absolute inset-0 m-auto" />
-          </button>
-        </div>
-
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : Array.isArray(posts) && posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id} className="bg-white rounded-lg p-5 mb-5 shadow-md">
-              <div className="flex items-center mb-3">
-                <UserAvatar
-                  image={post.pengguna_gambar}
-                  name={post.pengguna_nama}
-                  onClick={() => navigate(`/detail-pasar/${post.pengguna_id}`)}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+      <div className="max-w-screen-xl mx-auto px-4 py-6">
+        <div className="flex gap-6">
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Create Post Button */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <img
+                  src={profil?.gambar ? `${API_BASE_URL}${profil.gambar}` : "/assets/banner.png"}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full border-2 border-green-100"
                 />
-                <span
-                  className="font-bold text-lx cursor-pointer"
-                  onClick={() => navigate(`/detail-pasar/${post.pengguna_id}`)}
-                >
-                  {post.pengguna_nama || "Pengguna"}
-                </span>
-              </div>
-
-              <div className="text-gray-600">
-                <p>Harga: {post.harga || "Tidak tersedia"}</p>
-                <p>Lokasi: {post.lokasi || "Tidak diketahui"}</p>
-                {expandedPosts[post.id] && (
-                  <>
-                    <p>Stok: {post.stok || "Habis"}</p>
-                    <p>Kategori: {post.kategori_nama || "Tidak ada"}</p>
-                    <p>{post.deskripsi || "Deskripsi tidak tersedia"}</p>
-                  </>
-                )}
                 <button
-                  onClick={() => setExpandedPosts(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
-                  className="text-blue-500 mt-2"
+                  onClick={() => navigate("/tambah-produk")}
+                  className="bg-green-100 hover:bg-green-200 text-green-600 px-4 py-2 rounded-full flex-1 text-left transition duration-200"
                 >
-                  {expandedPosts[post.id] ? "Baca Lebih Sedikit" : "Baca Selengkapnya"}
+                  Apa yang ingin Anda jual hari ini?
                 </button>
               </div>
-
-              <img
-  src={post.gambar ? `${API_BASE_URL}/uploads/${post.gambar}` : "/assets/placeholder.jpg"}
-  alt={post.nama || "Gambar tidak tersedia"}
-  className="w-full rounded-lg mt-3"
-/>
-
-              <div className="flex justify-between items-center text-gray-600 mt-3 space-x-4">
-                <button
-                  onClick={() => handleLikeClick(post.id)}
-                  className={`flex items-center text-lg transition duration-200 ${likedPosts[post.id] ? 'text-blue-600' : 'text-gray-500 hover:text-blue-500'
-                    }`}
-                >
-                  <FaThumbsUp className="mr-2 text-2xl" />
-                  {likeCounts[post.id] || 0}
-                </button>
-
-                <button
-                  onClick={() => handleCommentClick(post.id)}
-                  className="flex items-center text-lg text-green-500 hover:text-green-700 transition duration-200"
-                >
-                  <FaComment className="mr-2 text-2xl" />
-                  {commentsCount[post.id] || 0}
-                </button>
-              </div>
-
-              {isModalOpen && currentPostId === post.id && (
-                <KomentarModal postId={post.id} onClose={() => {
-                  setIsModalOpen(false);
-                  setCurrentPostId(null);
-                }} />
-              )}
+              <button
+                onClick={() => navigate("/tambah-produk")}
+                className="ml-4 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full transition duration-200"
+              >
+                <FaPlus className="w-5 h-5" />
+              </button>
             </div>
-          ))
-        ) : (
-          <p>Tidak ada produk tersedia</p>
-        )}
-      </main>
 
-      <aside className="w-96 bg-white p-5 lg:block hidden">
-        <div className="user-saran">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Saran</h2>
-          {Array.isArray(sarans) && sarans.length > 0 ? (
-            sarans.map((saran) => (
-              <div key={saran.pengguna_id} className="flex items-center mb-4">
-                <UserAvatar
-                  image={saran.profil_gambar}
-                  name={saran.profil_nama}
-                  onClick={() => navigate(`/detail-pasar/${saran.pengguna_id}`)}
-                />
-                <span
-                  className="text-gray-800 cursor-pointer"
-                  onClick={() => navigate(`/detail-pasar/${saran.pengguna_id}`)}
-                >
-                  {saran.pengguna_nama || "Pengguna"}
-                </span>
+            {/* Posts Feed */}
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
               </div>
-            ))
-          ) : (
-            <p>Tidak ada saran yang tersedia.</p>
-          )}
+            ) : Array.isArray(posts) && posts.length > 0 ? (
+              <div className="space-y-6">
+                {posts.map((post) => (
+                  <article key={post.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                    {/* Post Header */}
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center">
+                        <img
+                          src={post.pengguna_gambar ? `${API_BASE_URL}${post.pengguna_gambar}` : "/assets/banner.png"}
+                          alt={post.pengguna_nama}
+                          className="w-12 h-12 rounded-full border-2 border-gray-100 cursor-pointer hover:border-green-500 transition duration-200"
+                          onClick={() => navigate(`/detail-pasar/${post.pengguna_id}`)}
+                        />
+                        <div className="ml-3">
+                          <h3
+                            className="font-semibold text-gray-900 hover:text-green-600 cursor-pointer transition duration-200"
+                            onClick={() => navigate(`/detail-pasar/${post.pengguna_id}`)}
+                          >
+                            {post.pengguna_nama || "Pengguna"}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            {new Date(post.dibuat_pada).toLocaleDateString('id-ID', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Post Content */}
+                    <div className="p-4">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2">{post.nama}</h2>
+                      <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                        <div className="flex items-center text-gray-600">
+                          <FaTag className="mr-2 text-blue-500" />
+                          <span className="font-medium">
+                            Rp {parseInt(post.harga).toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <FaMapMarkerAlt className="mr-2 text-blue-500" />
+                          <span>{post.lokasi || "Tidak diketahui"}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <FaBox className="mr-2 text-blue-500" />
+                          <span>Stok: {post.stok || "Habis"}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="px-2 py-1 bg-green-100 rounded-full text-xs">
+                            {post.kategori_nama || "Uncategorized"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-600 mb-4">
+                        {expandedPosts[post.id]
+                          ? post.deskripsi
+                          : `${post.deskripsi?.slice(0, 150)}${post.deskripsi?.length > 150 ? '...' : ''}`
+                        }
+                        {post.deskripsi?.length > 150 && (
+                          <button
+                            onClick={() => setExpandedPosts(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
+                            className="text-green-600 hover:text-green-700 ml-2 font-medium transition duration-200"
+                          >
+                            {expandedPosts[post.id] ? "Baca Lebih Sedikit" : "Baca Selengkapnya"}
+                          </button>
+                        )}
+                      </p>
+
+                      {/* Post Image */}
+                      {post.gambar && (
+                        <img
+                          src={post.gambar ? `${API_BASE_URL}${post.gambar}` : "/assets/banner.png"}
+                          alt={post.nama}
+                          className="w-full h-[400px] object-cover rounded-lg"
+                        />
+                      )}
+                    </div>
+
+                    {/* Post Actions */}
+                    <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between bg-gray-50">
+                      <button
+                        onClick={() => handleLikeClick(post.id)}
+                        className={`flex items-center px-4 py-2 rounded-full transition duration-200 ${likedPosts[post.id]
+                          ? 'text-blue-600 bg-blue-50'
+                          : 'text-gray-600 hover:bg-gray-100'
+                          }`}
+                      >
+                        <FaThumbsUp className={`mr-2 ${likedPosts[post.id] ? 'text-blue-600' : 'text-gray-500'}`} />
+                        <span className="font-medium">{likeCounts[post.id] || 0}</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleCommentClick(post.id)}
+                        className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-full transition duration-200"
+                      >
+                        <FaComment className="mr-2 text-green-500" />
+                        <span className="font-medium">{commentsCount[post.id] || 0}</span>
+                      </button>
+                    </div>
+
+                    {isModalOpen && currentPostId === post.id && (
+                      <KomentarModal
+                        postId={post.id}
+                        onClose={() => {
+                          setIsModalOpen(false);
+                          setCurrentPostId(null);
+                        }}
+                      />
+                    )}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-white rounded-lg shadow-sm">
+                <p className="text-gray-500">Tidak ada produk tersedia</p>
+              </div>
+            )}
+          </main>
+
+          {/* Sidebar already styled in previous response */}
+          <aside className="w-96 bg-white rounded-lg shadow-sm lg:block hidden sticky top-6 h-fit">
+            <div className="p-6">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Saran Pengguna</h2>
+              </div>
+
+              <div className="space-y-4 mt-6">
+                {Array.isArray(sarans) && sarans.length > 0 ? (
+                  sarans.map((saran) => (
+                    <div
+                      key={saran.pengguna_id}
+                      className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-all duration-200 cursor-pointer"
+                      onClick={() => navigate(`/detail-pasar/${saran.pengguna_id}`)}
+                    >
+                      <img
+                        src={saran.profil_gambar ? `${API_BASE_URL}${saran.profil_gambar}` : "/assets/banner.png"}
+                        alt={saran.pengguna_nama}
+                        className="w-10 h-10 rounded-full border-2 border-gray-100"
+                      />
+                      <div>
+                        <h3 className="font-medium text-gray-900 hover:text-green-600 transition duration-200">
+                          {saran.pengguna_nama || "Pengguna"}
+                        </h3>
+                        {saran.profil_nama && (
+                          <p className="text-sm text-gray-500">{saran.profil_nama}</p>
+                        )}
+                      </div>  
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500 py-4">Tidak ada saran yang tersedia</p>
+                )}
+              </div>
+            </div>
+          </aside>
         </div>
-      </aside>
+      </div>
     </div>
   );
-}
+};
 
-export default Pasar;
+export default Pasar; 

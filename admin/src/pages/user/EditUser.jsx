@@ -131,162 +131,225 @@ const EditUser = () => {
   };
 
   return (
-    <div className="bg-softCream p-8 h-full w-full bg-white">
-      <form onSubmit={handleSubmit} className="p-6 rounded-xl space-y-6">
-        <div className="text-center pb-4">
-          <h1 className="text-2xl font-medium text-gray-800">Edit Pengguna</h1>
-        </div>
-
-        <div>
-          <label htmlFor="name" className="block text-lg font-semibold text-gray-700">Nama</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Nama Lengkap"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email" className="block text-lg font-semibold text-gray-700">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email Pengguna"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="peran" className="block text-lg font-semibold text-gray-700">Peran</label>
-          <select
-            id="peran"
-            name="peran"
-            value={formData.peran || ''}  // Nilai default menjadi string kosong jika null
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          >
-            <option value="">Pilih Peran</option>  {/* Opsi default kosong */}
-            <option value="petani">Petani</option>
-          </select>
-        </div>
-
-
-        <div>
-          <label htmlFor="pengalaman" className="block text-lg font-semibold text-gray-700">Pengalaman</label>
-          <input
-            type="text"
-            id="pengalaman"
-            name="pengalaman"
-            value={formData.pengalaman}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="tentang" className="block text-lg font-semibold text-gray-700">Tentang</label>
-          <input
-            type="text"
-            id="tentang"
-            name="tentang"
-            value={formData.tentang}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="alamat" className="block text-lg font-semibold text-gray-700">Alamat</label>
-          <input
-            type="text"
-            id="alamat"
-            name="alamat"
-            value={formData.alamat}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="pekerjaan" className="block text-lg font-semibold text-gray-700">Pekerjaan</label>
-          <input
-            type="text"
-            id="pekerjaan"
-            name="pekerjaan"
-            value={formData.pekerjaan}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="no_hp" className="block text-lg font-semibold text-gray-700">No. HP</label>
-          <input
-            type="text"
-            id="no_hp"
-            name="no_hp"
-            value={formData.no_hp}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="kata_sandi" className="block text-lg font-semibold text-gray-700">Kata Sandi</label>
-          <input
-            type="password"
-            id="kata_sandi"
-            name="kata_sandi"
-            value={formData.kata_sandi}
-            onChange={handleChange}
-            className="w-full p-3 mt-2 border rounded-md shadow-sm focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <div className="flex justify-between gap-10 pt-10">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
-          >
-            Kembali
-          </button>
-          <button
-            type="submit"
-            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
-          >
-            Perbarui Pengguna
-          </button>
-        </div>
-      </form>
-
-      {/* Modal Konfirmasi */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">Perhatian</h3>
-            <p className="mb-4 text-gray-600">Perubahan yang Anda buat belum disimpan. Apakah Anda yakin ingin kembali?</p>
-            <div className="flex justify-center gap-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-green-600 to-green-400 px-8 py-6">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-white">Edit Profil Pengguna</h1>
               <button
-                onClick={handleConfirmBack}
-                className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                onClick={handleBack}
+                className="text-white hover:text-gray-200 transition-colors"
               >
-                Ya
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="px-8 py-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Personal Information Section */}
+              <div className="space-y-6">
+                <div className="border-b pb-4">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Informasi Pribadi</h2>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                        Nama Lengkap
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="no_hp" className="block text-sm font-medium text-gray-700">
+                        Nomor Telepon
+                      </label>
+                      <input
+                        type="text"
+                        id="no_hp"
+                        name="no_hp"
+                        value={formData.no_hp}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Professional Information Section */}
+              <div className="space-y-6">
+                <div className="border-b pb-4">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-4">Informasi Profesional</h2>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="peran" className="block text-sm font-medium text-gray-700">
+                        Peran
+                      </label>
+                      <select
+                        id="peran"
+                        name="peran"
+                        value={formData.peran || ''}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      >
+                        <option value="">Pilih Peran</option>
+                        <option value="petani">Petani</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="pekerjaan" className="block text-sm font-medium text-gray-700">
+                        Pekerjaan
+                      </label>
+                      <input
+                        type="text"
+                        id="pekerjaan"
+                        name="pekerjaan"
+                        value={formData.pekerjaan}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="pengalaman" className="block text-sm font-medium text-gray-700">
+                        Pengalaman
+                      </label>
+                      <input
+                        type="text"
+                        id="pengalaman"
+                        name="pengalaman"
+                        value={formData.pengalaman}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information Section */}
+            <div className="border-b pb-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Informasi Tambahan</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="tentang" className="block text-sm font-medium text-gray-700">
+                    Tentang
+                  </label>
+                  <textarea
+                    id="tentang"
+                    name="tentang"
+                    value={formData.tentang}
+                    onChange={handleChange}
+                    rows="3"
+                    className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="alamat" className="block text-sm font-medium text-gray-700">
+                    Alamat
+                  </label>
+                  <textarea
+                    id="alamat"
+                    name="alamat"
+                    value={formData.alamat}
+                    onChange={handleChange}
+                    rows="2"
+                    className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="kata_sandi" className="block text-sm font-medium text-gray-700">
+                    Kata Sandi Baru (opsional)
+                  </label>
+                  <input
+                    type="password"
+                    id="kata_sandi"
+                    name="kata_sandi"
+                    value={formData.kata_sandi}
+                    onChange={handleChange}
+                    className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-4 pt-6">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+              >
+                Batal
               </button>
               <button
-                onClick={handleCloseModal}
-                className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                type="submit"
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
               >
-                Tidak
+                Simpan Perubahan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Confirmation Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="bg-white rounded-lg p-8 max-w-sm mx-auto relative z-50">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Konfirmasi</h3>
+            <p className="text-gray-600 mb-6">
+              Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin keluar?
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleConfirmBack}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Ya, Keluar
               </button>
             </div>
           </div>

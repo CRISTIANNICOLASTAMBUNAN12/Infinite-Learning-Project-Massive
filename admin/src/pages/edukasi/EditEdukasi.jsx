@@ -123,44 +123,37 @@ const EditEdukasi = () => {
   };
 
   return (
-    <div className="p-6 bg-white h-full w-full">
-      <div className="p-10">
-        <div className="text-center pb-4">
-          <h1 className="text-2xl font-medium text-gray-800">Edit Edukasi</h1>
-        </div>
+    <div className="p-6 bg-gray-100 min-h-screen font-sans">
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-10">
+        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8 border-b pb-4 border-gray-300">Edit Edukasi</h1>
 
         {/* Image Preview */}
-        <div className="items-center pb-10">
+        <div className="py-6">
           {(previewImage || edukasi.imageUrl) && (
-            <div className="mb-10 relative">
+            <div className="relative flex justify-center mb-6">
               <img
                 src={previewImage || edukasi.imageUrl}
                 alt="Preview Gambar Edukasi"
-                className="object-cover h-auto max-h-96 max-w-96 rounded-md shadow-md mx-auto"
+                className="rounded-xl shadow-md w-full max-w-md object-cover"
               />
-            </div>
-          )}
-
-          {/* Button to Remove Image */}
-          {previewImage && (
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={handleRemoveImage}
-                className="px-4 text-red-500 hover:text-red-700 font-semibold rounded-lg flex items-center gap-2"
-              >
-                <FaTimesCircle size={20} />
-                Hapus Perubahan
-              </button>
+              {previewImage && (
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-3 hover:bg-red-600 shadow-md"
+                >
+                  <FaTimesCircle size={24} />
+                </button>
+              )}
             </div>
           )}
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Title */}
           <div>
-            <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="title" className="block text-gray-700 font-semibold mb-3">
               Judul Edukasi
             </label>
             <input
@@ -168,36 +161,38 @@ const EditEdukasi = () => {
               id="title"
               value={edukasi.title}
               onChange={(e) => setEdukasi({ ...edukasi, title: e.target.value })}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
+              className="w-full px-5 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400 shadow-sm"
+              placeholder="Masukkan judul edukasi"
               required
             />
           </div>
 
           {/* Content */}
           <div>
-            <label htmlFor="content" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="content" className="block text-gray-700 font-semibold mb-3">
               Konten Edukasi
             </label>
             <textarea
               id="content"
               value={edukasi.content}
               onChange={(e) => setEdukasi({ ...edukasi, content: e.target.value })}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
-              rows="5"
+              className="w-full px-5 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400 shadow-sm"
+              rows="6"
+              placeholder="Tulis konten edukasi di sini"
               required
             />
           </div>
 
           {/* Category Selection */}
           <div>
-            <label htmlFor="kategori_id" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="kategori_id" className="block text-gray-700 font-semibold mb-3">
               Kategori Edukasi
             </label>
             <select
               id="kategori_id"
               value={edukasi.kategori_id}
               onChange={(e) => setEdukasi({ ...edukasi, kategori_id: e.target.value })}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
+              className="w-full px-5 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm"
               required
             >
               <option value="">Pilih Kategori</option>
@@ -211,26 +206,24 @@ const EditEdukasi = () => {
 
           {/* Image Upload */}
           <div>
-            <label htmlFor="gambar" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="gambar" className="block text-gray-700 font-semibold mb-3">
               Gambar Edukasi
             </label>
-            <div className="relative">
-              <input
-                type="file"
-                id="gambar"
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition-shadow placeholder-gray-400"
-                onChange={handleFileChange}
-                accept="image/*"
-              />
-            </div>
+            <input
+              type="file"
+              id="gambar"
+              onChange={handleFileChange}
+              accept="image/*"
+              className="w-full px-5 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none placeholder-gray-400 shadow-sm"
+            />
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between gap-10 pt-10">
+          <div className="flex justify-between gap-6 pt-8">
             <button
               type="button"
               onClick={() => navigate('/edukasi')}
-              className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 hover:shadow-lg transition-transform transform hover:scale-105"
+              className="flex-1 py-4 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-transform transform hover:scale-105 shadow-md"
             >
               Kembali
             </button>
@@ -238,7 +231,7 @@ const EditEdukasi = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 hover:shadow-lg transition-transform transform hover:scale-105"
+              className="flex-1 py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-transform transform hover:scale-105 shadow-md"
             >
               {loading ? 'Loading...' : 'Simpan Perubahan'}
             </button>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { FiSearch, FiFilter, FiBookOpen } from "react-icons/fi";
 
 function Edukasi() {
   const [edukasiList, setEdukasiList] = useState([]);
@@ -8,51 +9,63 @@ function Edukasi() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
-  // Fetch kategori untuk filter
+  // Debounce function for fetching edukasi list
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      const fetchEdukasi = async () => {
+        try {
+          setIsLoading(true);
+          let url = "http://localhost:4000/api/edukasi?";
+          if (selectedCategory) {
+            url += `kategori=${selectedCategory}&`;
+          }
+          if (searchTerm) {
+            url += `search=${searchTerm}&`;
+          }
+
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error("Failed to fetch edukasi");
+          }
+          const data = await response.json();
+          setEdukasiList(data);
+        } catch (error) {
+          console.error("Error fetching edukasi:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchEdukasi();
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [searchTerm, selectedCategory]);
+
+  // Fetch categories for filtering
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setIsFetching(true);
         const response = await fetch("http://localhost:4000/api/kategori");
         if (!response.ok) {
-          throw new Error("Gagal mengambil kategori");
+          throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
+      } finally {
+        setIsFetching(false);
       }
     };
     fetchCategories();
   }, []);
 
-  // Fetch edukasi dengan filter kategori dan pencarian
-  useEffect(() => {
-    const fetchEdukasi = async () => {
-      try {
-        let url = "http://localhost:4000/api/edukasi?";
-        if (selectedCategory) {
-          url += `kategori=${selectedCategory}&`;
-        }
-        if (searchTerm) {
-          url += `search=${searchTerm}&`;
-        }
-
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data edukasi");
-        }
-        const data = await response.json();
-        setEdukasiList(data);
-      } catch (error) {
-        console.error("Error fetching edukasi:", error);
-      }
-    };
-
-    fetchEdukasi();
-  }, [searchTerm, selectedCategory]);
-
-  // Set kategori dari parameter URL saat pertama kali dimuat
+  // Set category from URL parameters on initial load
   useEffect(() => {
     const kategoriParam = searchParams.get("kategori");
     if (kategoriParam) {
@@ -61,105 +74,116 @@ function Edukasi() {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-col items-center w-full h-full py-10 bg-gray-100">
-      <div className="w-full max-w-7xl px-5">
-        {/* Filter and Search */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-5 space-y-3 sm:space-y-0 sm:space-x-5">
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Cari Edukasi..."
-            className="p-3 mb-5 w-full sm:w-2/3 md:w-1/2 lg:w-1/3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-green-800 mb-4">Pusat Edukasi</h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Temukan berbagai artikel informatif untuk menambah pengetahuan Anda
+          </p>
+        </div>
 
-          {/* Filter by Category */}
-          <div className="relative inline-block w-full sm:w-1/3 lg:w-1/4">
+        {/* Search and Filter Section */}
+        <div className="mb-10 flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          {/* Search Input */}
+          <div className="relative flex-grow">
+            <input
+              type="text"
+              placeholder="Cari artikel..."
+              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-green-200 focus:ring-2 focus:ring-green-400 focus:border-transparent transition duration-300"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <FiSearch className="absolute left-3 top-3.5 h-5 w-5 text-green-500" />
+          </div>
+
+          {/* Category Dropdown */}
+          <div className="relative">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="block w-full p-3 pl-4 pr-10 text-base text-gray-700 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 ease-in-out hover:bg-gray-50 appearance-none"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-green-200 focus:ring-2 focus:ring-green-400 appearance-none"
             >
-              <option
-                value=""
-                className="text-gray-500 bg-gray-100 hover:bg-gray-200 py-2"
-              >
-                Semua Kategori
-              </option>
+              <option value="">Semua Kategori</option>
               {categories.map((category) => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                  className="text-gray-900 hover:bg-green-100 py-2"
-                >
+                <option key={category.id} value={category.id}>
                   {category.nama}
                 </option>
               ))}
             </select>
-
-            {/* Custom Dropdown Arrow Icon */}
-            <div className="absolute top-0 right-0 flex items-center justify-center w-10 h-full pointer-events-none">
-              <svg
-                className="w-5 h-5 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
+            <FiFilter className="absolute left-3 top-3.5 h-5 w-5 text-green-500" />
           </div>
         </div>
 
-        {/* List of Edukasi */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 cursor-pointer">
-          {edukasiList.map((edukasi) => (
-            <div
-              key={edukasi.id}
-              className="bg-white rounded-lg shadow-lg hover:transform hover:-translate-y-1 transition-transform duration-300"
-              onClick={() => navigate(`/edukasi/${edukasi.id}`)}
-            >
-              <img
-                src={
-                  edukasi.gambar
-                    ? `http://localhost:4000${edukasi.gambar}`
-                    : "http://via.placeholder.com/150"
-                }
-                alt={edukasi.judul || "Edukasi Image"}
-                className="w-full h-36 object-cover rounded-t-lg"
-              />
-              <div className="p-5">
-                <div className="flex justify-between text-sm text-gray-500 mb-2">
-                  <p>
-                    {new Date(edukasi.diterbitkan_pada).toLocaleDateString(
-                      "id-ID",
-                      {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )}
-                  </p>
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-800 truncate">
-                  {edukasi.judul}
+        {/* Edukasi Grid */}
+        {isLoading || isFetching ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray-200 animate-pulse rounded-2xl h-72"
+              ></div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {edukasiList.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {edukasiList.map((edukasi) => (
+                  <div
+                    key={edukasi.id}
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 transform cursor-pointer"
+                    onClick={() => navigate(`/edukasi/${edukasi.id}`)}
+                  >
+                    {/* Image */}
+                    <div className="relative h-56 w-full">
+                      <img
+                        src={
+                          edukasi.gambar
+                            ? `http://localhost:4000${edukasi.gambar}`
+                            : "https://via.placeholder.com/400x250"
+                        }
+                        alt={edukasi.judul}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black opacity-20 hover:opacity-10 transition-opacity"></div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="flex items-center text-sm text-gray-500 mb-3">
+                        <FiBookOpen className="h-5 w-5 mr-2 text-green-500" />
+                        <span>
+                          {new Date(edukasi.diterbitkan_pada).toLocaleDateString(
+                            "id-ID",
+                            {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                        {edukasi.judul}
+                      </h3>
+                      <p className="text-gray-600 line-clamp-3">{edukasi.konten}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Tidak ada artikel yang ditemukan
                 </h3>
-                <p className="text-sm text-gray-600">
-                  {edukasi.konten.split(" ").length > 20
-                    ? `${edukasi.konten.split(" ").slice(0, 20).join(" ")}...`
-                    : edukasi.konten}
+                <p className="text-gray-500">
+                  Silakan coba kata kunci pencarian yang lain
                 </p>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

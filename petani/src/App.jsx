@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // import useLocation
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,6 +33,8 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const [refreshProfileKey, setRefreshProfileKey] = useState(0);
+
+  const location = useLocation(); // Get current location
 
   useEffect(() => {
     const validateToken = async () => {
@@ -107,13 +109,11 @@ function App() {
           handleLogout={handleLogout}
         />
         <div className="flex flex-1 pt-16">
-          {isAuthenticated && role === "petani" && (
-            <Sidebar
-              isOpen={isSidebarOpen}
-              toggleSidebar={toggleSidebar}
-              handleLogout={handleLogout}
-            />
-          )}
+          <Sidebar
+            isOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
+            handleLogout={handleLogout}
+          />
           <div className="flex-1 overflow-y-auto">
             <Routes>
               <Route
@@ -273,14 +273,17 @@ function App() {
             </Routes>
           </div>
         </div>
-        {!isAuthenticated && (
-          <Footer
-            isAuthenticated={isAuthenticated}
-            role={role}
-            toggleSidebar={toggleSidebar}
-            handleLogout={handleLogout}
-          />
-        )}
+        {/* Sembunyikan Footer jika berada di /login atau /register */}
+        {location.pathname !== "/login" &&
+          location.pathname !== "/register" &&
+          !isAuthenticated && ( // Add this condition to hide the footer when logged in
+            <Footer
+              isAuthenticated={isAuthenticated}
+              role={role}
+              toggleSidebar={toggleSidebar}
+              handleLogout={handleLogout}
+            />
+          )}
       </div>
     </>
   );

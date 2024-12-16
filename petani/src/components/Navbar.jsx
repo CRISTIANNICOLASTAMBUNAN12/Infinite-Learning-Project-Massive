@@ -71,13 +71,16 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
     setIsDropdownOpen(false);
   };
 
-  const handleLogoutClick = () => {
-    handleLogout();
-    setIsDropdownOpen(false);
-  };
-
   // Helper function to check if a route is active
   const isActive = (path) => location.pathname === path;
+
+  const handleLogoutClick = () => {
+    localStorage.clear();
+    handleLogout();
+    setIsDropdownOpen(false);
+    navigate("/");
+  };
+
 
   return (
     <div className="h-16 bg-white text-black flex justify-between items-center px-4 border-b sm:px-10 fixed top-0 left-0 w-full z-50">
@@ -193,8 +196,7 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
                 >
                   <img
                     className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover"
-                    src={`http://localhost:4000${profile?.gambar || assets.upload_area
-                      }`}
+                    src={`http://localhost:4000${profile?.gambar || assets.upload_area}`}
                     onError={(e) => {
                       e.target.src = assets.upload_area;
                     }}
@@ -213,13 +215,6 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
                   />
                 )}
               </div>
-
-              <button
-                className="text-2xl text-gray-600 md:hidden"
-                onClick={toggleSidebar}
-              >
-                ☰
-              </button>
             </div>
           )
         ) : (
@@ -230,6 +225,14 @@ const Navbar = ({ toggleSidebar, handleLogout, isAuthenticated, role }) => {
             Masuk
           </button>
         )}
+
+        {/* Always show the sidebar toggle button */}
+        <button
+          className="text-2xl text-gray-600 md:hidden"
+          onClick={toggleSidebar}
+        >
+          ☰
+        </button>
       </div>
     </div>
   );
