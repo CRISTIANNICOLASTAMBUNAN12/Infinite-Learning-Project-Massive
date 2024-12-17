@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaEnvelope, FaPhone, FaLock } from 'react-icons/fa';
 
 const TambahUser = () => {
   const [formData, setFormData] = useState({
@@ -65,157 +65,155 @@ const TambahUser = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 h-full w-full">
-      <div className='text-center pb-6'>
-        <h1 className="text-3xl font-bold text-gray-800">Tambah Pengguna</h1>
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-br from-gray-50 to-green-50 min-h-screen flex flex-col items-center justify-center">
+      <div className="max-w-4xl w-full bg-white border rounded-xl p-8">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Tambah Pengguna</h1>
+          <p className="text-gray-500">Isi formulir di bawah ini untuk menambahkan pengguna baru.</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Nama Lengkap</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Masukkan nama lengkap"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Email</label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Masukkan email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">No. HP</label>
+              <div className="relative">
+                <FaPhone className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Masukkan nomor handphone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Password</label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Masukkan password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Pengalaman</label>
+            <textarea
+              name="experience"
+              placeholder="Masukkan pengalaman"
+              value={formData.experience}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Tentang</label>
+            <textarea
+              name="about"
+              placeholder="Masukkan tentang diri Anda"
+              value={formData.about}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Alamat</label>
+            <textarea
+              name="address"
+              placeholder="Masukkan alamat"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Jenis Kelamin</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                <option value="male">Laki-laki</option>
+                <option value="female">Perempuan</option>
+                <option value="other">Lainnya</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Pekerjaan</label>
+              <input
+                type="text"
+                name="job"
+                placeholder="Masukkan pekerjaan"
+                value={formData.job}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-4 pt-6">
+            <button
+              onClick={handleBack}
+              className="flex-1 px-6 py-3 bg-white text-black rounded-lg hover:bg-green-50 hover:text-green-600 border focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center"
+            >
+              Kembali
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center"
+            >
+              Tambah
+            </button>
+          </div>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow-md rounded-lg p-8">
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Masukkan nama lengkap"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Masukkan email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Pengalaman</label>
-          <textarea
-            name="experience"
-            placeholder="Masukkan pengalaman"
-            value={formData.experience}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Tentang</label>
-          <textarea
-            name="about"
-            placeholder="Masukkan tentang diri Anda"
-            value={formData.about}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Alamat</label>
-          <textarea
-            name="address"
-            placeholder="Masukkan alamat"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Jenis Kelamin</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700"
-          >
-            <option value="male">Laki-laki</option>
-            <option value="female">Perempuan</option>
-            <option value="other">Lainnya</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Pekerjaan</label>
-          <input
-            type="text"
-            name="job"
-            placeholder="Masukkan pekerjaan"
-            value={formData.job}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">No. HP</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Masukkan nomor handphone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Masukkan password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Peran</label>
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-gray-700"
-          >
-            <option value="petani">Petani</option>
-            {/* Tambahkan opsi lain jika diperlukan */}
-          </select>
-        </div>
-
-        <div className="flex justify-between gap-8 pt-8">
-          <button
-            onClick={handleBack}
-            className="flex-1 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-200 transform hover:scale-105"
-          >
-            <FaArrowLeft className="inline mr-2" /> Kembali
-          </button>
-          <button
-            type="submit"
-            className="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 transform hover:scale-105"
-          >
-            Tambah Pengguna
-          </button>
-        </div>
-      </form>
     </div>
   );
 };

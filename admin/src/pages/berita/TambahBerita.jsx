@@ -176,7 +176,7 @@ const TambahBerita = () => {
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all"
+                className="flex-1 px-6 py-3 bg-white text-black rounded-lg hover:bg-green-50 hover:text-green-600 border focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center"
               >
                 Batal
               </button>
@@ -191,7 +191,7 @@ const TambahBerita = () => {
                     Menyimpan...
                   </>
                 ) : (
-                  'Simpan Berita'
+                  'Simpan'
                 )}
               </button>
             </div>

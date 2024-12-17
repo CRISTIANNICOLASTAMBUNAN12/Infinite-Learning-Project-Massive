@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FaSpinner, FaChevronLeft, FaEdit, FaClock, FaCalendarAlt } from 'react-icons/fa';
 
 const EditUser = () => {
   const { id } = useParams();
@@ -131,26 +132,25 @@ const EditUser = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+      <div className="bg-white rounded-2xl border overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-green-400 px-8 py-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-white">Edit Profil Pengguna</h1>
-              <button
+          <div className="p-6 sm:p-8">
+          <div className="flex items-center justify-between border-b pb-4 border-gray-300">
+          <button
                 onClick={handleBack}
-                className="text-white hover:text-gray-200 transition-colors"
+                className="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-green-600 transition duration-200"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <FaChevronLeft className="w-4 h-4 mr-1" />
+                Kembali
               </button>
+              <h1 className="text-2xl font-bold text-gray-900">Edit Profil Pengguna</h1>
             </div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="px-8 py-6 space-y-6">
+          <form onSubmit={handleSubmit} className="px-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Personal Information Section */}
               <div className="space-y-6">
@@ -310,19 +310,19 @@ const EditUser = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end space-x-4 pt-6">
+            <div className="flex justify-end space-x-4 p-6">
               <button
                 type="button"
                 onClick={handleBack}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="flex-1 px-6 py-3 bg-white text-black rounded-lg hover:bg-green-50 hover:text-green-600 border focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed inline-flex items-center justify-center"
               >
-                Simpan Perubahan
+                Simpan
               </button>
             </div>
           </form>

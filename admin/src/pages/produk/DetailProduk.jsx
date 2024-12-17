@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FaSpinner, FaChevronLeft, FaCalendarAlt, FaClock } from 'react-icons/fa';
 
 const DetailProduk = () => {
   const { id } = useParams();
@@ -13,9 +14,8 @@ const DetailProduk = () => {
 
   const getFullImageUrl = (imagePath) => {
     if (!imagePath) return null;
-
     try {
-      new URL(imagePath);
+      new URL(imagePath); // Check if it's already a valid URL
       return imagePath;
     } catch {
       if (imagePath.startsWith('/uploads/')) {
@@ -97,10 +97,10 @@ const DetailProduk = () => {
   };
 
   const ImagePlaceholder = () => (
-    <div className="flex items-center justify-center w-full h-64 bg-gray-100 rounded-md">
+    <div className="flex items-center justify-center w-full h-64 bg-gray-200 rounded-lg border border-gray-300">
       <div className="text-center">
         <svg
-          className="mx-auto h-12 w-12 text-gray-400"
+          className="mx-auto h-12 w-12 text-gray-500"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -112,74 +112,109 @@ const DetailProduk = () => {
             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        <p className="mt-2 text-sm text-gray-500">Gambar tidak tersedia</p>
+        <p className="mt-2 text-sm text-gray-600">Gambar tidak tersedia</p>
       </div>
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <FaSpinner className="w-12 h-12 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600 text-lg">Memuat produk...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!produk) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+          <p className="text-lg text-gray-600 text-center">Produk tidak ditemukan</p>
+          <button
+            onClick={handleBack}
+            className="mt-4 flex items-center mx-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+          >
+            <FaChevronLeft className="w-4 h-4 mr-2" />
+            Kembali
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const formattedDate = new Date(produk.dibuat_pada).toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const formattedTime = new Date(produk.dibuat_pada).toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        {loading ? (
-          <div className="flex justify-center items-center p-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-800"></div>
-            <p className="ml-4 text-gray-600">Memuat produk...</p>
-          </div>
-        ) : produk ? (
-          <div className="p-6">
-            <div className="relative mb-6 flex justify-center items-center">
-              {produk.gambar && !imageError ? (
-                <div className="w-full max-w-2xl aspect-video relative">
-                  <img
-                    src={produk.gambar}
-                    alt={produk.nama}
-                    className="w-full h-full object-contain rounded-md shadow-sm"
-                    onError={handleImageError}
-                  />
-                </div>
-              ) : (
-                <ImagePlaceholder />
-              )}
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Header Section */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-start mb-4">
+              <button
+                onClick={handleBack}
+                className="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-green-600 transition duration-200"
+              >
+                <FaChevronLeft className="w-4 h-4 mr-2" />
+                Kembali
+              </button>
             </div>
-
-            <hr className="my-6" />
-
-            <div className="space-y-4">
-              <h1 className="text-2xl font-semibold text-gray-800">{produk.nama}</h1>
-              <p className="text-sm text-gray-500">
-                {new Date(produk.dibuat_pada).toLocaleDateString('id-ID', {
-                  day: '2-digit',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </p>
-              <p className="text-lg text-gray-700 leading-relaxed">{produk.deskripsi || 'Tidak ada deskripsi'}</p>
-              <p className="text-xl text-gray-800 font-semibold">
-                Rp {parseInt(produk.harga).toLocaleString('id-ID')}
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                <div>
-                  <span className="font-medium">Stok:</span> {produk.stok}
-                </div>
-                <div>
-                  <span className="font-medium">Lokasi:</span> {produk.lokasi}
-                </div>
-              </div>
-
-              <div className="flex justify-between gap-4 pt-6">
-                <button
-                  onClick={handleBack}
-                  className="py-2 px-6 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 transition-colors"
-                >
-                  Kembali
-                </button>
-              </div>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-4">{produk.nama}</h1>
+            <div className="flex items-center text-sm text-gray-500">
+              <FaCalendarAlt className="w-4 h-4 mr-1 text-blue-500" />
+              <span className="mr-4">
+                <span className="mr-4">{formattedDate}</span>
+              </span>
+              <FaClock className="w-4 h-4 mr-1 text-green-500" />
+              <span>{formattedTime}</span>
             </div>
           </div>
-        ) : (
-          <div className="p-6 text-center text-gray-600">Produk tidak ditemukan</div>
-        )}
+
+          {/* Image Section */}
+          <div className="pt-6">
+            {produk.gambar ? (
+              <div className="mb-6 flex justify-center">
+
+                <img
+                  src={produk.gambar}
+                  alt={produk.nama}
+                  className="w-full max-w-xl object-cover rounded-xl shadow-lg "
+                  onError={handleImageError}
+                />
+              </div>
+            ) : (
+              <ImagePlaceholder />
+            )}
+          </div>
+          <div className="prose prose-lg max-w-none px-8 py-2 bg-gray-50 rounded-lg">
+            <p className="text-2xl font-semibold text-gray-900 mb-4">
+              Rp {parseInt(produk.harga).toLocaleString('id-ID')}
+            </p>
+            <div className="text-gray-600">
+              <span className="font-medium">Stok:</span> {produk.stok} Kg
+            </div>
+            <div className="text-gray-600 mt-2">
+              <span className="font-medium">Lokasi:</span> {produk.lokasi}
+            </div>
+            <div className='m-4'>
+              {(produk.deskripsi || "Tidak ada konten tersedia").split('\n').map((deskripsi, index) => (
+                <p key={index} className="mb-4 text-gray-700 leading-relaxed">{deskripsi}</p>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
